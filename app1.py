@@ -15,8 +15,6 @@ from math import sqrt
 import statsmodels.api as sm
 # streamlit run app1.py --server.maxMessageSize=1028
 # source streamlit_machine_learning/bin/activate
-# https://riccardodandrea-streamlit-ml-app-app1-ehfe11.streamlit.app/
-
 
 ################################################################################################################
 ############### Hier können die lottie files eingesetzt werden #################################################
@@ -37,6 +35,7 @@ objection_detection_explanation = load_lottieurl('https://assets9.lottiefiles.co
 question_with_NaN_values = load_lottieurl('https://assets7.lottiefiles.com/packages/lf20_lKvkGl.json')
 no_X_variable_lottie = load_lottieurl('https://assets10.lottiefiles.com/packages/lf20_ydo1amjm.json')
 value_is_zero_in_train_size = load_lottieurl('https://assets7.lottiefiles.com/packages/lf20_usmfx6bp.json')
+wrong_data_type_ML = load_lottieurl('https://assets5.lottiefiles.com/packages/lf20_2frpohrv.json')
 ################################################################################################################
 ################################################################################################################
 
@@ -511,11 +510,28 @@ elif options == 'Machine Learning':
 
                 MachineLearning_sklearn = st.expander('Machine learning evaluation')
                 with MachineLearning_sklearn:
-                    # Hier kann der Nutzer Dynamisch die Unabhängige, sowie die abhängigen erklären
+                    # Hier kann der Nutzer dynamisch die unabhängigen und abhängigen Variablen auswählen
                     Target_variable_col, X_variables_col = st.columns(2)
                     Target_variable = Target_variable_col.selectbox('Which is your Target Variable (Y)', options=uploaded_file.columns, key='LR Sklearn Target Variable')
                     X_variables = X_variables_col.multiselect('Which is your Variables (X)', options=uploaded_file.columns, key='LR Sklearn X Variables')
                     
+                    if uploaded_file[Target_variable].dtype == object:
+                        st.warning('Ups, wrong data type for Target variable!')
+                        st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
+                        st.dataframe(uploaded_file.dtypes, use_container_width=True)
+                        st.stop()
+                        
+                    if any(uploaded_file[x].dtype == object for x in X_variables):
+                        st.warning('Ups, wrong data type for X variables!')
+                        st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
+                        st.dataframe(uploaded_file.dtypes, use_container_width=True)
+                        st.stop()
+    
+                    elif len(X_variables) == 0 :
+                        st_lottie(no_X_variable_lottie)
+                        st.warning('X Variable is empty!')
+                        st.stop()
+
                     # Mit dem Slider kann der Nutzer selber aussuchen wie viel Prozentual er als Test und Train definiert
                     # Default Parameters so das keine Fehler meldung ensteht
                     
@@ -555,18 +571,10 @@ elif options == 'Machine Learning':
                     # Aufteilung der Train und Test Datensätze
                     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size/100, train_size=train_size/100, random_state=42)
 
-                    if X_train.size == 0:
-                        st_lottie(no_X_variable_lottie)
-                        st.warning('X Variable is empty!')
-                        st.stop()
-                    elif y_train.size == 0:
-                        st.warning('y_train is empty!')
-                        st.stop()
-
                     # Initalisierung des Models
                     lm = LinearRegression(fit_intercept=True)
                     lm.fit(X_train, y_train)
-
+                    
                     # Evaluierung
                     # R2 oder auch Score
 
@@ -584,8 +592,6 @@ elif options == 'Machine Learning':
                     # Root Mean Square error
                     y_pred_train = lm.predict(X_train)
                     y_pred_test = lm.predict(X_test)
-                    
-                    
 
                     RMSE_train = sqrt(mean_squared_error(y_train, y_pred_train))
                     RMSE_test = sqrt(mean_squared_error(y_test, y_pred_test))
@@ -615,9 +621,6 @@ elif options == 'Machine Learning':
                     with RMSE_test_col:
                         st.metric(label = 'MAE of the Test Data', value = round(MAE_test,3))
 
-
-
-                    
                     # Coefficient
                     coefficiensts = lm.coef_
                     coefficients = pd.DataFrame(lm.coef_.reshape(-1, 1), columns=['Coefficient'], index=X.columns)
@@ -740,21 +743,14 @@ elif options == 'Machine Learning':
                         st.stop()
                     st.markdown(f'Your predicted value for :blue[{Target_variable}] is: **{y_pred_.round(3)}**')
 
-                
-
-
-                
-
-
 ###########################################################################################################################
 ######################################## Wenn kein date drinne ist #######################################################
 ##########################################################################################################################
         else:
             with Groupby_tab:
-                updated_data_type = uploaded_file
                 st.title('Interactive Groupbys with date')
 
-                if 'date' not in updated_data_type.columns:
+                if 'date' not in uploaded_file.columns:
                     st.write('You have no date column')
                     st_lottie(no_date_col, 
                               quality='low', 
@@ -762,35 +758,35 @@ elif options == 'Machine Learning':
 
             with remove_columns_tab:
                 # Dropdown-Box mit Spaltennamen erstellen
-                columns_to_drop = st.multiselect("Select columns to drop", updated_data_type.columns)
+                columns_to_drop = st.multiselect("Select columns to drop", uploaded_file.columns)
 
                 # Ausgewählte Spalten aus dem DataFrame entfernen
-                df_dtype_and_groupby_and_dropped = updated_data_type.drop(columns=columns_to_drop)
+                uploaded_file = uploaded_file.drop(columns=columns_to_drop)
 
                 only_numeric_columns = st.button(label=('Only numeric values'))
 
                 if only_numeric_columns:
                     # Nur numerische Spalten beibehalten und 'date' falls vorhanden
-                    numeric_cols = df_dtype_and_groupby_and_dropped.select_dtypes(include=[np.number]).columns.tolist()
+                    numeric_cols = uploaded_file.select_dtypes(include=[np.number]).columns.tolist()
 
-                    if 'date' in df_dtype_and_groupby_and_dropped.columns:
+                    if 'date' in uploaded_file.columns:
                         numeric_cols.append('date')
-                    df_dropped = df_dtype_and_groupby_and_dropped[numeric_cols]
-                    st.dataframe(df_dropped.head(20), use_container_width=True)
+                    uploaded_file = uploaded_file[numeric_cols]
+                    st.dataframe(uploaded_file.head(20), use_container_width=True)
                 else:
-                    st.dataframe(df_dtype_and_groupby_and_dropped.head(20), use_container_width=True)
+                    st.dataframe(uploaded_file.head(20), use_container_width=True)
 
                 reset_selection = st.button('Reset Selection')
 
                 if reset_selection:
-                    df_dtype_and_groupby_and_dropped = updated_data_type.copy()
-                    st.dataframe(df_dtype_and_groupby_and_dropped)
+                    uploaded_file = uploaded_file.copy()
+                    st.dataframe(uploaded_file)
                     st.success('Selection reset.')
 
 
             with Visualization:
 
-                if df_dtype_and_groupby_and_dropped is not None:
+                if uploaded_file is not None:
         
                     options_of_charts = st.multiselect(
                         'What Graphs do you want?', ('Barchart', 
@@ -804,12 +800,12 @@ elif options == 'Machine Learning':
                             st.write('You can freely choose your :blue[Histogramm]')
                             col1_col ,col2_bins = st.columns(2)
                             with col1_col:
-                                x_axis_val_hist = st.selectbox('Select X-Axis Value', options=df_dtype_and_groupby_and_dropped.columns,
+                                x_axis_val_hist = st.selectbox('Select X-Axis Value', options=uploaded_file.columns,
                                                             key='x_axis_hist_multiselect')
                             with col2_bins:
                                 bin_size = st.slider('Bin Size', min_value=1, max_value=30, step=1, value=1, format='%d')
                             color = st.color_picker('Pick A Color')
-                            hist_plot_1 = px.histogram(df_dtype_and_groupby_and_dropped, 
+                            hist_plot_1 = px.histogram(uploaded_file, 
                                                        x=x_axis_val_hist, 
                                                        nbins=bin_size,
                                                        color_discrete_sequence=[color])
@@ -830,10 +826,10 @@ elif options == 'Machine Learning':
                             st.write('You can freely choose your :blue[Scatter plot]')
                             x_axis_val_col_, y_axis_val_col_ = st.columns(2)
                             with x_axis_val_col_:
-                                x_axis_val = st.selectbox('Select X-Axis Value', options=df_dtype_and_groupby_and_dropped.columns, key='x_axis_selectbox')
+                                x_axis_val = st.selectbox('Select X-Axis Value', options=uploaded_file.columns, key='x_axis_selectbox')
                             with y_axis_val_col_:
-                                y_axis_val = st.selectbox('Select Y-Axis Value', options=df_dtype_and_groupby_and_dropped.columns, key='y_axis_selectbox')
-                            scatter_plot_1 = px.scatter(df_dtype_and_groupby_and_dropped, x=x_axis_val,y=y_axis_val)
+                                y_axis_val = st.selectbox('Select Y-Axis Value', options=uploaded_file.columns, key='y_axis_selectbox')
+                            scatter_plot_1 = px.scatter(uploaded_file, x=x_axis_val,y=y_axis_val)
 
                             st.plotly_chart(scatter_plot_1,use_container_width=True)
                             # # Erstellen des Histogramms mit Plotly
@@ -860,13 +856,13 @@ elif options == 'Machine Learning':
                             col3,col4 = st.columns(2)
                             
                             with col3:
-                                x_axis_val_line = st.selectbox('Select X-Axis Value', options=df_dtype_and_groupby_and_dropped.columns,
+                                x_axis_val_line = st.selectbox('Select X-Axis Value', options=uploaded_file.columns,
                                                             key='x_axis_line_multiselect')
                             with col4:
-                                y_axis_vals_line = st.multiselect('Select :blue[Y-Axis Values]', options=df_dtype_and_groupby_and_dropped.columns,
+                                y_axis_vals_line = st.multiselect('Select :blue[Y-Axis Values]', options=uploaded_file.columns,
                                                                 key='y_axis_line_multiselect')
 
-                            line_plot_1 = px.line(df_dtype_and_groupby_and_dropped, x=x_axis_val_line, y=y_axis_vals_line)
+                            line_plot_1 = px.line(uploaded_file, x=x_axis_val_line, y=y_axis_vals_line)
                             st.plotly_chart(line_plot_1)
                             # fig_line = go.Figure(data=line_plot_1)
                             # # Umwandeln des Histogramm-Graphen in eine Bilddatei
@@ -883,12 +879,12 @@ elif options == 'Machine Learning':
                             st.write('You can freely choose your :blue[Barplot]')
                             bar_X_col,bar_Y_col = st.columns(2)
                             with bar_X_col:
-                                x_axis_val_bar = st.selectbox('Select X-Axis Value', options=df_dtype_and_groupby_and_dropped.columns,
+                                x_axis_val_bar = st.selectbox('Select X-Axis Value', options=uploaded_file.columns,
                                                         key='x_axis_bar_multiselect')
                             with bar_Y_col:
-                                y_axis_val_bar = st.selectbox('Select Y-Axis Value', options=df_dtype_and_groupby_and_dropped.columns,
+                                y_axis_val_bar = st.selectbox('Select Y-Axis Value', options=uploaded_file.columns,
                                                         key='Y_axis_bar_multiselect')
-                            bar_plot_1 = px.bar(df_dtype_and_groupby_and_dropped, x=x_axis_val_bar, y=y_axis_val_bar)
+                            bar_plot_1 = px.bar(uploaded_file, x=x_axis_val_bar, y=y_axis_val_bar)
                             st.plotly_chart(bar_plot_1)
 
                             # fig_bar = go.Figure(data=bar_plot_1)
@@ -906,9 +902,9 @@ elif options == 'Machine Learning':
 
                         elif chart_type == 'Boxplot':
                             st.write('You can freely choose your :blue[Boxplot]')
-                            y_axis_val_bar = st.selectbox('Select Y-Axis Value', options=df_dtype_and_groupby_and_dropped.columns,
+                            y_axis_val_bar = st.selectbox('Select Y-Axis Value', options=uploaded_file.columns,
                                                         key='Y_axis_box_multiselect')
-                            box_plot_1 = px.box(df_dtype_and_groupby_and_dropped,y=y_axis_val_bar)
+                            box_plot_1 = px.box(uploaded_file,y=y_axis_val_bar)
                             st.plotly_chart(box_plot_1)
 
 
@@ -922,8 +918,6 @@ elif options == 'Machine Learning':
                             #     img_bytes_line = f.read()
                             #     st.download_button(label='Download Boxplot', data=img_bytes_boxplot, file_name='Barplot.png')
                             st.divider()
-
-                        
                            
                 else:
                     st.write('Please upload a file to continue')
@@ -943,7 +937,7 @@ elif options == 'Machine Learning':
                                 target, and avoid problems with multicollinearity.""", icon="ℹ️")
                     
                     # Korrelationsmatrix
-                    corr_matrix = df_dtype_and_groupby_and_dropped.select_dtypes(include=[np.number]).corr()
+                    corr_matrix = uploaded_file.select_dtypes(include=[np.number]).corr()
 
 
                     # Erstellung der Heatmap mit Plotly
@@ -986,14 +980,28 @@ elif options == 'Machine Learning':
                 
                 #Ende der Correlations Matrix
               
-
                 MachineLearning_sklearn = st.expander('Machine learning evaluation')
                 with MachineLearning_sklearn:
-                    # Hier kann der Nutzer Dynamisch die Unabhängige, sowie die abhängigen erklären
+                    # Hier kann der Nutzer dynamisch die unabhängigen und abhängigen Variablen auswählen
                     Target_variable_col, X_variables_col = st.columns(2)
-                    Target_variable = Target_variable_col.selectbox('Which is your Target Variable (Y)', options=df_dtype_and_groupby_and_dropped.columns, key='LR Sklearn Target Variable')
-                    X_variables = X_variables_col.multiselect('Which is your Variables (X)', options=df_dtype_and_groupby_and_dropped.columns, key='LR Sklearn X Variables')
+                    Target_variable = Target_variable_col.selectbox('Which is your Target Variable (Y)', options=uploaded_file.columns, key='LR Sklearn Target Variable')
+                    X_variables = X_variables_col.multiselect('Which is your Variables (X)', options=uploaded_file.columns, key='LR Sklearn X Variables')
+                    if any(uploaded_file[x].dtype == object for x in Target_variable):
+                        st.warning('Ups, wrong data type for X variables!')
+                        st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
+                        st.dataframe(uploaded_file.dtypes,use_container_width=True)
+                        st.stop()
+                    if any(uploaded_file[x].dtype == object for x in X_variables):
+                        st.warning('Ups, wrong data type for X variables!')
+                        st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
+                        st.dataframe(uploaded_file.dtypes,use_container_width=True)
+                        st.stop()
                     
+                    elif len(X_variables) == 0 :
+                        st_lottie(no_X_variable_lottie)
+                        st.warning('X Variable is empty!')
+                        st.stop()
+
                     # Mit dem Slider kann der Nutzer selber aussuchen wie viel Prozentual er als Test und Train definiert
                     # Default Parameters so das keine Fehler meldung ensteht
                     
@@ -1022,29 +1030,21 @@ elif options == 'Machine Learning':
                     # elif train_size + test_size > len(df_dtype_and_groupby_and_dropped):
                     #     st.warning('Train size and Test size exceed the number of samples in the dataset.')
                     #     st.stop()
-                    elif train_size == len(df_dtype_and_groupby_and_dropped):
+                    elif train_size == len(uploaded_file):
                         st.warning('Train size cannot be equal to the number of samples in the dataset.')
                         st.stop()
                     
                     # Unanhängige Varible sowie Abhängige 
-                    X = df_dtype_and_groupby_and_dropped[X_variables]
-                    y = df_dtype_and_groupby_and_dropped[Target_variable]
+                    X = uploaded_file[X_variables]
+                    y = uploaded_file[Target_variable]
                     
                     # Aufteilung der Train und Test Datensätze
                     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size/100, train_size=train_size/100, random_state=42)
 
-                    if X_train.size == 0:
-                        st_lottie(no_X_variable_lottie)
-                        st.warning('X Variable is empty!')
-                        st.stop()
-                    elif y_train.size == 0:
-                        st.warning('y_train is empty!')
-                        st.stop()
-
                     # Initalisierung des Models
                     lm = LinearRegression(fit_intercept=True)
                     lm.fit(X_train, y_train)
-
+                    
                     # Evaluierung
                     # R2 oder auch Score
 
@@ -1062,8 +1062,6 @@ elif options == 'Machine Learning':
                     # Root Mean Square error
                     y_pred_train = lm.predict(X_train)
                     y_pred_test = lm.predict(X_test)
-                    
-                    
 
                     RMSE_train = sqrt(mean_squared_error(y_train, y_pred_train))
                     RMSE_test = sqrt(mean_squared_error(y_test, y_pred_test))
@@ -1093,9 +1091,6 @@ elif options == 'Machine Learning':
                     with RMSE_test_col:
                         st.metric(label = 'MAE of the Test Data', value = round(MAE_test,3))
 
-
-
-                    
                     # Coefficient
                     coefficiensts = lm.coef_
                     coefficients = pd.DataFrame(lm.coef_.reshape(-1, 1), columns=['Coefficient'], index=X.columns)
