@@ -217,28 +217,28 @@ elif options == 'Machine Learning':
                     repalced_uploaded_file = uploaded_file.copy()
                     repalced_uploaded_file[numeric_columns] = repalced_uploaded_file[numeric_columns].fillna(Nan_values_replaced_file)
                     st.markdown(' ##### You have succesfully change the NaN values :blue[ with the Mean]')
-                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
+                    st.dataframe(repalced_uploaded_file.isna().sum(), use_container_width=True)
                     st.divider()
                 elif 'with Minimum value' in missing_values:
                     Nan_values_replaced_file = uploaded_file[numeric_columns].min()
                     repalced_uploaded_file = uploaded_file.copy()
                     repalced_uploaded_file[numeric_columns] = repalced_uploaded_file[numeric_columns].fillna(Nan_values_replaced_file)
                     st.write('##### You have succesfully change the NaN values :blue[with the minimum values]')
-                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
+                    st.dataframe(repalced_uploaded_file.isna().sum(), use_container_width=True)
                     st.divider()
                 elif 'with Maximum value' in missing_values:
                     Nan_values_replaced_file = uploaded_file[numeric_columns].max()
                     repalced_uploaded_file = uploaded_file.copy()
                     repalced_uploaded_file[numeric_columns] = repalced_uploaded_file[numeric_columns].fillna(Nan_values_replaced_file)
                     st.write('##### You habe succesfully change the NaN values :blue[with the maximums values]')
-                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
+                    st.dataframe(repalced_uploaded_file.isna().sum(), use_container_width=True)
                     st.divider()
                 elif 'with Zero' in missing_values:
                     replaced_uploaded_file = uploaded_file.copy()
                     numeric_columns = replaced_uploaded_file.select_dtypes(include=[np.number]).columns.tolist()
                     replaced_uploaded_file[numeric_columns] = replaced_uploaded_file[numeric_columns].fillna(0)
                     st.write('##### You have successfully changed :blue[the NaN values to 0.]')
-                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
+                    st.dataframe(replaced_uploaded_file.isna().sum(), use_container_width=True)
                     st.divider()
 
   
@@ -257,58 +257,59 @@ elif options == 'Machine Learning':
         if 'date' in new_data_types:
 
             with Groupby_tab:
+                updated_data_type = uploaded_file
                 st.title('Interactive Groupbys with date')
-                if 'date' not in uploaded_file.columns:
+                if 'date' not in updated_data_type.columns:
                     st.write('You have no date column')
                     st_lottie(no_date_col, 
                               quality='low', 
                               loop=False)
 
-                elif 'date' not in uploaded_file.columns:
+                elif 'date' not in updated_data_type.columns:
                     st.write('You have removed the date column')
                     st_lottie(removed_date_column, 
                               quality='low', 
                               loop=False)
 
-                elif uploaded_file is not None:
-                    uploaded_file['date'] = pd.to_datetime(uploaded_file['date'])
-                    uploaded_file.set_index('date', inplace=True)
+                elif updated_data_type is not None:
+                    updated_data_type['date'] = pd.to_datetime(updated_data_type['date'])
+                    updated_data_type.set_index('date', inplace=True)
                     options_groupby = st.selectbox('Select Groupby Method', options=('Day', 'Month', 'Quarter', 'Yearly'))
                     
                     # Aggregationen der date Spalte
                     if options_groupby == 'Day':
-                        uploaded_file = uploaded_file.groupby(pd.Grouper(freq='D')).sum().reset_index()
-                        st.dataframe(uploaded_file)
+                        df_dtype_and_groupby = updated_data_type.groupby(pd.Grouper(freq='D')).sum().reset_index()
+                        st.dataframe(df_dtype_and_groupby)
 
                     elif options_groupby == 'Month':
-                        uploaded_file = uploaded_file.groupby(pd.Grouper(freq='M')).sum().reset_index()
-                        st.dataframe(uploaded_file)
+                        df_dtype_and_groupby = updated_data_type.groupby(pd.Grouper(freq='M')).sum().reset_index()
+                        st.dataframe(df_dtype_and_groupby)
 
                     elif options_groupby == 'Quarter':
-                        uploaded_file = uploaded_file.groupby(pd.Grouper(freq='Q')).sum().reset_index()
-                        st.dataframe(uploaded_file)
+                        df_dtype_and_groupby = updated_data_type.groupby(pd.Grouper(freq='Q')).sum().reset_index()
+                        st.dataframe(df_dtype_and_groupby)
 
                     elif options_groupby == 'Yearly':
-                        uploaded_file = uploaded_file.groupby(pd.Grouper(freq='Y')).sum().reset_index()
-                        st.dataframe(uploaded_file)
+                        df_dtype_and_groupby = updated_data_type.groupby(pd.Grouper(freq='Y')).sum().reset_index()
+                        st.dataframe(df_dtype_and_groupby)
 
 
             
             with remove_columns_tab:
                 # Dropdown-Box mit Spaltennamen erstellen
-                columns_to_drop = st.multiselect("Select columns to drop", uploaded_file.columns)            
+                columns_to_drop = st.multiselect("Select columns to drop", df_dtype_and_groupby.columns)            
                 if 'date' in columns_to_drop:
                     columns_to_drop.remove('date')
-                uploaded_file = uploaded_file.drop(columns=columns_to_drop)
+                df_dtype_and_groupby_and_dropped = df_dtype_and_groupby.drop(columns=columns_to_drop)
 
-                st.dataframe(uploaded_file,use_container_width=True)
+                st.dataframe(df_dtype_and_groupby_and_dropped,use_container_width=True)
                
 
 
 
             with Visualization:
 
-                if uploaded_file is not None:
+                if df_dtype_and_groupby_and_dropped is not None:
                     options_of_charts = st.multiselect(
                         'What Graphs do you want?', ('Barchart', 
                                                     'Linechart', 
@@ -322,12 +323,12 @@ elif options == 'Machine Learning':
                             st.write('You can freely choose your :blue[Histogramm]')
                             col1_col ,col2_bins = st.columns(2)
                             with col1_col:
-                                x_axis_val_hist = st.selectbox('Select X-Axis Value', options=uploaded_file.columns,
+                                x_axis_val_hist = st.selectbox('Select X-Axis Value', options=df_dtype_and_groupby_and_dropped.columns,
                                                             key='x_axis_hist_multiselect')
                             with col2_bins:
                                 bin_size = st.slider('Bin Size', min_value=1, max_value=100, step=1, value=1, format='%d')
                             color = st.color_picker('Pick A Color')
-                            hist_plot_1 = px.histogram(uploaded_file, 
+                            hist_plot_1 = px.histogram(df_dtype_and_groupby_and_dropped, 
                                                        x=x_axis_val_hist, 
                                                        nbins=bin_size,
                                                        color_discrete_sequence=[color])
@@ -349,10 +350,10 @@ elif options == 'Machine Learning':
                             st.write('You can freely choose your :blue[Scatter plot]')
                             x_axis_val_col_, y_axis_val_col_ = st.columns(2)
                             with x_axis_val_col_:
-                                x_axis_val = st.selectbox('Select X-Axis Value', options=uploaded_file.columns, key='x_axis_selectbox')
+                                x_axis_val = st.selectbox('Select X-Axis Value', options=df_dtype_and_groupby_and_dropped.columns, key='x_axis_selectbox')
                             with y_axis_val_col_:
-                                y_axis_val = st.selectbox('Select Y-Axis Value', options=uploaded_file.columns, key='y_axis_selectbox')
-                            scatter_plot_1 = px.scatter(uploaded_file, x=x_axis_val,y=y_axis_val)
+                                y_axis_val = st.selectbox('Select Y-Axis Value', options=df_dtype_and_groupby_and_dropped.columns, key='y_axis_selectbox')
+                            scatter_plot_1 = px.scatter(df_dtype_and_groupby_and_dropped, x=x_axis_val,y=y_axis_val)
 
                             st.plotly_chart(scatter_plot_1,use_container_width=True)
                             # Erstellen des Histogramms mit Plotly
@@ -371,23 +372,23 @@ elif options == 'Machine Learning':
                         elif chart_type == 'Linechart':
                             col1, col2 = st.columns(2)
                             with col1:
-                                start_date = st.date_input('Start date:', value=uploaded_file["date"].min())
+                                start_date = st.date_input('Start date:', value=df_dtype_and_groupby_and_dropped["date"].min())
                                 start_date = pd.to_datetime(start_date)
 
                             with col2:
-                                end_date = st.date_input('End date:', value=uploaded_file["date"].max())
+                                end_date = st.date_input('End date:', value=df_dtype_and_groupby_and_dropped["date"].max())
                                 end_date = pd.to_datetime(end_date)
 
                             col3, col4 = st.columns(2)
                             st.markdown('You can freely choose your :blue[Linechart] :chart_with_upwards_trend:')
                             with col3:
-                                x_axis_val_line = st.selectbox('Select :orange[X-Axis Value]', options=uploaded_file.columns, key='x_axis_line_multiselect')
+                                x_axis_val_line = st.selectbox('Select :orange[X-Axis Value]', options=df_dtype_and_groupby_and_dropped.columns, key='x_axis_line_multiselect')
                             with col4:
-                                y_axis_vals_line = st.multiselect('Select :blue[Y-Axis Values]', options=uploaded_file.columns, key='y_axis_line_multiselect')
+                                y_axis_vals_line = st.multiselect('Select :blue[Y-Axis Values]', options=df_dtype_and_groupby_and_dropped.columns, key='y_axis_line_multiselect')
 
                             # Filtern des Dataframes auf die ausgewählte Zeitrange
-                            df_filtered = uploaded_file.loc[(uploaded_file["date"] >= start_date) & 
-                                                                            (uploaded_file["date"] <= end_date)]
+                            df_filtered = df_dtype_and_groupby_and_dropped.loc[(df_dtype_and_groupby_and_dropped["date"] >= start_date) & 
+                                                                            (df_dtype_and_groupby_and_dropped["date"] <= end_date)]
 
                             # Erstellen des Lineplots mit der eingeschränkten Zeitachse
                             line_plot = px.line(df_filtered, x=x_axis_val_line, y=y_axis_vals_line)
@@ -406,12 +407,12 @@ elif options == 'Machine Learning':
                             st.write('You can freely choose your :blue[Barplot]')
                             bar_X_col,bar_Y_col = st.columns(2)
                             with bar_X_col:
-                                x_axis_val_bar = st.selectbox('Select X-Axis Value', options=uploaded_file.columns,
+                                x_axis_val_bar = st.selectbox('Select X-Axis Value', options=df_dtype_and_groupby_and_dropped.columns,
                                                         key='x_axis_bar_multiselect')
                             with bar_Y_col:
-                                y_axis_val_bar = st.selectbox('Select Y-Axis Value', options=uploaded_file.columns,
+                                y_axis_val_bar = st.selectbox('Select Y-Axis Value', options=df_dtype_and_groupby_and_dropped.columns,
                                                         key='Y_axis_bar_multiselect')
-                            bar_plot_1 = px.bar(uploaded_file, x=x_axis_val_bar, y=y_axis_val_bar)
+                            bar_plot_1 = px.bar(df_dtype_and_groupby_and_dropped, x=x_axis_val_bar, y=y_axis_val_bar)
                             st.plotly_chart(bar_plot_1)
 
                             fig_bar = go.Figure(data=bar_plot_1)
@@ -429,9 +430,9 @@ elif options == 'Machine Learning':
 
                         elif chart_type == 'Boxplot':
                             st.write('You can freely choose your :blue[Boxplot] plot')
-                            y_axis_val_bar = st.selectbox('Select Y-Axis Value', options=uploaded_file.columns,
+                            y_axis_val_bar = st.selectbox('Select Y-Axis Value', options=df_dtype_and_groupby_and_dropped.columns,
                                                         key='Y_axis_box_multiselect')
-                            box_plot_1 = px.box(uploaded_file,y=y_axis_val_bar)
+                            box_plot_1 = px.box(df_dtype_and_groupby_and_dropped,y=y_axis_val_bar)
                             st.plotly_chart(box_plot_1)
                             fig_boxplot = go.Figure(data=box_plot_1)
                             # Umwandeln des Histogramm-Graphen in eine Bilddatei
@@ -452,7 +453,7 @@ elif options == 'Machine Learning':
             with machine_learning:
                 
                 #Start  von Machine Learning 
-                st.dataframe(uploaded_file)
+                st.dataframe(df_dtype_and_groupby_and_dropped.head())
 
                 # Correlation Matrix erster Expander
                 Correlation_Matrix = st.expander('Correlation Matrix')
@@ -465,7 +466,7 @@ elif options == 'Machine Learning':
                                 target, and avoid problems with multicollinearity.""", icon="ℹ️")
                     
                     # Korrelationsmatrix
-                    corr_matrix = uploaded_file.select_dtypes(include=[np.number]).corr()
+                    corr_matrix = df_dtype_and_groupby_and_dropped.select_dtypes(include=[np.number]).corr()
 
 
                     # Erstellung der Heatmap mit Plotly
@@ -513,8 +514,8 @@ elif options == 'Machine Learning':
                 with MachineLearning_sklearn:
                     # Hier kann der Nutzer Dynamisch die Unabhängige, sowie die abhängigen erklären
                     Target_variable_col, X_variables_col = st.columns(2)
-                    Target_variable = Target_variable_col.selectbox('Which is your Target Variable (Y)', options=uploaded_file.columns, key='LR Sklearn Target Variable')
-                    X_variables = X_variables_col.multiselect('Which is your Variables (X)', options=uploaded_file.columns, key='LR Sklearn X Variables')
+                    Target_variable = Target_variable_col.selectbox('Which is your Target Variable (Y)', options=df_dtype_and_groupby_and_dropped.columns, key='LR Sklearn Target Variable')
+                    X_variables = X_variables_col.multiselect('Which is your Variables (X)', options=df_dtype_and_groupby_and_dropped.columns, key='LR Sklearn X Variables')
                     
                     # Mit dem Slider kann der Nutzer selber aussuchen wie viel Prozentual er als Test und Train definiert
                     # Default Parameters so das keine Fehler meldung ensteht
@@ -544,13 +545,13 @@ elif options == 'Machine Learning':
                     # elif train_size + test_size > len(df_dtype_and_groupby_and_dropped):
                     #     st.warning('Train size and Test size exceed the number of samples in the dataset.')
                     #     st.stop()
-                    elif train_size == len(uploaded_file):
+                    elif train_size == len(df_dtype_and_groupby_and_dropped):
                         st.warning('Train size cannot be equal to the number of samples in the dataset.')
                         st.stop()
                     
                     # Unanhängige Varible sowie Abhängige 
-                    X = uploaded_file[X_variables]
-                    y = uploaded_file[Target_variable]
+                    X = df_dtype_and_groupby_and_dropped[X_variables]
+                    y = df_dtype_and_groupby_and_dropped[Target_variable]
                     
                     # Aufteilung der Train und Test Datensätze
                     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size/100, train_size=train_size/100, random_state=42)
@@ -931,7 +932,8 @@ elif options == 'Machine Learning':
             with machine_learning:
                 
                 #Start  von Machine Learning 
-                st.dataframe(uploaded_file,use_container_width= True)
+                st.dataframe(df_dtype_and_groupby_and_dropped.head())
+
                 # Correlation Matrix erster Expander
                 Correlation_Matrix = st.expander('Correlation Matrix')
                 
