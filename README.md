@@ -1,1 +1,1 @@
-# Streamlit_ML_app
+# Streamlit-Regression-App
