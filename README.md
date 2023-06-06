@@ -6,4 +6,4 @@ The website provides an interactive user interface that allows you to experience
 Please feel free to explore the different features and functionalities of our website and don't hesitate to provide any feedback or suggestions. I hope you find this platform helpful in your machine learning journey!
 
 
-![Linear Regression](https://cdn.lynda.com/course/645049/645049-636628390565991366-16x9.jpg)
+![Linear Regression](https://cdn.lynda.com/course/2848256/2848256-1608664963973-16x9.jpg)
