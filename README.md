@@ -7,6 +7,7 @@ Please feel free to explore the different features and functionalities of our we
 
 <img src="https://streamlit.io/images/brand/streamlit-logo-primary-colormark-darktext.png" alt="Linear Regression" width="450" height="450">
 
+![Linear Regression](https://streamlit.io/images/brand/streamlit-logo-primary-colormark-darktext.png)
 
 
 ![Linear Regression](https://cdn.lynda.com/course/2848256/2848256-1608664963973-16x9.jpg)
