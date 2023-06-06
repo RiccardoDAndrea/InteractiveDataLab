@@ -5,5 +5,6 @@ The website provides an interactive user interface that allows you to experience
 
 Please feel free to explore the different features and functionalities of our website and don't hesitate to provide any feedback or suggestions. I hope you find this platform helpful in your machine learning journey!
 
+![Linear Regression](https://streamlit.io/images/brand/streamlit-logo-primary-colormark-darktext.png)
 
 ![Linear Regression](https://cdn.lynda.com/course/2848256/2848256-1608664963973-16x9.jpg)
