@@ -5,7 +5,7 @@ The website provides an interactive user interface that allows you to experience
 
 Please feel free to explore the different features and functionalities of our website and don't hesitate to provide any feedback or suggestions. I hope you find this platform helpful in your machine learning journey!
 
-<img src="https://streamlit.io/images/brand/streamlit-logo-primary-colormark-darktext.png" alt="Linear Regression" width="400" height="200">
+<img src="https://streamlit.io/images/brand/streamlit-logo-primary-colormark-darktext.png" alt="Linear Regression" width="500" height="450">
 
 
 
