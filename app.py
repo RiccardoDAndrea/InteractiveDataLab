@@ -1,4 +1,9 @@
-#### Wir sind nun in der neuen Branch git branch groupby_feature
+
+
+#### Ziel dieser Branch ist es in Groupby funktion die Kunden aggregation auf einer Spalte zu miniemeren damit wir string nicht 
+#### groupbyen da wir sonst die Metriken verfälschen
+
+
 import streamlit as st 
 import pandas as pd 
 import plotly.express as px
