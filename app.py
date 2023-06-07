@@ -2,8 +2,8 @@
 
 #### Ziel dieser Branch ist es in Groupby funktion die Kunden aggregation auf einer Spalte zu miniemeren damit wir string nicht 
 #### groupbyen da wir sonst die Metriken verfälschen
-
-
+#pip install scikit-learn
+#wieder ein test ob alles geklappt hat
 import streamlit as st 
 import pandas as pd 
 import plotly.express as px
