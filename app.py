@@ -1,4 +1,11 @@
-#### Wir sind nun in der neuen Branch git branch groupby_feature
+""" 
+
+Ziel dieser Branch ist es in Groupby funktion die Kunden aggregation auf einer Spalte zu miniemeren damit wir string nicht 
+groupbyen da wir sonst die Metriken verfälschen
+
+"""
+#pip install scikit-learn
+
 import streamlit as st 
 import pandas as pd 
 import plotly.express as px
@@ -37,6 +44,7 @@ question_with_NaN_values = load_lottieurl('https://assets7.lottiefiles.com/packa
 no_X_variable_lottie = load_lottieurl('https://assets10.lottiefiles.com/packages/lf20_ydo1amjm.json')
 value_is_zero_in_train_size = load_lottieurl('https://assets7.lottiefiles.com/packages/lf20_usmfx6bp.json')
 wrong_data_type_ML = load_lottieurl('https://assets5.lottiefiles.com/packages/lf20_2frpohrv.json')
+
 ################################################################################################################
 ################################################################################################################
 
@@ -252,8 +260,9 @@ elif options == 'Machine Learning':
         
  ###################################################################################################################
  ####################### wenn date drinne ist ######################################################################
- ###################################################################################################################               
-        
+ ###################################################################################################################  
+              
+########################################################################################################################################################################     
         if 'date' in new_data_types:
 
             with Groupby_tab:
@@ -269,30 +278,38 @@ elif options == 'Machine Learning':
                     st_lottie(removed_date_column, 
                               quality='low', 
                               loop=False)
-
+                
                 elif uploaded_file is not None:
+                    
+                    st.write('One which columns do you want to filter:') 
                     uploaded_file['date'] = pd.to_datetime(uploaded_file['date'])
                     uploaded_file.set_index('date', inplace=True)
-                    options_groupby = st.selectbox('Select Groupby Method', options=('Day', 'Month', 'Quarter', 'Yearly'))
-                    
+                    groupby_format, filter_data = st.columns(2)
+                    with groupby_format:
+                        options_groupby = st.selectbox('Select Groupby Method', options=('Day', 'Month', 'Quarter', 'Yearly'))
+                    with filter_data:
+                        st.multiselect('Choose a colum to filter', options=uploaded_file.columns)
+                      
                     # Aggregationen der date Spalte
+                    numeric_columns = uploaded_file.select_dtypes(include=['int', 'float']).columns
+                    numeric_columns = uploaded_file.select_dtypes(include=['int', 'float']).columns
+
                     if options_groupby == 'Day':
-                        uploaded_file = uploaded_file.groupby(pd.Grouper(freq='D')).sum().reset_index()
-                        st.dataframe(uploaded_file)
+                        grouped_file = uploaded_file.groupby(pd.Grouper(freq='D'))[numeric_columns].sum().reset_index()
+                        uploaded_file[numeric_columns] = grouped_file[numeric_columns]
 
                     elif options_groupby == 'Month':
                         uploaded_file = uploaded_file.groupby(pd.Grouper(freq='M')).sum().reset_index()
-                        st.dataframe(uploaded_file)
 
                     elif options_groupby == 'Quarter':
                         uploaded_file = uploaded_file.groupby(pd.Grouper(freq='Q')).sum().reset_index()
-                        st.dataframe(uploaded_file)
 
                     elif options_groupby == 'Yearly':
                         uploaded_file = uploaded_file.groupby(pd.Grouper(freq='Y')).sum().reset_index()
-                        st.dataframe(uploaded_file)
+                    
+                    st.dataframe(uploaded_file)
 
-
+########################################################################################################################################################################
             
             with remove_columns_tab:
                 # Dropdown-Box mit Spaltennamen erstellen
@@ -812,15 +829,15 @@ elif options == 'Machine Learning':
                                                        color_discrete_sequence=[color])
                             st.plotly_chart(hist_plot_1)
                             # Erstellen des Histogramms mit Plotly
-                            # fig = go.Figure(data=hist_plot_1)
-                            # # Umwandeln des Histogramm-Graphen in eine Bilddatei
-                            # img_bytes = pio.to_image(fig, format='png', width=1000, height=600, scale=2)
-                            # # Herunterladen der Bilddatei als Button
-                            # with open('histo.png', 'wb') as f:
-                            #     f.write(img_bytes)
-                            # with open('histo.png', 'rb') as f:
-                            #     image_bytes = f.read()
-                            #     st.download_button(label='Download Histogramm', data=image_bytes, file_name='histo.png')
+                            fig = go.Figure(data=hist_plot_1)
+                            # Umwandeln des Histogramm-Graphen in eine Bilddatei
+                            img_bytes = pio.to_image(fig, format='png', width=1000, height=600, scale=2)
+                            # Herunterladen der Bilddatei als Button
+                            with open('histo.png', 'wb') as f:
+                                f.write(img_bytes)
+                            with open('histo.png', 'rb') as f:
+                                image_bytes = f.read()
+                                st.download_button(label='Download Histogramm', data=image_bytes, file_name='histo.png')
                             st.divider()
 
                         elif chart_type == 'Scatterchart':
@@ -833,17 +850,17 @@ elif options == 'Machine Learning':
                             scatter_plot_1 = px.scatter(uploaded_file, x=x_axis_val,y=y_axis_val)
 
                             st.plotly_chart(scatter_plot_1,use_container_width=True)
-                            # # Erstellen des Histogramms mit Plotly
-                            # fig_scatter = go.Figure(data=scatter_plot_1)
-                            # # Umwandeln des Histogramm-Graphen in eine Bilddatei
-                            # plt.tight_layout()
-                            # img_bytes_scatter = pio.to_image(fig_scatter, format='png', width=1000, height=600, scale=2)
-                            # # Herunterladen der Bilddatei als Button
-                            # with open('Scatter.png', 'wb') as f:
-                            #     f.write(img_bytes_scatter)
-                            # with open('Scatter.png', 'rb') as f:
-                            #     image_bytes_scatter = f.read()
-                            #     st.download_button(label='Download Scatter', data=image_bytes_scatter, file_name='Scatter.png')
+                            # Erstellen des Histogramms mit Plotly
+                            fig_scatter = go.Figure(data=scatter_plot_1)
+                            # Umwandeln des Histogramm-Graphen in eine Bilddatei
+                            plt.tight_layout()
+                            img_bytes_scatter = pio.to_image(fig_scatter, format='png', width=1000, height=600, scale=2)
+                            # Herunterladen der Bilddatei als Button
+                            with open('Scatter.png', 'wb') as f:
+                                f.write(img_bytes_scatter)
+                            with open('Scatter.png', 'rb') as f:
+                                image_bytes_scatter = f.read()
+                                st.download_button(label='Download Scatter', data=image_bytes_scatter, file_name='Scatter.png')
                             st.divider()
 
                         elif chart_type == 'Linechart':
@@ -865,15 +882,15 @@ elif options == 'Machine Learning':
 
                             line_plot_1 = px.line(uploaded_file, x=x_axis_val_line, y=y_axis_vals_line)
                             st.plotly_chart(line_plot_1)
-                            # fig_line = go.Figure(data=line_plot_1)
-                            # # Umwandeln des Histogramm-Graphen in eine Bilddatei
-                            # img_bytes_line = pio.to_image(fig_line, format='png', width=1000, height=600, scale=2)
-                            # # Herunterladen der Bilddatei als Button
-                            # with open('Lineplot.png', 'wb') as f:
-                            #     f.write(img_bytes_line)
-                            # with open('Lineplot.png', 'rb') as f:
-                            #     img_bytes_line = f.read()
-                            #     st.download_button(label='Download Lineplot', data=img_bytes_line, file_name='histo.png')
+                            fig_line = go.Figure(data=line_plot_1)
+                            # Umwandeln des Histogramm-Graphen in eine Bilddatei
+                            img_bytes_line = pio.to_image(fig_line, format='png', width=1000, height=600, scale=2)
+                            # Herunterladen der Bilddatei als Button
+                            with open('Lineplot.png', 'wb') as f:
+                                f.write(img_bytes_line)
+                            with open('Lineplot.png', 'rb') as f:
+                                img_bytes_line = f.read()
+                                st.download_button(label='Download Lineplot', data=img_bytes_line, file_name='histo.png')
                             st.divider()
 
                         elif chart_type == 'Barchart':
@@ -888,17 +905,17 @@ elif options == 'Machine Learning':
                             bar_plot_1 = px.bar(uploaded_file, x=x_axis_val_bar, y=y_axis_val_bar)
                             st.plotly_chart(bar_plot_1)
 
-                            # fig_bar = go.Figure(data=bar_plot_1)
+                            fig_bar = go.Figure(data=bar_plot_1)
                             
-                            # # Umwandeln des Histogramm-Graphen in eine Bilddatei
-                            # img_bytes_bar = pio.to_image(fig_bar, format='png', width=1000, height=600, scale=2)
+                            # Umwandeln des Histogramm-Graphen in eine Bilddatei
+                            img_bytes_bar = pio.to_image(fig_bar, format='png', width=1000, height=600, scale=2)
                             
-                            # # Herunterladen der Bilddatei als Button
-                            # with open('Barplot.png', 'wb') as f:
-                            #     f.write(img_bytes_bar)
-                            # with open('Barplot.png', 'rb') as f:
-                            #     img_bytes_line = f.read()
-                            #     st.download_button(label='Download Barplot', data=img_bytes_bar, file_name='Barplot.png')
+                            # Herunterladen der Bilddatei als Button
+                            with open('Barplot.png', 'wb') as f:
+                                f.write(img_bytes_bar)
+                            with open('Barplot.png', 'rb') as f:
+                                img_bytes_line = f.read()
+                                st.download_button(label='Download Barplot', data=img_bytes_bar, file_name='Barplot.png')
                             st.divider()
 
                         elif chart_type == 'Boxplot':
@@ -909,15 +926,15 @@ elif options == 'Machine Learning':
                             st.plotly_chart(box_plot_1)
 
 
-                            # fig_boxplot = go.Figure(data=box_plot_1)
-                            # # Umwandeln des Histogramm-Graphen in eine Bilddatei
-                            # img_bytes_boxplot = pio.to_image(fig_boxplot, format='png', width=1000, height=600, scale=2)
-                            # # Herunterladen der Bilddatei als Button
-                            # with open('Boxplot.png', 'wb') as f:
-                            #     f.write(img_bytes_boxplot)
-                            # with open('Boxplot.png', 'rb') as f:
-                            #     img_bytes_line = f.read()
-                            #     st.download_button(label='Download Boxplot', data=img_bytes_boxplot, file_name='Barplot.png')
+                            fig_boxplot = go.Figure(data=box_plot_1)
+                            # Umwandeln des Histogramm-Graphen in eine Bilddatei
+                            img_bytes_boxplot = pio.to_image(fig_boxplot, format='png', width=1000, height=600, scale=2)
+                            # Herunterladen der Bilddatei als Button
+                            with open('Boxplot.png', 'wb') as f:
+                                f.write(img_bytes_boxplot)
+                            with open('Boxplot.png', 'rb') as f:
+                                img_bytes_line = f.read()
+                                st.download_button(label='Download Boxplot', data=img_bytes_boxplot, file_name='Barplot.png')
                             st.divider()
                            
                 else:
@@ -987,18 +1004,18 @@ elif options == 'Machine Learning':
                     Target_variable_col, X_variables_col = st.columns(2)
                     Target_variable = Target_variable_col.selectbox('Which is your Target Variable (Y)', options=uploaded_file.columns, key='LR Sklearn Target Variable')
                     X_variables = X_variables_col.multiselect('Which is your Variables (X)', options=uploaded_file.columns, key='LR Sklearn X Variables')
-                    if any(uploaded_file[x].dtype == object for x in Target_variable):
-                        st.warning('Ups, wrong data type for X variables!')
-                        st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
-                        st.dataframe(uploaded_file.dtypes,use_container_width=True)
-                        st.stop()
-                    if any(uploaded_file[x].dtype == object for x in X_variables):
-                        st.warning('Ups, wrong data type for X variables!')
-                        st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
-                        st.dataframe(uploaded_file.dtypes,use_container_width=True)
-                        st.stop()
+                    # if any(uploaded_file[x].dtype == object for x in Target_variable):
+                    #     st.warning('Ups, wrong data type for X variables!')
+                    #     st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
+                    #     st.dataframe(uploaded_file.dtypes,use_container_width=True)
+                    #     st.stop()
+                    # if any(uploaded_file[x].dtype == object for x in X_variables):
+                    #     st.warning('Ups, wrong data type for X variables!')
+                    #     st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
+                    #     st.dataframe(uploaded_file.dtypes,use_container_width=True)
+                    #     st.stop()
                     
-                    elif len(X_variables) == 0 :
+                    if len(X_variables) == 0 :
                         st_lottie(no_X_variable_lottie)
                         st.warning('X Variable is empty!')
                         st.stop()
