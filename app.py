@@ -58,7 +58,7 @@ wrong_data_type_ML = load_lottieurl('https://assets5.lottiefiles.com/packages/lf
 
 ####################  H O M E P A G E   #######################################################
 st.title('Regression Analyses') 
-options = st.sidebar.radio(
+options_sidebar = st.sidebar.radio(
     'Select an option',
     ('Homepage',
     'Machine Learning',
@@ -83,7 +83,7 @@ uploaded_file = dataframe()
 
 ########################  H O M E P A G E ########################
 
-if options == 'Homepage':
+if options_sidebar == 'Homepage':
 
     st.write('# :blue[Welcome]')
 
@@ -93,8 +93,11 @@ if options == 'Homepage':
                 You will find in the navigation bar on the left side of your screen different 
                 navigation points where I will explain metrics, functions as understandable as possible.
                 So I suggest you just upload a .csv or a .txt file and let it start.""")
-    
-    st.divider()
+    # If the user choose the possibility Machine Learning
+    if options_sidebar == 'Machine Learning':
+        # User can seperator the dataframe with different possibilitys
+        st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))
+        st.divider()
 
     st_lottie( working_men,
                 quality='high',
@@ -103,9 +106,7 @@ if options == 'Homepage':
     
     st.divider()
     
-    
-    
-# Give the user a sort overview what a the different section in the homepage
+    # Give the user a sort overview what the different section in the homepage
     explination_homepage = option_menu("Main Menu", 
                                        ["Machine Learning",
                                         'Object detection'], 
@@ -115,6 +116,7 @@ if options == 'Homepage':
                                 default_index = 0)
     
     if 'Machine Learning' in explination_homepage:
+        # use of ccs because than we can center the tile otherwise it would be left orientited on the homepage
         st.markdown(f"<div style='text-align:center;'><h1>Machine Learning</h1></div>",
                     unsafe_allow_html=True)
         
@@ -130,7 +132,10 @@ if options == 'Homepage':
                     But be careful,if you identify yourself with a selfie,the facial recognition 
                     program might think you're a robot and lock you out - but hey,we're working 
                     on it!""")
+        
+    #### Explination of what is Objection Detection
     if 'Object detection' in explination_homepage:
+        # use of ccs because than we can center the tile otherwise it would be left orientited on the homepage
         st.markdown(f"<div style='text-align:center;'><h1>Objection Detection</h1></div>",
                     unsafe_allow_html=True)
         st_lottie(objection_detection_explanation, 
@@ -148,18 +153,15 @@ if options == 'Homepage':
 
 ##### S I D E B A R _ O P T I O N S ##################
 
-# If the user choose the possibility Machine Learning
-if options == 'Machine Learning':
-    # User can seperator the dataframe with different possibilitys
-    st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))
+
 
 
 
 ####################################################################################################
-############# Bereich Machine Learning  ############################################################
+#############  M A C H I N E - L E A R N I N G ####################################################
 ####################################################################################################
 
-elif options == 'Machine Learning':
+elif options_sidebar == 'Machine Learning':
 # Hier werden die Auswahl möglichkeiten gesetzt
     overview,change_data_type, handling_missing_values, Groupby_tab, remove_columns_tab, Visualization, machine_learning = st.tabs([  'Overview',
                                                                                                             'Change the data type',
@@ -168,6 +170,7 @@ elif options == 'Machine Learning':
                                                                                                             'Remove columns',
                                                                                                             "Viszulisation",
                                                                                                             'Machine Learning'])
+
 # In this Section we are in Change Data types
 
     if uploaded_file is not None:
@@ -1312,7 +1315,7 @@ elif options == 'Machine Learning':
 ################## Bereich Object detection ##############################################
 ##########################################################################################
 
-elif options == 'Object detection':
+elif options_sidebar == 'Object detection':
     st.title('Falken Auge')
     img_file_buffer = st.camera_input("Take a picture")
 
@@ -1329,7 +1332,8 @@ elif options == 'Object detection':
 
 
 
-elif options == 'Contact':
-    st.write('Still nothing')
+elif options_sidebar == 'Contact':
+    st.write("""You can contact me on my Linkind Profil https://www.linkedin.com/in/riccardo-d-andrea-670426234/ also on my 
+                github account https://github.com/RiccardoDAndrea """)
     
     
