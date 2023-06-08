@@ -22,7 +22,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 from math import sqrt
 import statsmodels.api as sm
 # streamlit run app1.py --server.maxMessageSize=1028
-# source streamlit_machine_learning/bin/activate
+# source regression_app/bin/activate
 
 ################################################################################################################
 ############### Hier können die lottie files eingesetzt werden #################################################
@@ -49,13 +49,8 @@ wrong_data_type_ML = load_lottieurl('https://assets5.lottiefiles.com/packages/lf
 ################################################################################################################
 
 
-# Welcome page
-
-st.title('Project Prometheus') 
-
-# Navigation was an der Seite steht
-
-
+####################  H O M E P A G E   #######################################################
+st.title('Regression Analyses') 
 options = st.sidebar.radio(
     'Select an option',
     ('Homepage',
@@ -64,23 +59,24 @@ options = st.sidebar.radio(
     'Contact'))
 
 def dataframe():
-    uploaded_file = st.sidebar.file_uploader('Upload here your file', key='def')
+    """
+    The following function give the User the capability to 
+    enter a dataframe that he wonts
+    """
+    uploaded_file = st.sidebar.file_uploader('Upload here your file', key='dataframe')
     if uploaded_file is not None:
         if st.session_state.separator:
             df = pd.read_csv(uploaded_file, sep=st.session_state.separator)
         else:
             df = pd.read_csv(uploaded_file)
         return df
-
-if options == 'Machine Learning':
-    st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))
-
 uploaded_file = dataframe()
+#######  H O M E P A G E ########
 
 if options == 'Homepage':
 
     st.write('# :blue[Welcome]')
-    st.write("""Welcome to Project Prometheus. My name is Riccardo D'Andrea and in this website I will guide you through some machine learning processes and explain things as best I can so that we :blue[all understand why machine learning is so great.]
+    st.write("""Welcome to my Regression App. My name is Riccardo D'Andrea and in this website I will guide you through some machine learning processes and explain things as best I can so that we :blue[all understand why machine learning is so great.]
                 You will find in the navigation bar on the left side of your screen different navigation points where I will explain metrics, functions as understandable as possible.
                 So I suggest you just upload a .csv or a .txt file and let it start.""")
     st.divider()
@@ -128,6 +124,15 @@ if options == 'Homepage':
         object recognition, we can identify and track everything. But be careful! If you send the 
         object recognition programme to a party, it might try to detect each pair of shoes as a 
         separate object - and that probably wouldn't get it very far!""")
+
+##### S I D E B A R _ O P T I O N S ##################
+
+# If the user choose the possibility Machine Learning
+if options == 'Machine Learning':
+    # User can seperator the dataframe with different possibilitys
+    st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))
+
+
 
 ####################################################################################################
 ############# Bereich Machine Learning  ############################################################
