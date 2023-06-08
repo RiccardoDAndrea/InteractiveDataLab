@@ -4,7 +4,7 @@ Ziel dieser Branch ist es in Groupby funktion die Kunden aggregation auf einer S
 groupbyen da wir sonst die Metriken verfälschen
 
 """
-#pip install scikit-learn
+# pip install scikit-learn
 
 import streamlit as st 
 import pandas as pd 
@@ -25,9 +25,16 @@ import statsmodels.api as sm
 # source regression_app/bin/activate
 
 ################################################################################################################
-############### Hier können die lottie files eingesetzt werden #################################################
+############### Hier werden die Lottie files eingesetzt  #######################################################
 ################################################################################################################
+
 def load_lottieurl(url:str):
+    """ 
+    The follwing function request a url from the homepage
+    lottie files if status is 200 he will return
+    instand we can use this func to implement lottie files for 
+    our Homepage
+    """
     r = requests.get(url)
     if r.status_code != 200:
         return None
