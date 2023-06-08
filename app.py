@@ -77,33 +77,47 @@ def dataframe():
         else:
             df = pd.read_csv(uploaded_file)
         return df
+    
 uploaded_file = dataframe()
-#######  H O M E P A G E ########
+
+
+########################  H O M E P A G E ########################
 
 if options == 'Homepage':
 
     st.write('# :blue[Welcome]')
-    st.write("""Welcome to my Regression App. My name is Riccardo D'Andrea and in this website I will guide you through some machine learning processes and explain things as best I can so that we :blue[all understand why machine learning is so great.]
-                You will find in the navigation bar on the left side of your screen different navigation points where I will explain metrics, functions as understandable as possible.
+
+    st.write("""Welcome to my Regression App. My name is Riccardo D'Andrea and in this website I will guide you through some machine learning 
+                processes and explain things as best I 
+                can so that we :blue[all understand why machine learning is so great.]
+                You will find in the navigation bar on the left side of your screen different 
+                navigation points where I will explain metrics, functions as understandable as possible.
                 So I suggest you just upload a .csv or a .txt file and let it start.""")
+    
     st.divider()
+
     st_lottie( working_men,
-                quality='low',
+                quality='high',
                 width=650,
                 height=400)
+    
     st.divider()
     
     
     
-# Erklärungen für Projekte die es auf der Internet Seite gibt
-    selected = option_menu("Main Menu", ["Machine Learning",
-                                         'Object detection'], 
-                                icons = ['house', 'gear'], menu_icon = "cast",
+# Give the user a sort overview what a the different section in the homepage
+    explination_homepage = option_menu("Main Menu", 
+                                       ["Machine Learning",
+                                        'Object detection'], 
+                                icons = ['house', 'gear'], 
+                                menu_icon = "cast",
                                 orientation = 'horizontal', 
                                 default_index = 0)
-    if 'Machine Learning' in selected:
+    
+    if 'Machine Learning' in explination_homepage:
         st.markdown(f"<div style='text-align:center;'><h1>Machine Learning</h1></div>",
                     unsafe_allow_html=True)
+        
         st_lottie(machine_learning_explanation, width= 700, 
                                                 height=200, 
                                                 quality='high')
@@ -116,7 +130,7 @@ if options == 'Homepage':
                     But be careful,if you identify yourself with a selfie,the facial recognition 
                     program might think you're a robot and lock you out - but hey,we're working 
                     on it!""")
-    else:
+    if 'Object detection' in explination_homepage:
         st.markdown(f"<div style='text-align:center;'><h1>Objection Detection</h1></div>",
                     unsafe_allow_html=True)
         st_lottie(objection_detection_explanation, 
