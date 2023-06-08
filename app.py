@@ -56,7 +56,7 @@ wrong_data_type_ML = load_lottieurl('https://assets5.lottiefiles.com/packages/lf
 ################################################################################################################
 
 
-####################  H O M E P A G E   #######################################################
+####################  H O M E P A G E   ########################################################################    
 st.title('Regression Analyses') 
 options_sidebar = st.sidebar.radio(
     'Select an option',
@@ -77,7 +77,8 @@ def dataframe():
         else:
             df = pd.read_csv(uploaded_file)
         return df
-    
+if options_sidebar == 'Machine Learning':
+    st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))    
 uploaded_file = dataframe()
 
 
@@ -94,10 +95,10 @@ if options_sidebar == 'Homepage':
                 navigation points where I will explain metrics, functions as understandable as possible.
                 So I suggest you just upload a .csv or a .txt file and let it start.""")
     # If the user choose the possibility Machine Learning
-    if options_sidebar == 'Machine Learning':
-        # User can seperator the dataframe with different possibilitys
-        st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))
-        st.divider()
+    # if options_sidebar == 'Machine Learning':
+    #     # User can seperator the dataframe with different possibilitys
+    #     st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))
+    #     st.divider()
 
     st_lottie( working_men,
                 quality='high',
@@ -162,14 +163,14 @@ if options_sidebar == 'Homepage':
 ####################################################################################################
 
 elif options_sidebar == 'Machine Learning':
-# Hier werden die Auswahl möglichkeiten gesetzt
-    overview,change_data_type, handling_missing_values, Groupby_tab, remove_columns_tab, Visualization, machine_learning = st.tabs([  'Overview',
-                                                                                                            'Change the data type',
-                                                                                                            'Handling missing Values',
-                                                                                                            'Groupings',
-                                                                                                            'Remove columns',
-                                                                                                            "Viszulisation",
-                                                                                                            'Machine Learning'])
+# Possibilitys for the use 
+    overview,change_data_type, handling_missing_values, Groupby_tab, remove_columns_tab, Visualization, machine_learning = st.tabs(['Overview',
+                                                                                                                                    'Change the data type',
+                                                                                                                                    'Handling missing Values',
+                                                                                                                                    'Groupings',
+                                                                                                                                    'Remove columns',
+                                                                                                                                    "Viszulisation",
+                                                                                                                                    'Machine Learning'])
 
 # In this Section we are in Change Data types
 
@@ -194,7 +195,7 @@ elif options_sidebar == 'Machine Learning':
                 st.divider()
 
                 st.write('Here are the NaN values in your data')
-                st.dataframe(uploaded_file.isna().sum(),use_container_width=True)
+                st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
                 expander_NaN = st.expander(':orange[What are NaN values and why should you pay attention to them]')
                 expander_NaN.write(""" NaN stands for "Not a Number" and refers to missing or invalid values in a data set. NaN values can come in many forms, including missing values, incorrect entries, or other invalid values.
                                        As a Data Scientist or Analyst, it is important to pay attention to NaN values as they can skew or distort the data set. For example, when we perform a statistical analysis or train a 
@@ -203,15 +204,19 @@ elif options_sidebar == 'Machine Learning':
 
 
         with change_data_type:
+            ######## In this part the user have the choose to change his datatype if is neccary he or she can choose betweem
+            ######## different types of data types and can save it with the button 'save changes'
+
             st.subheader('Your Dataframe datatype')
-            st.dataframe(uploaded_file.dtypes,use_container_width=True)
+            st.dataframe(uploaded_file.dtypes, use_container_width=True)
             st.subheader("Change your Datatypes:")
             selected_columns = st.multiselect("Choose your columns", uploaded_file.columns)
-            selected_dtype = st.selectbox("Choose one Datatype", [  "int64", 
-                                                                    "float64",
-                                                                    "string",
-                                                                    "datetime64[ns]"])
+            selected_dtype = st.selectbox("Choose one Datatype", [ "int64", 
+                                                                   "float64",
+                                                                   "string",
+                                                                   "datetime64[ns]"])
             
+            # Explanation of what are datatypes 
             expander_datatypes = st.expander(':blue[What are Datatypes and why are they so importen :question:]')
             expander_datatypes.write("""Explination :white_check_mark: """)
 
@@ -220,17 +225,21 @@ elif options_sidebar == 'Machine Learning':
                 if selected_dtype == "datetime64[ns]":
                     for col in selected_columns:
                         uploaded_file[col] = pd.to_datetime(uploaded_file[col], format="%Y")
+
                 for col in selected_columns:
                     uploaded_file[col] = uploaded_file[col].astype(selected_dtype)
+
                 st.write("Updated DataFrame:")
                 st.dataframe(uploaded_file.dtypes,use_container_width=True)
                 st.write(uploaded_file.head(),use_container_width=True)
             new_data_types = uploaded_file
 
         with handling_missing_values:
+
             st.write('How to proceed with NaN values')
             st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
             checkbox_nan_values = st.checkbox("Do you want to replace the NaN values to proceed?", key="disabled")
+
             if checkbox_nan_values:
                 numeric_columns = uploaded_file.select_dtypes(include=[np.number]).columns.tolist()
                 missing_values = st.selectbox(
@@ -246,7 +255,6 @@ elif options_sidebar == 'Machine Learning':
                     Nan_values_replaced_file = uploaded_file[numeric_columns].median()
                     uploaded_file[numeric_columns] = uploaded_file[numeric_columns].fillna(Nan_values_replaced_file)
                     st.write('##### You have succesfully change the NaN values :blue[with the Median]')
-                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
                     st.divider()
 
                 elif 'with Mean' in missing_values:
@@ -254,29 +262,29 @@ elif options_sidebar == 'Machine Learning':
                     repalced_uploaded_file = uploaded_file.copy()
                     repalced_uploaded_file[numeric_columns] = repalced_uploaded_file[numeric_columns].fillna(Nan_values_replaced_file)
                     st.markdown(' ##### You have succesfully change the NaN values :blue[ with the Mean]')
-                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
                     st.divider()
+
                 elif 'with Minimum value' in missing_values:
                     Nan_values_replaced_file = uploaded_file[numeric_columns].min()
                     repalced_uploaded_file = uploaded_file.copy()
                     repalced_uploaded_file[numeric_columns] = repalced_uploaded_file[numeric_columns].fillna(Nan_values_replaced_file)
                     st.write('##### You have succesfully change the NaN values :blue[with the minimum values]')
-                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
                     st.divider()
+
                 elif 'with Maximum value' in missing_values:
                     Nan_values_replaced_file = uploaded_file[numeric_columns].max()
                     repalced_uploaded_file = uploaded_file.copy()
                     repalced_uploaded_file[numeric_columns] = repalced_uploaded_file[numeric_columns].fillna(Nan_values_replaced_file)
                     st.write('##### You habe succesfully change the NaN values :blue[with the maximums values]')
-                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
                     st.divider()
                 elif 'with Zero' in missing_values:
                     replaced_uploaded_file = uploaded_file.copy()
                     numeric_columns = replaced_uploaded_file.select_dtypes(include=[np.number]).columns.tolist()
                     replaced_uploaded_file[numeric_columns] = replaced_uploaded_file[numeric_columns].fillna(0)
                     st.write('##### You have successfully changed :blue[the NaN values to 0.]')
-                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
                     st.divider()
+                    
+                st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
 
   
                    
