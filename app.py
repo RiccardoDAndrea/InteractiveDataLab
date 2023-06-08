@@ -82,7 +82,6 @@ if options_sidebar == 'Machine Learning':
 uploaded_file = dataframe()
 
 
-########################  H O M E P A G E ########################
 
 if options_sidebar == 'Homepage':
 
@@ -136,9 +135,11 @@ if options_sidebar == 'Homepage':
         
     #### Explination of what is Objection Detection
     if 'Object detection' in explination_homepage:
+
         # use of ccs because than we can center the tile otherwise it would be left orientited on the homepage
         st.markdown(f"<div style='text-align:center;'><h1>Objection Detection</h1></div>",
                     unsafe_allow_html=True)
+        
         st_lottie(objection_detection_explanation, 
                                                 width= 700, 
                                                 height=200, 
