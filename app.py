@@ -21,7 +21,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from math import sqrt
 import statsmodels.api as sm
-# streamlit run app1.py --server.maxMessageSize=1028
+# streamlit run app.py --server.maxMessageSize=1028
 # source regression_app/bin/activate
 
 ################################################################################################################
@@ -93,11 +93,6 @@ if options_sidebar == 'Homepage':
                 You will find in the navigation bar on the left side of your screen different 
                 navigation points where I will explain metrics, functions as understandable as possible.
                 So I suggest you just upload a .csv or a .txt file and let it start.""")
-    # If the user choose the possibility Machine Learning
-    # if options_sidebar == 'Machine Learning':
-    #     # User can seperator the dataframe with different possibilitys
-    #     st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))
-    #     st.divider()
 
     st_lottie( working_men,
                 quality='high',
@@ -152,11 +147,6 @@ if options_sidebar == 'Homepage':
         object recognition, we can identify and track everything. But be careful! If you send the 
         object recognition programme to a party, it might try to detect each pair of shoes as a 
         separate object - and that probably wouldn't get it very far!""")
-
-##### S I D E B A R _ O P T I O N S ##################
-
-
-
 
 
 ####################################################################################################
@@ -253,39 +243,40 @@ elif options_sidebar == 'Machine Learning':
                             "with Zero"])
 
                 if 'with Median' in missing_values:
-                    Nan_values_replaced_file = uploaded_file[numeric_columns].median()
-                    uploaded_file[numeric_columns] = uploaded_file[numeric_columns].fillna(Nan_values_replaced_file)
+                    uploaded_file_median = uploaded_file[numeric_columns].median()
+                    uploaded_file[numeric_columns] = uploaded_file[numeric_columns].fillna(uploaded_file_median)
                     st.write('##### You have succesfully change the NaN values :blue[with the Median]')
+                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
                     st.divider()
-
+                    
                 elif 'with Mean' in missing_values:
-                    Nan_values_replaced_file = uploaded_file[numeric_columns].mean()
-                    repalced_uploaded_file = uploaded_file.copy()
-                    repalced_uploaded_file[numeric_columns] = repalced_uploaded_file[numeric_columns].fillna(Nan_values_replaced_file)
+                    uploaded_file_mean = uploaded_file[numeric_columns].mean()
+                    uploaded_file[numeric_columns] = uploaded_file[numeric_columns].fillna(uploaded_file_mean)
                     st.markdown(' ##### You have succesfully change the NaN values :blue[ with the Mean]')
+                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
                     st.divider()
 
                 elif 'with Minimum value' in missing_values:
-                    Nan_values_replaced_file = uploaded_file[numeric_columns].min()
-                    repalced_uploaded_file = uploaded_file.copy()
-                    repalced_uploaded_file[numeric_columns] = repalced_uploaded_file[numeric_columns].fillna(Nan_values_replaced_file)
+                    uploaded_file_min = uploaded_file[numeric_columns].min()
+                    uploaded_file[numeric_columns] = uploaded_file[numeric_columns].fillna(uploaded_file_min)
                     st.write('##### You have succesfully change the NaN values :blue[with the minimum values]')
-                    st.divider()
-
-                elif 'with Maximum value' in missing_values:
-                    Nan_values_replaced_file = uploaded_file[numeric_columns].max()
-                    repalced_uploaded_file = uploaded_file.copy()
-                    repalced_uploaded_file[numeric_columns] = repalced_uploaded_file[numeric_columns].fillna(Nan_values_replaced_file)
-                    st.write('##### You habe succesfully change the NaN values :blue[with the maximums values]')
-                    st.divider()
-                elif 'with Zero' in missing_values:
-                    replaced_uploaded_file = uploaded_file.copy()
-                    numeric_columns = replaced_uploaded_file.select_dtypes(include=[np.number]).columns.tolist()
-                    replaced_uploaded_file[numeric_columns] = replaced_uploaded_file[numeric_columns].fillna(0)
-                    st.write('##### You have successfully changed :blue[the NaN values to 0.]')
+                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
                     st.divider()
                     
-                st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
+                elif 'with Maximum value' in missing_values:
+                    uploaded_file_max = uploaded_file[numeric_columns].max()
+                    uploaded_file[numeric_columns] = uploaded_file[numeric_columns].fillna(uploaded_file_max)
+                    st.write('##### You have succesfully change the NaN values :blue[with the maximums values]')
+                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
+                    st.divider()
+                    
+                elif 'with Zero' in missing_values:
+                    numeric_columns = uploaded_file.select_dtypes(include=[np.number]).columns.tolist()
+                    uploaded_file[numeric_columns] = uploaded_file[numeric_columns].fillna(0)
+                    st.write('##### You have successfully changed :blue[the NaN values to 0.]')
+                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
+                    st.divider()
+
 
   
                    
