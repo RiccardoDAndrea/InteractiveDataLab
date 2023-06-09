@@ -4,6 +4,10 @@ Ziel dieser Branch ist es in Groupby funktion die Kunden aggregation auf einer S
 groupbyen da wir sonst die Metriken verfälschen
 
 """
+
+#### branch für die datensatz implemntierung 
+
+
 # pip install scikit-learn
 
 import streamlit as st 
