@@ -1,14 +1,8 @@
 """ 
 
-Ziel dieser Branch ist es in Groupby funktion die Kunden aggregation auf einer Spalte zu miniemeren damit wir string nicht 
-groupbyen da wir sonst die Metriken verfälschen
+Ziel dieser Branch ist es den Nutzer zwei Dataset auszusuchen 
 
 """
-
-#### branch für die datensatz implemntierung 
-###test
-
-# pip install scikit-learn
 
 import streamlit as st 
 import pandas as pd 
@@ -70,6 +64,7 @@ options_sidebar = st.sidebar.radio(
     "Object detection",
     'Contact'))
 
+
 def dataframe():
     """
     The following function give the User the capability to 
@@ -82,8 +77,21 @@ def dataframe():
         else:
             df = pd.read_csv(uploaded_file)
         return df
-    
 
+datasets = ['Dataset 1', 'Dataset 2', 'Dataset 3']  # Liste der verfügbaren Datensätze
+
+selected_datasets = st.sidebar.multiselect('Choose your Dataset:', datasets)
+
+
+
+
+
+if selected_datasets:
+    for dataset in selected_datasets:
+        # Hier können Sie den Code hinzufügen, um den ausgewählten Datensatz zu verarbeiten
+        st.write(f'Selected Dataset: {dataset}')
+else:
+    st.write('No dataset selected.')
 if options_sidebar == 'Machine Learning':
     
     st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))    
@@ -101,11 +109,7 @@ if options_sidebar == 'Homepage':
                 You will find in the navigation bar on the left side of your screen different 
                 navigation points where I will explain metrics, functions as understandable as possible.
                 So I suggest you just upload a .csv or a .txt file and let it start.""")
-    # If the user choose the possibility Machine Learning
-    # if options_sidebar == 'Machine Learning':
-    #     # User can seperator the dataframe with different possibilitys
-    #     st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))
-    #     st.divider()
+
 
     st_lottie( working_men,
                 quality='high',
@@ -206,6 +210,7 @@ elif options_sidebar == 'Machine Learning':
 
         ## Here can the use change the data types if its neccarsary
         with change_data_type:
+
             ######## In this part the user have the choose to change his datatype if is neccary he or she can choose betweem
             ######## different types of data types and can save it with the button 'save changes'
 
