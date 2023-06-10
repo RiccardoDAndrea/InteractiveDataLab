@@ -19,6 +19,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from math import sqrt
 import statsmodels.api as sm
+import os
 # streamlit run app.py --server.maxMessageSize=1028
 # source regression_app/bin/activate
 
@@ -77,26 +78,45 @@ def dataframe():
         else:
             df = pd.read_csv(uploaded_file)
         return df
+    
 
-datasets = ['Dataset 1', 'Dataset 2', 'Dataset 3']  # Liste der verfügbaren Datensätze
+def dataframe_from_url():
+    # URL des GitHub-Datensatzes
+    dataset_url_supermarket = 'https://github.com/RiccardoDAndrea/Streamlit-Regression-App/raw/main/supermarket_sales%20-%20Sheet1.csv'
 
-selected_datasets = st.sidebar.multiselect('Choose your Dataset:', datasets)
+    # Herunterladen des Inhalts der CSV-Datei
+    response = requests.get(dataset_url_supermarket)
+    content = response.content
 
+    # Speichern des Inhalts als temporäre Datei
+    temp_file = 'temp.csv'
+    with open(temp_file, 'wb') as f:
+        f.write(content)
 
+    # Laden der CSV-Datei mit Pandas
+    dataset = pd.read_csv(temp_file)
+    os.remove(temp_file)
+    Supermarket_data_set = pd.DataFrame(dataset)
+    return Supermarket_data_set
 
-
-
-if selected_datasets:
-    for dataset in selected_datasets:
-        # Hier können Sie den Code hinzufügen, um den ausgewählten Datensatz zu verarbeiten
-        st.write(f'Selected Dataset: {dataset}')
-else:
-    st.write('No dataset selected.')
 if options_sidebar == 'Machine Learning':
     
     st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))    
-uploaded_file = dataframe()
 
+
+
+# Ausgabe des Datensatzes
+
+datasets = ['Supermarket dataset', 'Dataset 2', 'Own dataset']  # Liste der verfügbaren Datensätze
+selected_datasets = st.sidebar.selectbox('Choose your Dataset:', options = datasets)
+if 'Supermarket dataset' in selected_datasets:
+    uploaded_file = dataframe_from_url()
+elif 'Dataset 2' in selected_datasets:
+    uploaded_file = dataframe_from_url()
+elif 'Own dataset' in selected_datasets: 
+    uploaded_file = dataframe()
+
+    
 
 
 if options_sidebar == 'Homepage':
