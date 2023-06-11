@@ -6,6 +6,9 @@ The website provides an interactive user interface that allows you to experience
 Please feel free to explore the different features and functionalities of our website and don't hesitate to provide any feedback or suggestions. I hope you find this platform helpful in your machine learning journey! 🌟
 
 
+**At the moment there are some errors in the page. I am working on it. And will update all errors as soon as possible**
+
+
 
 
 ![Linear Regression](https://streamlit.io/images/brand/streamlit-logo-primary-colormark-darktext.png)
