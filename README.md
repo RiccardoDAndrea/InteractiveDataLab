@@ -7,6 +7,9 @@ Please feel free to explore the different features and functionalities of our we
 
 **At the moment there are some errors in the page. I am working on it. And will update all errors as soon as possible**
 
+**At the moment there are some errors in the page. I am working on it. And will update all errors as soon as possible**
+
+
 
 
 ![Linear Regression](https://streamlit.io/images/brand/streamlit-logo-primary-colormark-darktext.png)
