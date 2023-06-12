@@ -107,14 +107,14 @@ if options_sidebar == 'Machine Learning':
 
 # Ausgabe des Datensatzes
 
-datasets = ['Supermarket dataset', 'Dataset 2', 'Own dataset']  # Liste der verfügbaren Datensätze
-selected_datasets = st.sidebar.selectbox('Choose your Dataset:', options = datasets)
-if 'Supermarket dataset' in selected_datasets:
-    uploaded_file = dataframe_from_url()
-elif 'Dataset 2' in selected_datasets:
-    uploaded_file = dataframe_from_url()
-elif 'Own dataset' in selected_datasets: 
-    uploaded_file = dataframe()
+    datasets = ['Supermarket dataset', 'Dataset 2', 'Own dataset']  # Liste der verfügbaren Datensätze
+    selected_datasets = st.sidebar.selectbox('Choose your Dataset:', options = datasets)
+    if 'Supermarket dataset' in selected_datasets:
+        uploaded_file = dataframe_from_url()
+    elif 'Dataset 2' in selected_datasets:
+        uploaded_file = dataframe_from_url()
+    elif 'Own dataset' in selected_datasets: 
+        uploaded_file = dataframe()
 
     
 
