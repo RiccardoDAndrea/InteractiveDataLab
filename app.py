@@ -102,6 +102,7 @@ def dataframe_from_url():
 if options_sidebar == 'Machine Learning':
     
     st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))    
+    #st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))    
 
 
 
