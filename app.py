@@ -130,6 +130,7 @@ if options_sidebar == 'Homepage':
                 You will find in the navigation bar on the left side of your screen different 
                 navigation points where I will explain metrics, functions as understandable as possible.
                 So I suggest you just upload a .csv or a .txt file and let it start.""")
+    st.warning("Hold your horses! This page is still under construction. Don't be surprised if you encounter a wild error or two. But fear not! I'm on the case, working my coding magic to make it all better!")
 
 
     st_lottie( working_men,
