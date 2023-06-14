@@ -507,7 +507,6 @@ elif options_sidebar == 'Machine Learning':
                                     labels=dict(x="Columns", y="Columns", color="Correlation"))
                     
                     # Anpassung der Plot-Parameter
-                    fig_correlation.update_layout(title='Correlation Matrix')
                     fig_correlation.update_layout(
                         title='Correlation Matrix',
                         font=dict(
@@ -527,17 +526,16 @@ elif options_sidebar == 'Machine Learning':
                     # Anzeigen der Plot
                     st.plotly_chart(fig_correlation, use_container_width= True)
                     fig_correlationplot = go.Figure(data=fig_correlation)
-                    fig_correlationplot
-                    # Umwandeln des Histogramm-Graphen in eine Bilddatei
-                    #img_bytes_correlationplot = pio.to_image(fig_correlationplot, format='png', width=1000, height=600, scale=2)
+                    #Umwandeln des Histogramm-Graphen in eine Bilddatei
+                    img_bytes_correlationplot = pio.to_image(fig_correlationplot, format='png', width=1000, height=600, scale=2)
                     
-                    # Herunterladen der Bilddatei als Button
+                    #Herunterladen der Bilddatei als Button
 
-                    # with open('Correlation Matrix.png', 'wb') as f:
-                    #     f.write(img_bytes_correlationplot)
-                    # with open('Correlation Matrix.png', 'rb') as f:
-                    #     img_bytes_line = f.read()
-                    #     st.download_button(label='Download Correlation Matrix', data=img_bytes_correlationplot, file_name='Barplot.png')
+                    with open('Correlation Matrix.png', 'wb') as f:
+                        f.write(img_bytes_correlationplot)
+                    with open('Correlation Matrix.png', 'rb') as f:
+                        img_bytes_line = f.read()
+                        st.download_button(label='Download Correlation Matrix', data=img_bytes_correlationplot, file_name='Barplot.png')
                 
                 #Ende der Correlations Matrix
               
