@@ -1,6 +1,58 @@
 """ 
+The following script was created to give users the opportunity to learn how to handle a simple machine learning concept.
 
-Ziel dieser Branch ist es den Nutzer zwei Dataset auszusuchen 
+1. the user starts on the home page
+--> Afterwards he has the possibility to choose between the section 
+
+2. Machine learning
+Here the user has the possibility to choose between two predefined datasets or to use his own dataset. As well as to choose the column separator freely.
+Then follows the Machine Learning process which is structured as follows.
+
+    - Overview',
+        -> df.head(), df.describe(), df.isna().sum() quick overview for the data
+
+    - 'Change the data type',
+        -> The user can change the data type if the data is not imported as he/she imagined it.
+
+    - 'Handling missing values',
+        -> Each Dataset can have NaN values so we can SOLVE this problem. Here the user can replace the NaN with different possibilities. 
+           Depending on the dataset, he can make the best choice of how he wants to replace the NaN values.
+
+    - 'Remove columns',
+        -> For better clarity, it is possible to remove entire columns. 
+
+    - 'Viszulisation',
+        -> In the visualisation area, many different charts can be developed from 
+            1. Barchart
+            2. Linechart
+            3. Scatterchart
+            4. Boxplot
+            5. Histogram
+
+    - Machine Learning
+        ->  In the final area of machine learning, a correlation matrix is created that the user can look at in terms of multicollinearity. But also to determine / evaluate the correlation between the variables. 
+            After that, a "target variable" and the "X variables" can be freely selected.
+            After successful entry of the X and Y variables, the size of the train and test data set can be determined with a link.
+            The most important metrics of a regression model are briefly described below. From Intercept, Slope, RMSE, MAE. 
+            In the final area of machine learning, a correlation matrix is created that the user can look at in terms of multicollinearity. 
+            But also to determine / evaluate the correlation between the variables. 
+            After that, a "target variable" and the "X variables" can be freely selected.
+            After successful entry of the X and Y variables, the size of the train and test data set can be determined with a link.
+            The most important metrics of a regression model are briefly described below. From Intercept, Slope, RMSE, MAE.
+
+            Two dynamised scatter charts follow 
+            1. scatterchart are the Acutal versus the Predicted values
+            2. scatterchart are the residuals
+
+            In the last section, after importing the data, Data manipulation, Data visualization. 
+            The user can test his regression through freely selectable input options and the result as Output.
+
+3. Objection detection (under construction)
+    - under contruction...
+
+4. Contact
+    - under contruction... 
+
 
 """
 
@@ -195,11 +247,11 @@ if options_sidebar == 'Homepage':
 elif options_sidebar == 'Machine Learning':
 # Possibilitys for the use 
     overview,change_data_type, handling_missing_values, remove_columns_tab, Visualization, machine_learning = st.tabs(['Overview',
-                                                                                                                                    'Change the data type',
-                                                                                                                                    'Handling missing Values',
-                                                                                                                                    'Remove columns',
-                                                                                                                                    "Viszulisation",
-                                                                                                                                    'Machine Learning'])
+                                                                                                                        'Change the data type',
+                                                                                                                        'Handling missing Values',
+                                                                                                                        'Remove columns',
+                                                                                                                        "Viszulisation",
+                                                                                                                        'Machine Learning'])
 
     # In this Section we are in Change Data types
     if uploaded_file is not None:
