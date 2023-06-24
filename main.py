@@ -82,7 +82,7 @@ def dataframe():
 
 def dataframe_from_url():
     # URL des GitHub-Datensatzes
-    dataset_url_supermarket = 'https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/feature_dataset/Datasets/supermarket_sales%20.csv'
+    dataset_url_supermarket = 'https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/feature_dataset/Dataset/supermarket_sales%20.csv'
 
     # Herunterladen des Inhalts der CSV-Datei
     response = requests.get(dataset_url_supermarket)
