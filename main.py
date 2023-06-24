@@ -61,6 +61,7 @@ If YOU see any improvements, potential errors or optimisation potential please d
 
 """
 
+
 import streamlit as st 
 import pandas as pd 
 import plotly.express as px
@@ -77,18 +78,16 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 from math import sqrt
 import statsmodels.api as sm
 import os
-# streamlit run app.py --server.maxMessageSize=1028
-# source regression_app/bin/activate
 
-################################################################################################################
-############### Hier werden die Lottie files eingesetzt  #######################################################
-################################################################################################################
+################################################################################################
+############### L O T T I E _ F I L E S  #######################################################
+################################################################################################
 
 def load_lottieurl(url:str):
     """ 
     The follwing function request a url from the homepage
-    lottie files if status is 200 he will return
-    instand we can use this func to implement lottie files for 
+    lottie files. If status is 200 he will return the lottie file.
+    Instand we can use this func to implement lottie files for 
     our Homepage
     """
     r = requests.get(url)
@@ -115,12 +114,8 @@ wrong_data_type_ML = load_lottieurl('https://assets5.lottiefiles.com/packages/lf
 ####################  H O M E P A G E   ########################################################################    
 
 st.title('Regression Analyses') 
-options_sidebar = st.sidebar.radio(
-    'Select an option',
-    ('Homepage',
-    'Machine Learning',
-    "Object detection",
-    'Contact'))
+
+options_sidebar = st.sidebar.radio('Select an option', ('Homepage','Machine Learning', 'Object detection', 'Contact'))
 
 
 def dataframe():
@@ -129,43 +124,72 @@ def dataframe():
     enter a dataframe that he wonts
     """
     uploaded_file = st.sidebar.file_uploader('Upload here your file', key='dataframe')
+
     if uploaded_file is not None:
+
         if st.session_state.separator:
+
             df = pd.read_csv(uploaded_file, sep=st.session_state.separator)
+
         else:
+
             df = pd.read_csv(uploaded_file)
+
         return df
     
 
 def dataframe_from_url(url):
+    """
+    We use the function to recive dataset
+    from our github repository
+    Input 
+        - The Raw Url from the dataset  
+    """
+
+
     response = requests.get(url)
     content = response.content
 
-    # Speichern des Inhalts als temporäre Datei
+    # Save as temporary file
     temp_file = 'temp.csv'
+
     with open(temp_file, 'wb') as f:
         f.write(content)
 
-    # Laden der CSV-Datei mit Pandas
-    dataset = pd.read_csv(temp_file, sep= st.session_state.separator)
+    # load the csv into a pandas dataframe
+    dataset = pd.read_csv(temp_file, 
+                          sep= st.session_state.separator)
+    
     os.remove(temp_file)
+
     dataset_regression = pd.DataFrame(dataset)
+
     return dataset_regression
 
 
 if options_sidebar == 'Machine Learning':
-    st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))
 
-    # Ausgabe des Datensatzes
-    datasets = ['Supermarket dataset', 'Wage dataset', 'Own dataset']  # Liste der verfügbaren Datensätze
-    selected_datasets = st.sidebar.selectbox('Choose your Dataset:', options=datasets)
+    st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", 
+                                                                                                      ";", 
+                                                                                                      ".", 
+                                                                                                      ":"))
+
+    # List of datasets for the user that he can choose from
+    datasets = ['Supermarket dataset', 
+                'Wage dataset', 
+                'Own dataset'] 
+    
+    selected_datasets = st.sidebar.selectbox('Choose your Dataset:', 
+                                             options=datasets)
 
     if 'Supermarket dataset' in selected_datasets:
         dataset_url = "https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/feature_dataset/Dataset/supermarket_sales%20.csv"
         uploaded_file = dataframe_from_url(dataset_url)
+
     elif 'Wage dataset' in selected_datasets:
         dataset_url = "https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/feature_dataset/Dataset/wage.csv"
         uploaded_file = dataframe_from_url(dataset_url)
+        
     elif 'Own dataset' in selected_datasets:
         uploaded_file = dataframe()
 
@@ -183,9 +207,11 @@ if options_sidebar == 'Homepage':
                 You will find in the navigation bar on the left side of your screen different 
                 navigation points where I will explain metrics, functions as understandable as possible.
                 So I suggest you just upload a .csv or a .txt file and let it start.""")
-    st.warning("Hold your horses! This page is still under construction. Don't be surprised if you encounter a wild error or two. But fear not! I'm on the case, working my coding magic to make it all better!")
+    
+    st.warning("""Hold your horses! This page is still under construction. Don't be surprised if you encounter a wild error or two. 
+                  But fear not! I'm on the case, working my coding magic to make it all better!""")
 
-
+    # Lottie file from the Homepage greetings
     st_lottie( working_men,
                 quality='high',
                 width=650,
@@ -227,27 +253,31 @@ if options_sidebar == 'Homepage':
     #### Explination of what is Objection Detection
     if 'Object detection' in explination_homepage:
 
+
         # use of ccs because than we can center the tile otherwise it would be left orientited on the homepage
         st.markdown(f"<div style='text-align:center;'><h1>Objection Detection</h1></div>",
                     unsafe_allow_html=True)
         
+
         st_lottie(objection_detection_explanation, 
                                                 width= 700, 
                                                 height=200, 
                                                 quality='high')
         
+
         st.write("""Object recognition is like a robot that scans its environment and identifies 
-        any object that is in its way. It's like a waiter who, every time he serves a new dish, 
-        immediately recognises what's on it and whether it contains nuts or gluten so he can warn 
-        the allergy sufferers among the guests. Whether it's cars, buildings or faces - thanks to 
-        object recognition, we can identify and track everything. But be careful! If you send the 
-        object recognition programme to a party, it might try to detect each pair of shoes as a 
-        separate object - and that probably wouldn't get it very far!""")
+                    any object that is in its way. It's like a waiter who, every time he serves a new dish, 
+                    immediately recognises what's on it and whether it contains nuts or gluten so he can warn 
+                    the allergy sufferers among the guests. Whether it's cars, buildings or faces - thanks to 
+                    object recognition, we can identify and track everything. But be careful! If you send the 
+                    object recognition programme to a party, it might try to detect each pair of shoes as a 
+                    separate object - and that probably wouldn't get it very far!""")
 
 
 ####################################################################################################
 #############  M A C H I N E - L E A R N I N G ####################################################
 ####################################################################################################
+
 
 elif options_sidebar == 'Machine Learning':
 # Possibilitys for the use 
@@ -263,28 +293,41 @@ elif options_sidebar == 'Machine Learning':
 
         with overview:
                 st.write('In the follwoing Tab you can get a :blue[Overview of your data.] It will only show the first :keycap_ten: rows')
+
                 st.dataframe(uploaded_file.head(10),use_container_width=True)
+
                 expander_head = st.expander(':orange[More details about the df.head() method and why its important]')
-                expander_head.markdown("""When you're working with big data, you don't always want to repeat the whole 
-                                        process of reloading the data. Especially when an API is connected, this can be time intensive. 
-                                        The Head function df.head() of Pandas gives you the first 5 lines.""")
+
+                expander_head.markdown(""" When you're working with big data, you don't always want to repeat the whole 
+                                           process of reloading the data. Especially when an API is connected, this can be time intensive. 
+                                           The Head function df.head() of Pandas gives you the first 5 lines.""")
+                
                 st.divider()
 
                 st.write('Here you can get an overview of your data')
+
                 st.dataframe(uploaded_file.describe(),use_container_width=True)
+
                 expander_describe = st.expander(':orange[More details about the describe method and why its important]')
-                expander_describe.write(""" Now let's look at the df.describe function and see if this of all functions is so powerfull.
-                                            The describe function not only shows us the rows and columns but also gives us the median. 
-                                            So if we build a machine learning model and we get a prediction value that is significantly higher than the max value and the median,
-                                            we know that our model is not good at calculating prediction values. """)
+
+                expander_describe.write("""Now let's look at the df.describe function and see if this of all functions is so powerfull.
+                                           The describe function not only shows us the rows and columns but also gives us the median. 
+                                           So if we build a machine learning model and we get a prediction value that is significantly 
+                                           higher than the max value and the median,we know that our model is not good at calculating prediction values.""")
+                
                 st.divider()
 
                 st.write('Here are the NaN values in your data')
-                st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
+
+                st.dataframe(uploaded_file.isna().sum(), 
+                             use_container_width=True)
+                
                 expander_NaN = st.expander(':orange[What are NaN values and why should you pay attention to them]')
+
                 expander_NaN.write(""" NaN stands for "Not a Number" and refers to missing or invalid values in a data set. NaN values can come in many forms, including missing values, incorrect entries, or other invalid values.
                                        As a Data Scientist or Analyst, it is important to pay attention to NaN values as they can skew or distort the data set. For example, when we perform a statistical analysis or train a 
                                        machine learning model, missing values can lead to incorrect conclusions or worse predictions.""")
+                
                 st.divider()
 
         ## Here can the use change the data types if its neccarsary
@@ -294,9 +337,14 @@ elif options_sidebar == 'Machine Learning':
             ######## different types of data types and can save it with the button 'save changes'
 
             st.subheader('Your Dataframe datatype')
-            st.dataframe(uploaded_file.dtypes, use_container_width=True)
+
+            st.dataframe(uploaded_file.dtypes, 
+                         use_container_width=True)
+            
             st.subheader("Change your Datatypes:")
-            selected_columns = st.multiselect("Choose your columns", uploaded_file.columns)
+            selected_columns = st.multiselect("Choose your columns", 
+                                              uploaded_file.columns)
+            
             selected_dtype = st.selectbox("Choose one Datatype", [ "int64", 
                                                                    "float64",
                                                                    "string",
@@ -304,72 +352,111 @@ elif options_sidebar == 'Machine Learning':
             
             # Explanation of what are datatypes 
             expander_datatypes = st.expander(':blue[What are Datatypes and why are they so importen :question:]')
+
             expander_datatypes.write("""Explination :white_check_mark: """)
 
         # Ändere den Datentyp und zeige den aktualisierten Datensatz an
             if st.button("Save chanages"):
+
                 if selected_dtype == "datetime64[ns]":
+
                     for col in selected_columns:
-                        uploaded_file[col] = pd.to_datetime(uploaded_file[col], format="%Y")
+
+                        uploaded_file[col] = pd.to_datetime(uploaded_file[col], 
+                                                            format="%Y")
 
                 for col in selected_columns:
                     uploaded_file[col] = uploaded_file[col].astype(selected_dtype)
 
                 st.write("Updated DataFrame:")
-                st.dataframe(uploaded_file.dtypes,use_container_width=True)
-                st.write(uploaded_file.head(),use_container_width=True)
+                st.dataframe(uploaded_file.dtypes,
+                             use_container_width=True)
+                
+                st.write(uploaded_file.head(),
+                         use_container_width=True)
+                
             new_data_types = uploaded_file
 
         with handling_missing_values:
 
             st.write('How to proceed with NaN values')
-            st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
-            checkbox_nan_values = st.checkbox("Do you want to replace the NaN values to proceed?", key="disabled")
+            st.dataframe(uploaded_file.isna().sum(), 
+                         use_container_width=True)
+            
+            checkbox_nan_values = st.checkbox("Do you want to replace the NaN values to proceed?", 
+                                              key="disabled")
 
             if checkbox_nan_values:
                 numeric_columns = uploaded_file.select_dtypes(include=[np.number]).columns.tolist()
-                missing_values = st.selectbox(
-                    "How do you want to replace the NaN values in the numeric columns?",
-                    key="visibility",
-                    options=["with Median", 
-                            "with Mean", 
-                            "with Minimum value", 
-                            "with Maximum value", 
-                            "with Zero"])
+
+                missing_values = st.selectbox( "How do you want to replace the NaN values in the numeric columns?",
+                                                key="visibility",
+                                                options=["with Median", 
+                                                        "with Mean", 
+                                                        "with Minimum value", 
+                                                        "with Maximum value", 
+                                                        "with Zero"])
 
                 if 'with Median' in missing_values:
                     uploaded_file_median = uploaded_file[numeric_columns].median()
+
                     uploaded_file[numeric_columns] = uploaded_file[numeric_columns].fillna(uploaded_file_median)
+
                     st.write('##### You have succesfully change the NaN values :blue[with the Median]')
-                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
+                    st.dataframe(uploaded_file.isna().sum(), 
+                                 use_container_width=True)
+                    
                     st.divider()
                     
                 elif 'with Mean' in missing_values:
+
                     uploaded_file_mean = uploaded_file[numeric_columns].mean()
+
                     uploaded_file[numeric_columns] = uploaded_file[numeric_columns].fillna(uploaded_file_mean)
+
                     st.markdown(' ##### You have succesfully change the NaN values :blue[ with the Mean]')
-                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
+
+                    st.dataframe(uploaded_file.isna().sum(), 
+                                 use_container_width=True)
+                    
                     st.divider()
 
                 elif 'with Minimum value' in missing_values:
+
                     uploaded_file_min = uploaded_file[numeric_columns].min()
+
                     uploaded_file[numeric_columns] = uploaded_file[numeric_columns].fillna(uploaded_file_min)
+
                     st.write('##### You have succesfully change the NaN values :blue[with the minimum values]')
-                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
+
+                    st.dataframe(uploaded_file.isna().sum(), 
+                                 use_container_width=True)
+                    
                     st.divider()
                     
                 elif 'with Maximum value' in missing_values:
+
                     uploaded_file_max = uploaded_file[numeric_columns].max()
+
                     uploaded_file[numeric_columns] = uploaded_file[numeric_columns].fillna(uploaded_file_max)
+
                     st.write('##### You have succesfully change the NaN values :blue[with the maximums values]')
-                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
+
+                    st.dataframe(uploaded_file.isna().sum(), 
+                                 use_container_width=True)
+                    
                     st.divider()
                     
                 elif 'with Zero' in missing_values:
+
                     numeric_columns = uploaded_file.select_dtypes(include=[np.number]).columns.tolist()
+
                     uploaded_file[numeric_columns] = uploaded_file[numeric_columns].fillna(0)
+
                     st.write('##### You have successfully changed :blue[the NaN values to 0.]')
-                    st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
+
+                    st.dataframe(uploaded_file.isna().sum(), 
+                                 use_container_width=True)
                     st.divider()
 
 
@@ -377,29 +464,38 @@ elif options_sidebar == 'Machine Learning':
 
             with remove_columns_tab:
                 # Dropdown-Box mit Spaltennamen erstellen
-                columns_to_drop = st.multiselect("Select columns to drop", uploaded_file.columns)
+                columns_to_drop = st.multiselect("Select columns to drop", 
+                                                 uploaded_file.columns)
 
                 # Ausgewählte Spalten aus dem DataFrame entfernen
-                uploaded_file = uploaded_file.drop(columns=columns_to_drop)
 
-                only_numeric_columns = st.button(label=('Only numeric values'))
+                uploaded_file = uploaded_file.drop(columns = columns_to_drop)
+
+                only_numeric_columns = st.button(label = ('Only numeric values'))
 
                 if only_numeric_columns:
                     # Nur numerische Spalten beibehalten und 'date' falls vorhanden
-                    numeric_cols = uploaded_file.select_dtypes(include=[np.number]).columns.tolist()
+                    numeric_cols = uploaded_file.select_dtypes(include = [np.number]).columns.tolist()
 
                     if 'date' in uploaded_file.columns:
+
                         numeric_cols.append('date')
+
                     uploaded_file = uploaded_file[numeric_cols]
                     st.dataframe(uploaded_file.head(20), use_container_width=True)
+
                 else:
+
                     st.dataframe(uploaded_file.head(20), use_container_width=True)
 
                 reset_selection = st.button('Reset Selection')
 
                 if reset_selection:
+
                     uploaded_file = uploaded_file.copy()
+
                     st.dataframe(uploaded_file)
+
                     st.success('Selection reset.')
 
 
@@ -413,129 +509,229 @@ elif options_sidebar == 'Machine Learning':
                                                     'Scatterchart', 
                                                     'Histogramm',
                                                     'Boxplot'))
+                    
                     for chart_type in options_of_charts:
 
                         if chart_type == 'Histogramm':
+
                             st.write('You can freely choose your :blue[Histogramm]')
+
                             col1_col ,col2_bins = st.columns(2)
+
                             with col1_col:
-                                x_axis_val_hist = st.selectbox('Select X-Axis Value', options=uploaded_file.columns,
-                                                            key='x_axis_hist_multiselect')
+
+                                x_axis_val_hist = st.selectbox('Select X-Axis Value', 
+                                                               options=uploaded_file.columns,
+                                                                key='x_axis_hist_multiselect')
+                                
                             with col2_bins:
-                                bin_size = st.slider('Bin Size', min_value=1, max_value=30, step=1, value=1, format='%d')
+                                bin_size = st.slider('Bin Size', 
+                                                     min_value=1, 
+                                                     max_value=30, 
+                                                     step=1, 
+                                                     value=1, 
+                                                     format='%d')
+                                
                             color = st.color_picker('Pick A Color')
+
                             hist_plot_1 = px.histogram(uploaded_file, 
                                                        x=x_axis_val_hist, 
                                                        nbins=bin_size,
                                                        color_discrete_sequence=[color])
+                            
                             st.plotly_chart(hist_plot_1)
+
                             # Erstellen des Histogramms mit Plotly
+
                             fig = go.Figure(data=hist_plot_1)
+
                             # Umwandeln des Histogramm-Graphen in eine Bilddatei
-                            img_bytes = pio.to_image(fig, format='png', width=1000, height=600, scale=2)
+                            img_bytes = pio.to_image(fig, 
+                                                     format='png', 
+                                                     width=1000, 
+                                                     height=600, 
+                                                     scale=2)
+                            
                             # Herunterladen der Bilddatei als Button
                             with open('histo.png', 'wb') as f:
+
                                 f.write(img_bytes)
+
                             with open('histo.png', 'rb') as f:
+
                                 image_bytes = f.read()
-                                st.download_button(label='Download Histogramm', data=image_bytes, file_name='histo.png')
+
+                                st.download_button(label='Download Histogramm', 
+                                                   data=image_bytes, 
+                                                   file_name='histo.png')
+                                
                             st.divider()
 
                         elif chart_type == 'Scatterchart':
                             st.write('You can freely choose your :blue[Scatter plot]')
-                            x_axis_val_col_, y_axis_val_col_ = st.columns(2)
-                            with x_axis_val_col_:
-                                x_axis_val = st.selectbox('Select X-Axis Value', options=uploaded_file.columns, key='x_axis_selectbox')
-                            with y_axis_val_col_:
-                                y_axis_val = st.selectbox('Select Y-Axis Value', options=uploaded_file.columns, key='y_axis_selectbox')
-                            scatter_plot_1 = px.scatter(uploaded_file, x=x_axis_val,y=y_axis_val)
 
-                            st.plotly_chart(scatter_plot_1,use_container_width=True)
+                            x_axis_val_col_, y_axis_val_col_ = st.columns(2)
+
+                            with x_axis_val_col_:
+                                x_axis_val = st.selectbox('Select X-Axis Value', 
+                                                          options = uploaded_file.columns, 
+                                                          key = 'x_axis_selectbox')
+
+                            with y_axis_val_col_:
+                                y_axis_val = st.selectbox('Select Y-Axis Value', 
+                                                          options = uploaded_file.columns, 
+                                                          key = 'y_axis_selectbox')
+
+                            scatter_plot_1 = px.scatter(uploaded_file, 
+                                                        x = x_axis_val, 
+                                                        y = y_axis_val)
+
+                            st.plotly_chart(scatter_plot_1, 
+                                            use_container_width = True)
+
                             # Erstellen des Histogramms mit Plotly
-                            fig_scatter = go.Figure(data=scatter_plot_1)
+                            fig_scatter = go.Figure(data = scatter_plot_1)
                             # Umwandeln des Histogramm-Graphen in eine Bilddatei
+
                             plt.tight_layout()
-                            img_bytes_scatter = pio.to_image(fig_scatter, format='png', width=1000, height=600, scale=2)
+                            img_bytes_scatter = pio.to_image(fig_scatter, 
+                                                             format='png', 
+                                                             width=1000, 
+                                                             height=600, 
+                                                             scale=2)
+                            
                             # Herunterladen der Bilddatei als Button
                             with open('Scatter.png', 'wb') as f:
                                 f.write(img_bytes_scatter)
+
                             with open('Scatter.png', 'rb') as f:
                                 image_bytes_scatter = f.read()
-                                st.download_button(label='Download Scatter', data=image_bytes_scatter, file_name='Scatter.png')
+
+                                st.download_button(label='Download Scatter', 
+                                                   data = image_bytes_scatter, file_name = 'Scatter.png')
+                                
                             st.divider()
 
                         elif chart_type == 'Linechart':
                             st.markdown('You can freely choose your :blue[Linechart] :chart_with_upwards_trend:')
+
                             Line_date_not_col1, Line_date_not_col2= st.columns(2)
+
                             with Line_date_not_col1:
                                 start_date = st.date_input('Start date')
+
                             with Line_date_not_col2:
                                 end_date = st.date_input('End date')
                             
                             col3,col4 = st.columns(2)
                             
                             with col3:
-                                x_axis_val_line = st.selectbox('Select X-Axis Value', options=uploaded_file.columns,
-                                                            key='x_axis_line_multiselect')
+                                x_axis_val_line = st.selectbox('Select X-Axis Value', 
+                                                               options = uploaded_file.columns,
+                                                               key = 'x_axis_line_multiselect')
+                                
                             with col4:
-                                y_axis_vals_line = st.multiselect('Select :blue[Y-Axis Values]', options=uploaded_file.columns,
-                                                                key='y_axis_line_multiselect')
+                                y_axis_vals_line = st.multiselect('Select :blue[Y-Axis Values]', 
+                                                                  options = uploaded_file.columns,
+                                                                  key = 'y_axis_line_multiselect')
 
-                            line_plot_1 = px.line(uploaded_file, x=x_axis_val_line, y=y_axis_vals_line)
+                            line_plot_1 = px.line(uploaded_file, 
+                                                  x = x_axis_val_line, 
+                                                  y = y_axis_vals_line)
+                            
                             st.plotly_chart(line_plot_1)
-                            fig_line = go.Figure(data=line_plot_1)
+
+                            fig_line = go.Figure(data = line_plot_1)
+
                             # Umwandeln des Histogramm-Graphen in eine Bilddatei
-                            img_bytes_line = pio.to_image(fig_line, format='png', width=1000, height=600, scale=2)
+                            img_bytes_line = pio.to_image(fig_line, 
+                                                          format='png', 
+                                                          width=1000, 
+                                                          height=600, 
+                                                          scale=2)
+                            
                             # Herunterladen der Bilddatei als Button
                             with open('Lineplot.png', 'wb') as f:
                                 f.write(img_bytes_line)
+
                             with open('Lineplot.png', 'rb') as f:
                                 img_bytes_line = f.read()
-                                st.download_button(label='Download Lineplot', data=img_bytes_line, file_name='histo.png')
+
+                                st.download_button(label = 'Download Lineplot', data = img_bytes_line, file_name = 'histo.png')
                             st.divider()
 
                         elif chart_type == 'Barchart':
                             st.write('You can freely choose your :blue[Barplot]')
                             bar_X_col,bar_Y_col = st.columns(2)
+
                             with bar_X_col:
-                                x_axis_val_bar = st.selectbox('Select X-Axis Value', options=uploaded_file.columns,
-                                                        key='x_axis_bar_multiselect')
+                                x_axis_val_bar = st.selectbox('Select X-Axis Value', 
+                                                              options = uploaded_file.columns,
+                                                              key='x_axis_bar_multiselect')
+                                
                             with bar_Y_col:
-                                y_axis_val_bar = st.selectbox('Select Y-Axis Value', options=uploaded_file.columns,
-                                                        key='Y_axis_bar_multiselect')
-                            bar_plot_1 = px.bar(uploaded_file, x=x_axis_val_bar, y=y_axis_val_bar)
+                                y_axis_val_bar = st.selectbox('Select Y-Axis Value', 
+                                                               options = uploaded_file.columns,
+                                                               key='Y_axis_bar_multiselect')
+                                
+                            bar_plot_1 = px.bar(uploaded_file, 
+                                                x = x_axis_val_bar,
+                                                y = y_axis_val_bar)
+                            
                             st.plotly_chart(bar_plot_1)
 
-                            fig_bar = go.Figure(data=bar_plot_1)
+                            fig_bar = go.Figure(data = bar_plot_1)
                             
                             # Umwandeln des Histogramm-Graphen in eine Bilddatei
-                            img_bytes_bar = pio.to_image(fig_bar, format='png', width=1000, height=600, scale=2)
+                            img_bytes_bar = pio.to_image(fig_bar, 
+                                                         format = 'png', 
+                                                         width = 1000, 
+                                                         height = 600, 
+                                                         scale = 2)
                             
                             # Herunterladen der Bilddatei als Button
                             with open('Barplot.png', 'wb') as f:
                                 f.write(img_bytes_bar)
+
                             with open('Barplot.png', 'rb') as f:
                                 img_bytes_line = f.read()
-                                st.download_button(label='Download Barplot', data=img_bytes_bar, file_name='Barplot.png')
+
+                                st.download_button(label = 'Download Barplot', 
+                                                   data = img_bytes_bar, 
+                                                   file_name = 'Barplot.png')
+                                
                             st.divider()
 
                         elif chart_type == 'Boxplot':
                             st.write('You can freely choose your :blue[Boxplot]')
-                            y_axis_val_bar = st.selectbox('Select Y-Axis Value', options=uploaded_file.columns,
-                                                        key='Y_axis_box_multiselect')
-                            box_plot_1 = px.box(uploaded_file,y=y_axis_val_bar)
+
+                            y_axis_val_bar = st.selectbox('Select Y-Axis Value', 
+                                                          options = uploaded_file.columns,
+                                                          key = 'Y_axis_box_multiselect')
+                            
+                            box_plot_1 = px.box(uploaded_file,y = y_axis_val_bar)
+
                             st.plotly_chart(box_plot_1)
 
-
                             fig_boxplot = go.Figure(data=box_plot_1)
+
                             # Umwandeln des Histogramm-Graphen in eine Bilddatei
-                            img_bytes_boxplot = pio.to_image(fig_boxplot, format='png', width=1000, height=600, scale=2)
+                            img_bytes_boxplot = pio.to_image(fig_boxplot, 
+                                                             format = 'png', 
+                                                             width = 1000, 
+                                                             height = 600, 
+                                                             scale = 2)
+
                             # Herunterladen der Bilddatei als Button
                             with open('Boxplot.png', 'wb') as f:
                                 f.write(img_bytes_boxplot)
+                                
                             with open('Boxplot.png', 'rb') as f:
                                 img_bytes_line = f.read()
-                                st.download_button(label='Download Boxplot', data=img_bytes_boxplot, file_name='Barplot.png')
+
+                                st.download_button(label='Download Boxplot', 
+                                                   data = img_bytes_boxplot, 
+                                                   file_name = 'Barplot.png')
                             st.divider()
                            
                 else:
@@ -544,7 +740,8 @@ elif options_sidebar == 'Machine Learning':
             with machine_learning:
                 
                 #Start  von Machine Learning 
-                st.dataframe(uploaded_file,use_container_width= True)
+                st.dataframe(uploaded_file, 
+                             use_container_width = True)
                 # Correlation Matrix erster Expander
                 Correlation_Matrix = st.expander('Correlation Matrix')
                 
@@ -553,32 +750,44 @@ elif options_sidebar == 'Machine Learning':
                     st.info("""Correlation matrices are important in machine learning because they help 
                                 us understand how different variables are related to each other. By identifying 
                                 strong correlations, we can select the most useful variables for predicting a 
-                                target, and avoid problems with multicollinearity.""", icon="ℹ️")
+                                target, and avoid problems with multicollinearity.""", 
+                                icon = "ℹ️")
                     
-                    # Korrelationsmatrix
+                    # Correlationsmatrix
                     corr_matrix = uploaded_file.select_dtypes(include=[np.number]).corr()
 
 
-                    # Erstellung der Heatmap mit Plotly
-                    fig_correlation = px.imshow(corr_matrix.values, color_continuous_scale='purples', zmin=-1, zmax=1,
-                                    x=corr_matrix.columns, y=corr_matrix.index,
-                                    labels=dict(x="Columns", y="Columns", color="Correlation"))
+                    # Creation of the Heatmap with Plotly
+                    fig_correlation = px.imshow(corr_matrix.values, 
+                                                color_continuous_scale = 'purples', 
+                                                zmin = -1, 
+                                                zmax = 1,
+                                                x = corr_matrix.columns, 
+                                                y = corr_matrix.index,labels = dict(x = "Columns",  y = "Columns", 
+                                                  color = "Correlation"))
                     
                     # Anpassung der Plot-Parameter
                     fig_correlation.update_layout(
-                        title='Correlation Matrix',
-                        font=dict(
-                            color='grey'
+                        title = 'Correlation Matrix',
+                        font = dict(
+                        color = 'grey'
                         )
                     )
 
-                    fig_correlation.update_traces(showscale=False, colorbar_thickness=25)
+                    fig_correlation.update_traces(showscale = False, 
+                                                  colorbar_thickness = 25)
                     
                     # Hinzufügen der numerischen Werte als Text
                     annotations = []
                     for i, row in enumerate(corr_matrix.values):
                         for j, val in enumerate(row):
-                            annotations.append(dict(x=j, y=i, text=str(round(val, 2)), showarrow=False, font=dict(size=16)))
+
+                            annotations.append(dict(x = j, 
+                                                    y = i, 
+                                                    text = str(round(val, 2)), 
+                                                    showarrow = False, 
+                                                    font = dict(size=16))
+                                                    )
                     fig_correlation.update_layout(annotations=annotations)
                     
                     # Anzeigen der Plot
