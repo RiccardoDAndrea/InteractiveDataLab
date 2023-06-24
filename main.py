@@ -545,17 +545,21 @@ elif options_sidebar == 'Machine Learning':
                     # Hier kann der Nutzer dynamisch die unabhängigen und abhängigen Variablen auswählen
                     Target_variable_col, X_variables_col = st.columns(2)
                     Target_variable = Target_variable_col.selectbox('Which is your Target Variable (Y)', options=uploaded_file.columns, key='LR Sklearn Target Variable')
-                    X_variables = X_variables_col.multiselect('Which is your Variables (X)', options=uploaded_file.columns, key='LR Sklearn X Variables')
-                    # if any(uploaded_file[x].dtype == object for x in Target_variable):
-                    #     st.warning('Ups, wrong data type for X variables!')
-                    #     st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
-                    #     st.dataframe(uploaded_file.dtypes,use_container_width=True)
-                    #     st.stop()
-                    # if any(uploaded_file[x].dtype == object for x in X_variables):
-                    #     st.warning('Ups, wrong data type for X variables!')
-                    #     st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
-                    #     st.dataframe(uploaded_file.dtypes,use_container_width=True)
-                    #     st.stop()
+                    X_variables = X_variables_col.multiselect('Which are your Variables (X)', options=uploaded_file.columns, key='LR Sklearn X Variables')
+
+                    # Überprüfung des Datentyps der ausgewählten Variablen
+                    if uploaded_file[Target_variable].dtype == object:
+                        st.warning('Ups, wrong data type for Target variable!')
+                        st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
+                        st.dataframe(uploaded_file.dtypes, use_container_width=True)
+                        st.stop()
+
+                    if any(uploaded_file[x].dtype == object for x in X_variables):
+                        st.warning('Ups, wrong data type for X variables!')
+                        st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
+                        st.dataframe(uploaded_file.dtypes, use_container_width=True)
+                        st.stop()
+
                     
                     if len(X_variables) == 0 :
                         st_lottie(no_X_variable_lottie)
@@ -666,6 +670,7 @@ elif options_sidebar == 'Machine Learning':
                     st.dataframe(results,use_container_width= True)
 
                 plt_Scatter = st.expander('Visualization of Scatter Plot')
+
                 with plt_Scatter:
                     fig = px.scatter(results, x='y_test', y='y_pred_test', trendline="ols")
                     fig.update_layout(

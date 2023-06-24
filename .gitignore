@@ -5,7 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
-regression_app
+reg_venv
 # Distribution / packaging
 .Python
 build/
