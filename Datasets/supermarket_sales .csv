@@ -1,4 +1,3 @@
-supermarket_sales 
 Invoice ID;Unit price;Quantity;Tax 5%;Total;Date;Time;cogs;gross margin percentage;gross income;Rating
 750-67-8428;74.69;7;26.1415;548.9715;1/5/2019;13:08;522.83;4.761904762;26.1415;9.1
 226-31-3081;15.28;5;3.82;80.22;3/8/2019;10:29;76.4;4.761904762;3.82;9.6
