@@ -82,7 +82,7 @@ def dataframe():
 
 def dataframe_from_url():
     # URL des GitHub-Datensatzes
-    dataset_url_supermarket = 'https://github.com/RiccardoDAndrea/Streamlit-Regression-App/raw/main/supermarket_sales%20-%20Sheet1.csv'
+    dataset_url_supermarket = 'https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/feature_dataset/Datasets/supermarket_sales%20.csv'
 
     # Herunterladen des Inhalts der CSV-Datei
     response = requests.get(dataset_url_supermarket)
@@ -94,7 +94,7 @@ def dataframe_from_url():
         f.write(content)
 
     # Laden der CSV-Datei mit Pandas
-    dataset = pd.read_csv(temp_file)
+    dataset = pd.read_csv(temp_file, sep = ";")
     os.remove(temp_file)
     Supermarket_data_set = pd.DataFrame(dataset)
     return Supermarket_data_set
@@ -102,7 +102,7 @@ def dataframe_from_url():
 if options_sidebar == 'Machine Learning':
     
     st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))    
-    #st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))    
+ 
 
 
 
