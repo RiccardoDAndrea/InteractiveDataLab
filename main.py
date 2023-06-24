@@ -90,7 +90,7 @@ def dataframe_from_url(url):
         f.write(content)
 
     # Laden der CSV-Datei mit Pandas
-    dataset = pd.read_csv(temp_file, sep=";")
+    dataset = pd.read_csv(temp_file, sep= st.session_state.separator)
     os.remove(temp_file)
     dataset_regression = pd.DataFrame(dataset)
     return dataset_regression
@@ -140,9 +140,13 @@ if options_sidebar == 'Homepage':
     explination_homepage = option_menu("Main Menu", 
                                        ["Machine Learning",
                                         'Object detection'], 
+
                                 icons = ['house', 'gear'], 
+
                                 menu_icon = "cast",
+
                                 orientation = 'horizontal', 
+
                                 default_index = 0)
     
     if 'Machine Learning' in explination_homepage:
