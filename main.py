@@ -80,12 +80,8 @@ def dataframe():
         return df
     
 
-def dataframe_from_url():
-    # URL des GitHub-Datensatzes
-    dataset_url_supermarket = 'https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/feature_dataset/Dataset/supermarket_sales%20.csv'
-
-    # Herunterladen des Inhalts der CSV-Datei
-    response = requests.get(dataset_url_supermarket)
+def dataframe_from_url(url):
+    response = requests.get(url)
     content = response.content
 
     # Speichern des Inhalts als temporäre Datei
@@ -94,28 +90,28 @@ def dataframe_from_url():
         f.write(content)
 
     # Laden der CSV-Datei mit Pandas
-    dataset = pd.read_csv(temp_file, sep = ";")
+    dataset = pd.read_csv(temp_file, sep=";")
     os.remove(temp_file)
-    Supermarket_data_set = pd.DataFrame(dataset)
-    return Supermarket_data_set
+    dataset_regression = pd.DataFrame(dataset)
+    return dataset_regression
+
 
 if options_sidebar == 'Machine Learning':
-    
-    st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))    
- 
+    st.session_state.separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))
 
+    # Ausgabe des Datensatzes
+    datasets = ['Supermarket dataset', 'Wage dataset', 'Own dataset']  # Liste der verfügbaren Datensätze
+    selected_datasets = st.sidebar.selectbox('Choose your Dataset:', options=datasets)
 
-
-# Ausgabe des Datensatzes
-
-    datasets = ['Supermarket dataset', 'Dataset 2', 'Own dataset']  # Liste der verfügbaren Datensätze
-    selected_datasets = st.sidebar.selectbox('Choose your Dataset:', options = datasets)
     if 'Supermarket dataset' in selected_datasets:
-        uploaded_file = dataframe_from_url()
-    elif 'Dataset 2' in selected_datasets:
-        uploaded_file = dataframe_from_url()
-    elif 'Own dataset' in selected_datasets: 
+        dataset_url = "https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/feature_dataset/Dataset/supermarket_sales%20.csv"
+        uploaded_file = dataframe_from_url(dataset_url)
+    elif 'Wage dataset' in selected_datasets:
+        dataset_url = "https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/feature_dataset/Dataset/wage.csv"
+        uploaded_file = dataframe_from_url(dataset_url)
+    elif 'Own dataset' in selected_datasets:
         uploaded_file = dataframe()
+
 
     
 
