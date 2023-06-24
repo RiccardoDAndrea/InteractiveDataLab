@@ -53,6 +53,11 @@ Then follows the Machine Learning process which is structured as follows.
 4. Contact
     - under contruction... 
 
+To all of you who have taken the time to visit my site and are now reading the script. Thank you so much for taking the time - I really appreciate it. 
+
+If YOU see any improvements, potential errors or optimisation potential please don't hesitate to let me know.
+-- Thank you in advance
+
 
 """
 
