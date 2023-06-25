@@ -241,14 +241,31 @@ if options_sidebar == 'Homepage':
                                                 height=200, 
                                                 quality='high')
         
-        st.write("""Imagine you're on Netflix and looking for a good movie. But don't worry, 
-                    you don't have to spend hours scrolling through endless lists of movies - 
-                    thanks to machine learning, Netflix will recommend exactly what you want 
-                    to see! And if you get hungry during the movie, Amazon can even suggest 
-                    what kind of pizza to order based on your preferences and ordering history. 
-                    But be careful,if you identify yourself with a selfie,the facial recognition 
-                    program might think you're a robot and lock you out - but hey,we're working 
-                    on it!""")
+        
+
+        
+        st.markdown('''
+            <p>
+            Imagine you're a snack aficionado with an uncanny ability to predict the prices of your favorite treats. People flock to you, seeking your mystical snack forecasting powers. You confidently delve into the world of regression, armed with a magical crystal ball and a stack of snack-related data. 😄🔮
+            </p>
+            <p>
+            You meticulously analyze factors like snack popularity, ingredient costs, and even peculiar correlations like the number of seagulls spotted near the snack factory. With a twinkle in your eye, you embark on a quest to uncover the hidden recipe for predicting snack prices. ✨📊
+            </p>
+            <p>
+            As you wield the powers of regression, you start making predictions that baffle and astound. You foresee that the price of chocolate bars rises whenever there's a worldwide cocoa shortage, and you predict that the demand for cheese puffs skyrockets during late-night gaming marathons. 🍫🚀
+            </p>
+            <p>
+            Your customers are left in awe as they witness your knack for anticipating snack price fluctuations. They flock to you, seeking guidance before making their snack purchasing decisions. Your crystal ball becomes the talk of the town, and you gain a reputation as the mystical snack whisperer. 👑🔮
+            </p>
+            <p>
+            But amidst the triumphs, you encounter the occasional hiccup. Sometimes, bizarre events like a squirrel invasion at a pretzel factory or a sudden surge in avocado toast popularity disrupt your predictions. It's a reminder that even the most magical regression models have their limits. 🙃⚠️
+            </p>
+            <p>
+            So, armed with your whimsical crystal ball, you continue to navigate the enigmatic realm of regression, forever embracing the unpredictable nature of snack economics. After all, who said forecasting the price of snacks couldn't be a deliciously mysterious adventure? 🌟🔮
+            </p>
+            ''', unsafe_allow_html=True)
+
+
         
     #### Explination of what is Objection Detection
     if 'Object detection' in explination_homepage:
@@ -263,15 +280,31 @@ if options_sidebar == 'Homepage':
                                                 width= 700, 
                                                 height=200, 
                                                 quality='high')
-        
 
-        st.write("""Object recognition is like a robot that scans its environment and identifies 
-                    any object that is in its way. It's like a waiter who, every time he serves a new dish, 
-                    immediately recognises what's on it and whether it contains nuts or gluten so he can warn 
-                    the allergy sufferers among the guests. Whether it's cars, buildings or faces - thanks to 
-                    object recognition, we can identify and track everything. But be careful! If you send the 
-                    object recognition programme to a party, it might try to detect each pair of shoes as a 
-                    separate object - and that probably wouldn't get it very far!""")
+        st.markdown('''
+            <p>
+            Object detection is like having a superpower to identify and locate objects in images or videos. 🕵️‍♂️📷
+            </p>
+            <p>
+            It's as if you have a magical eye that can spot a cat, a chair, or even a banana hidden among all the pixels. 🐱🪑🍌
+            </p>
+            <p>
+            Behind the scenes, deep learning algorithms are at work, analyzing thousands of labeled images to learn patterns and features. 🧠🔍
+            </p>
+            <p>
+            Armed with this knowledge, the object detection model can then scan new images or videos and accurately identify the objects present. ✅📸
+            </p>
+            <p>
+            It's like having a reliable sidekick who can instantly recognize and label the objects in any visual content. 🦸‍♂️🖼️
+            </p>
+            <p>
+            But remember, even the best object detection models have their limits. Unusual perspectives, occlusions, or confusing backgrounds can sometimes challenge their powers. 🚫❓
+            </p>
+            <p>
+            So, embrace the magic of object detection, and let it assist you in unraveling the hidden world of objects in images and videos! ✨🔍
+            </p>
+            ''', unsafe_allow_html=True)
+
 
 
 ####################################################################################################
@@ -1276,7 +1309,43 @@ elif options_sidebar == 'Object detection':
 
 
 elif options_sidebar == 'Contact':
-    st.write("""You can contact me on my Linkind Profil https://www.linkedin.com/in/riccardo-d-andrea-670426234/ also on my 
-                github account https://github.com/RiccardoDAndrea """)
+
+    st.markdown('''
+        <h1 align="center">Hi 👋, I'm Riccardo D'Andrea</h1>
+        <h3 align="center">A passionate Data Scientist from Germany</h3>
+
+        <p>
+            I'm currently working on a Streamlit Regression App, where I explore the fascinating world of machine learning and data analysis. 📊🔬
+        </p>
+
+        <p>
+            Learning about object detection and classification has been my recent focus, and I'm excited to dive deeper into this field. 🕵️‍♂️🔍
+        </p>
+
+        <p>
+            If you have any questions or just want to chat about anything related to data science, feel free to reach out to me. I'm always open for discussions and collaborations! 💬📫
+        </p>
+
+        <h3 align="left">Connect with me:</h3>
+        <p align="left">
+            <a href="https://linkedin.com/in/riccardo-d-andrea-670426234" target="_blank">LinkedIn</a> |
+            <a href="https://stackoverflow.com/users/19773284" target="_blank">Stack Overflow</a>
+        </p>
+
+        <h3 align="left">Languages and Tools:</h3>
+        <p align="left">
+            <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="Git" width="40" height="40"/>
+            <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL" width="40" height="40"/>
+            <img src="https://www.vectorlogo.zone/logos/opencv/opencv-icon.svg" alt="OpenCV" width="40" height="40"/>
+            <img src="https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg" alt="Pandas" width="40" height="40"/>
+            <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="40" height="40"/>
+            <img src="https://www.vectorlogo.zone/logos/pytorch/pytorch-icon.svg" alt="PyTorch" width="40" height="40"/>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" alt="Scikit-Learn" width="40" height="40"/>
+            <img src="https://seaborn.pydata.org/_images/logo-mark-lightbg.svg" alt="Seaborn" width="40" height="40"/>
+            <img src="https://www.vectorlogo.zone/logos/tensorflow/tensorflow-icon.svg" alt="TensorFlow" width="40" height="40"/>
+        </p>
+    ''', unsafe_allow_html=True)
+
+
     
     
