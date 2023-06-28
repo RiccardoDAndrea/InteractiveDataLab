@@ -407,8 +407,6 @@ elif options_sidebar == 'Machine Learning':
                 
                 st.write(uploaded_file.head(),
                          use_container_width=True)
-                
-            new_data_types = uploaded_file
 
         with handling_missing_values:
 
