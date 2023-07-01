@@ -254,7 +254,8 @@ elif options_sidebar == 'Machine Learning':
                         uploaded_file[col] = uploaded_file[col].astype(selected_dtype)
                 except Exception as e:
                     st.error(f"An error occurred: {str(e)}")
-                    st.stop()
+                    st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
+                    #st.stop()
                     # Display updated DataFrame
                 st.write("Updated DataFrame:")
                 st.dataframe(uploaded_file.dtypes, use_container_width=True)
@@ -494,23 +495,31 @@ elif options_sidebar == 'Machine Learning':
                                 target, and avoid problems with multicollinearity.""", icon="ℹ️")
                     
                     # Korrelationsmatrix
-                    corr_matrix = uploaded_file.select_dtypes(include=['float64', 'int64']).corr()
+                    corr_matrix = uploaded_file.select_dtypes(include=['float64', 
+                                                                       'int64']).corr()
 
 
                     # Erstellung der Heatmap mit Plotly
-                    fig_correlation = px.imshow(corr_matrix.values, color_continuous_scale='purples', zmin=-1, zmax=1,
-                                    x=corr_matrix.columns, y=corr_matrix.index,
-                                    labels=dict(x="Columns", y="Columns", color="Correlation"))
+                    fig_correlation = px.imshow(corr_matrix.values, 
+                                                color_continuous_scale = 'purples', 
+                                                zmin = -1, 
+                                                zmax = 1,
+                                                x = corr_matrix.columns, 
+                                                y = corr_matrix.index,
+                                                labels = dict( x = "Columns", 
+                                                               y = "Columns", 
+                                                               color = "Correlation"))
                     
                     # Anpassung der Plot-Parameter
                     fig_correlation.update_layout(
-                        title='Correlation Matrix',
-                        font=dict(
-                            color='grey'
+                                                title='Correlation Matrix',
+                                                font=dict(
+                                                    color='grey'
                         )
                     )
 
-                    fig_correlation.update_traces(showscale=False, colorbar_thickness=25)
+                    fig_correlation.update_traces( showscale = False, 
+                                                  colorbar_thickness = 25)
                     
                     # Hinzufügen der numerischen Werte als Text
                     annotations = []
@@ -606,15 +615,16 @@ elif options_sidebar == 'Machine Learning':
                     
                     # Evaluierung
                     # R2 oder auch Score
-
                     # Berechnung der R2-Scores
+
                     try:
                         R2_sklearn_train = lm.score(X_train, y_train)
                     except Exception as e:
-                        st.error(f"""An error occurred while calculating R2 score for training data: {str(e)}.
-                                 Please go back to 'Change Data Types' and make sure the target variable has the correct data type.""")
-                        st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
+                        st.error(f"""Error occurred during R2 score calculation for training data: {str(e)}.
+                                     Please check the data type of your target variable in the 'Change Data Types' section and make sure it is compatible for regression analysis.""")
+
                         st.stop()
+
 
 
                     R2_sklearn_test = lm.score(X_test, y_test)
