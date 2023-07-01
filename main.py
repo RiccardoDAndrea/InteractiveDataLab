@@ -876,7 +876,41 @@ elif options_sidebar == 'Object detection':
 
 
 elif options_sidebar == 'Contact':
-    st.write("""You can contact me on my Linkind Profil https://www.linkedin.com/in/riccardo-d-andrea-670426234/ also on my 
-                github account https://github.com/RiccardoDAndrea """)
+
+    st.markdown('''
+        <h1 align="center">Hi 👋, I'm Riccardo D'Andrea</h1>
+        <h3 align="center">A passionate Data Scientist from Germany</h3>
+
+        <p>
+            I'm currently working on a Streamlit Regression App, where I explore the fascinating world of machine learning and data analysis. 📊🔬
+        </p>
+
+        <p>
+            Learning about object detection and classification has been my recent focus, and I'm excited to dive deeper into this field. 🕵️‍♂️🔍
+        </p>
+
+        <p>
+            If you have any questions or just want to chat about anything related to data science, feel free to reach out to me. I'm always open for discussions and collaborations! 💬📫
+        </p>
+
+        <h3 align="left">Connect with me:</h3>
+        <p align="left">
+            <a href="https://linkedin.com/in/riccardo-d-andrea-670426234" target="_blank">LinkedIn</a> |
+            <a href="https://stackoverflow.com/users/19773284" target="_blank">Stack Overflow</a>
+        </p>
+
+        <h3 align="left">Languages and Tools:</h3>
+        <p align="left">
+            <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="Git" width="40" height="40"/>
+            <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL" width="40" height="40"/>
+            <img src="https://www.vectorlogo.zone/logos/opencv/opencv-icon.svg" alt="OpenCV" width="40" height="40"/>
+            <img src="https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg" alt="Pandas" width="40" height="40"/>
+            <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="40" height="40"/>
+            <img src="https://www.vectorlogo.zone/logos/pytorch/pytorch-icon.svg" alt="PyTorch" width="40" height="40"/>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" alt="Scikit-Learn" width="40" height="40"/>
+            <img src="https://seaborn.pydata.org/_images/logo-mark-lightbg.svg" alt="Seaborn" width="40" height="40"/>
+            <img src="https://www.vectorlogo.zone/logos/tensorflow/tensorflow-icon.svg" alt="TensorFlow" width="40" height="40"/>
+        </p>
+    ''', unsafe_allow_html=True)
     
     
