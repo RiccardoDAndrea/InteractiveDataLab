@@ -236,32 +236,32 @@ elif options_sidebar == 'Machine Learning':
             ######## In this part the user have the choose to change his datatype if is neccary he or she can choose betweem
             ######## different types of data types and can save it with the button 'save changes'
 
-            st.subheader('Your Dataframe datatype')
+            st.subheader('Your DataFrame data types')
             st.dataframe(uploaded_file.dtypes, use_container_width=True)
-            st.subheader("Change your Datatypes:")
+
+            # Change data types
+            st.subheader("Change your Data Types:")
             selected_columns = st.multiselect("Choose your columns", uploaded_file.columns)
-            selected_dtype = st.selectbox("Choose one Datatype", [ "int64", 
-                                                                   "float64",
-                                                                   "string",
-                                                                   "datetime64[ns]"])
-            
-            # Explanation of what are datatypes 
-            expander_datatypes = st.expander(':blue[What are Datatypes and why are they so importen :question:]')
-            expander_datatypes.write("""Explination :white_check_mark: """)
+            selected_dtype = st.selectbox("Choose a data type", ["int64", "float64", "string", "datetime64[ns]"])
 
-        # Ändere den Datentyp und zeige den aktualisierten Datensatz an
-            if st.button("Save chanages"):
-                if selected_dtype == "datetime64[ns]":
+            if st.button("Save Changes"):
+                try:
+                    if selected_dtype == "datetime64[ns]":
+                        for col in selected_columns:
+                            uploaded_file[col] = pd.to_datetime(uploaded_file[col], format="%Y")
+
                     for col in selected_columns:
-                        uploaded_file[col] = pd.to_datetime(uploaded_file[col], format="%Y")
-
-                for col in selected_columns:
-                    uploaded_file[col] = uploaded_file[col].astype(selected_dtype)
-
+                        uploaded_file[col] = uploaded_file[col].astype(selected_dtype)
+                except Exception as e:
+                    st.error(f"An error occurred: {str(e)}")
+                    st.stop()
+                    # Display updated DataFrame
                 st.write("Updated DataFrame:")
-                st.dataframe(uploaded_file.dtypes,use_container_width=True)
-                st.write(uploaded_file.head(),use_container_width=True)
-            new_data_types = uploaded_file
+                st.dataframe(uploaded_file.dtypes, use_container_width=True)
+                st.dataframe(uploaded_file.head(), use_container_width=True)
+                
+
+            
 
         with handling_missing_values:
 
@@ -409,12 +409,7 @@ elif options_sidebar == 'Machine Learning':
 
                         elif chart_type == 'Linechart':
                             st.markdown('You can freely choose your :blue[Linechart] :chart_with_upwards_trend:')
-                            Line_date_not_col1, Line_date_not_col2= st.columns(2)
-                            with Line_date_not_col1:
-                                start_date = st.date_input('Start date')
-                            with Line_date_not_col2:
-                                end_date = st.date_input('End date')
-                            
+
                             col3,col4 = st.columns(2)
                             
                             with col3:
@@ -499,7 +494,7 @@ elif options_sidebar == 'Machine Learning':
                                 target, and avoid problems with multicollinearity.""", icon="ℹ️")
                     
                     # Korrelationsmatrix
-                    corr_matrix = uploaded_file.select_dtypes(include=[np.number]).corr()
+                    corr_matrix = uploaded_file.select_dtypes(include=['float64', 'int64']).corr()
 
 
                     # Erstellung der Heatmap mit Plotly
@@ -548,7 +543,7 @@ elif options_sidebar == 'Machine Learning':
                     X_variables = X_variables_col.multiselect('Which are your Variables (X)', options=uploaded_file.columns, key='LR Sklearn X Variables')
 
                     # Überprüfung des Datentyps der ausgewählten Variablen
-                    if uploaded_file[Target_variable].dtype == object:
+                    if uploaded_file[Target_variable].dtype == str or uploaded_file[Target_variable].dtype == str :
                         st.warning('Ups, wrong data type for Target variable!')
                         st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
                         st.dataframe(uploaded_file.dtypes, use_container_width=True)
@@ -612,7 +607,16 @@ elif options_sidebar == 'Machine Learning':
                     # Evaluierung
                     # R2 oder auch Score
 
-                    R2_sklearn_train = lm.score(X_train, y_train)
+                    # Berechnung der R2-Scores
+                    try:
+                        R2_sklearn_train = lm.score(X_train, y_train)
+                    except Exception as e:
+                        st.error(f"""An error occurred while calculating R2 score for training data: {str(e)}.
+                                 Please go back to 'Change Data Types' and make sure the target variable has the correct data type.""")
+                        st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
+                        st.stop()
+
+
                     R2_sklearn_test = lm.score(X_test, y_test)
                    
                     R_2_training_col,R_2_test_col = st.columns(2)
