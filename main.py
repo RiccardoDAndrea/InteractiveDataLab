@@ -78,6 +78,9 @@ from math import sqrt
 import statsmodels.api as sm
 import os
 
+import requests
+from PIL import Image
+
 # streamlit run app.py --server.maxMessageSize = 1028
 
 
@@ -881,7 +884,7 @@ elif options_sidebar == 'Contact':
                                        ["Contact",
                                         'Vita'], 
 
-                                icons = ['house', 'gear'], 
+                                icons = ['bi-send-fill', 'person-badge-fill'], 
 
                                 menu_icon = "cast",
 
@@ -926,4 +929,67 @@ elif options_sidebar == 'Contact':
         ''', unsafe_allow_html=True)
         
     if 'Vita' in contact_possibilities:
-        st.write('hier kommt dein Lebenslauf')
+        st.markdown(f"<div style='text-align:center;'><h1>CV</h1></div>",
+                    unsafe_allow_html=True)
+        st.divider()
+
+        url = "https://media.licdn.com/dms/image/D4E03AQGSjsIkLl4nng/profile-displayphoto-shrink_800_800/0/1678262554020?e=1693440000&v=beta&t=8tvue8VN77QL05pAIKMBV8xFarHBqKsAhM27ev-rlRg"
+
+        image = Image.open(requests.get(url, stream=True).raw)
+        resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
+
+        col1, col2 = st.columns([2, 1])  # Aufteilung in zwei Spalten
+
+        with col1:
+            st.write("Willkommen in meinem CV!")
+            st.write("Kurze Beschreibung was man grade macht")
+            # Weitere Inhalte... 
+
+        with col2:
+            # Hier können Sie den restlichen Inhalt der Spalte platzieren
+            st.image(resized_image, use_column_width=True)
+        st.divider()
+
+        current_activity_date, current_activity = st.columns((1,2))
+        
+        with current_activity_date:
+            st.markdown("""09/2020 – jetzt""")
+            st.markdown("""> 03/2023 - 06/2023""")
+
+        with current_activity:
+            st.markdown("""**Bachelor of Arts in Applied Economics** in the 5th semester Osnabrück University 
+                        of Applied Sciences, Osnabrück""")
+            st.markdown(" \n ")
+            st.markdown(""" > Intership mso Digital""")
+            
+        st.divider()
+        handelsfachwirt_date, handelsfachwirt_activity = st.columns((1,2))
+
+        with handelsfachwirt_date:
+            st.markdown("02/2019 – 02/2021")
+
+        with handelsfachwirt_activity:
+
+            st.markdown("""
+                        **Handelsfachwirt** Bachelor of Professional in Trade and Commerce Deichmann SE, Osnabrück Nahne
+                        - Stellvertretende Leitung
+                        - Führung und Motivation der Azubis
+                        - Planung und Analyse der Filialkennzahlen
+                        """)
+            
+        st.divider()
+
+        Deichmann_KIE_date, Deichmann_KIE_activity = st.columns((1,2))
+
+        with Deichmann_KIE_date:
+            st.markdown("08/2017 – 01/2019")
+            
+        with Deichmann_KIE_activity:
+            st.markdown("""
+                        **Retail sales assistant**
+                        \n 
+                        Deichmann SE, Osnabrück
+                        """)
+        st.divider()
+            
+        
