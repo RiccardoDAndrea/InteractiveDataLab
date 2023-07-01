@@ -954,13 +954,18 @@ elif options_sidebar == 'Contact':
         
         with current_activity_date:
             st.markdown("""09/2020 – jetzt""")
-            st.markdown("""> 03/2023 - 06/2023""")
+            
 
         with current_activity:
             st.markdown("""**Bachelor of Arts in Applied Economics** in the 5th semester Osnabrück University 
                         of Applied Sciences, Osnabrück""")
-            st.markdown(" \n ")
-            st.markdown(""" > Intership mso Digital""")
+        intership_date, intership_activity = st.columns((1,2))
+        
+        with intership_date:
+            st.markdown("""> 03/2023 - 06/2023""")
+        with intership_activity:
+            st.markdown("> **Internship mso Digital**\n\n > - Department **Data & Process Analytics**")
+
             
         st.divider()
         handelsfachwirt_date, handelsfachwirt_activity = st.columns((1,2))
@@ -971,7 +976,9 @@ elif options_sidebar == 'Contact':
         with handelsfachwirt_activity:
 
             st.markdown("""
-                        **Handelsfachwirt** Bachelor of Professional in Trade and Commerce Deichmann SE, Osnabrück Nahne
+                        **Handelsfachwirt** 
+                        \n
+                        Bachelor of Professional in Trade and Commerce Deichmann SE, Osnabrück Nahne
                         - Stellvertretende Leitung
                         - Führung und Motivation der Azubis
                         - Planung und Analyse der Filialkennzahlen
@@ -987,9 +994,25 @@ elif options_sidebar == 'Contact':
         with Deichmann_KIE_activity:
             st.markdown("""
                         **Retail sales assistant**
-                        \n 
+                        \n
                         Deichmann SE, Osnabrück
                         """)
         st.divider()
+
+        Fachabitur_date, Fachabitur_activity = st.columns((1,2))
+        with Fachabitur_date:
+            st.markdown("08/2015 – 07/2017")   
+
+        with Fachabitur_activity:
+            st.markdown(""" **Vocational baccalaureate in economics and administration**""")
+            st.markdown("""BBS am Pottgraben, Osnabrück""")
             
+        st.divider()
+        Realabschluss_date, Realabschluss_activity = st.columns((1,2))
+        with Realabschluss_date:
+            st.markdown("08/2015 – 07/2017")
+        
+        with Realabschluss_activity:
+            st.markdown("""**Secondary Certificate I**""") 
+            st.markdown("""Gesamtschule Schinkel, Osnabrück""")
         
