@@ -77,7 +77,6 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 from math import sqrt
 import statsmodels.api as sm
 import os
-
 import requests
 from PIL import Image
 
@@ -111,7 +110,7 @@ question_with_NaN_values = load_lottieurl('https://assets7.lottiefiles.com/packa
 no_X_variable_lottie = load_lottieurl('https://assets10.lottiefiles.com/packages/lf20_ydo1amjm.json')
 value_is_zero_in_train_size = load_lottieurl('https://assets7.lottiefiles.com/packages/lf20_usmfx6bp.json')
 wrong_data_type_ML = load_lottieurl('https://assets5.lottiefiles.com/packages/lf20_2frpohrv.json')
-
+rocket_for_cv = load_lottieurl('https://assets4.lottiefiles.com/packages/lf20_atskiwym.json')
 ################################################################################################################
 ################################################################################################################
 
@@ -929,90 +928,187 @@ elif options_sidebar == 'Contact':
         ''', unsafe_allow_html=True)
         
     if 'Vita' in contact_possibilities:
-        st.markdown(f"<div style='text-align:center;'><h1>CV</h1></div>",
-                    unsafe_allow_html=True)
-        st.divider()
-
-        url = "https://media.licdn.com/dms/image/D4E03AQGSjsIkLl4nng/profile-displayphoto-shrink_800_800/0/1678262554020?e=1693440000&v=beta&t=8tvue8VN77QL05pAIKMBV8xFarHBqKsAhM27ev-rlRg"
-
-        image = Image.open(requests.get(url, stream=True).raw)
-        resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
-
-        col1, col2 = st.columns([2, 1])  # Aufteilung in zwei Spalten
-
-        with col1:
-            st.write("Willkommen in meinem CV!")
-            st.write("Kurze Beschreibung was man grade macht")
-            # Weitere Inhalte... 
-
-        with col2:
-            # Hier können Sie den restlichen Inhalt der Spalte platzieren
-            st.image(resized_image, use_column_width=True)
-        st.divider()
-
-        current_activity_date, current_activity = st.columns((1,2))
+       
+        langugage_version = st.radio('Which langauge do you want the CV', ['German version', 
+                                                                           'English version'])
         
-        with current_activity_date:
-            st.markdown("""09/2020 – jetzt""")
-            
+        ##### G E R M A N _ V E R S I O N ####
 
-        with current_activity:
-            st.markdown("""**Bachelor of Arts in Applied Economics** in the 5th semester Osnabrück University 
-                        of Applied Sciences, Osnabrück""")
-        intership_date, intership_activity = st.columns((1,2))
-        
-        with intership_date:
-            st.markdown("""> 03/2023 - 06/2023""")
-        with intership_activity:
-            st.markdown("> **Internship mso Digital**\n\n > - Department **Data & Process Analytics**")
+        if 'German version' in langugage_version:
+            st.markdown(f"<div style='text-align:center;'><h1>Lebenslauf</h1></div>",
+                        unsafe_allow_html=True)
+            st.divider()
 
-            
-        st.divider()
-        handelsfachwirt_date, handelsfachwirt_activity = st.columns((1,2))
+            url = "https://media.licdn.com/dms/image/D4E03AQGSjsIkLl4nng/profile-displayphoto-shrink_800_800/0/1678262554020?e=1693440000&v=beta&t=8tvue8VN77QL05pAIKMBV8xFarHBqKsAhM27ev-rlRg"
 
-        with handelsfachwirt_date:
-            st.markdown("02/2019 – 02/2021")
+            image = Image.open(requests.get(url, stream=True).raw)
+            resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
 
-        with handelsfachwirt_activity:
+            col1, col2 = st.columns([2, 1])  # Aufteilung in zwei Spalten
 
-            st.markdown("""
-                        **Handelsfachwirt** 
-                        \n
-                        Bachelor of Professional in Trade and Commerce Deichmann SE, Osnabrück Nahne
-                        - Stellvertretende Leitung
-                        - Führung und Motivation der Azubis
-                        - Planung und Analyse der Filialkennzahlen
-                        """)
-            
-        st.divider()
+            with col1:
+                st.write("Willkommen in meinem CV!")
+                st.write("Kurze Beschreibung was man grade macht")   
+                st_lottie(rocket_for_cv, width=400, height=300, quality='high', loop=True)
 
-        Deichmann_KIE_date, Deichmann_KIE_activity = st.columns((1,2))
 
-        with Deichmann_KIE_date:
-            st.markdown("08/2017 – 01/2019")
-            
-        with Deichmann_KIE_activity:
-            st.markdown("""
-                        **Retail sales assistant**
-                        \n
-                        Deichmann SE, Osnabrück
-                        """)
-        st.divider()
+            with col2:
+                # Hier können Sie den restlichen Inhalt der Spalte platzieren
+                st.image(resized_image, use_column_width=True)
+            st.divider()
 
-        Fachabitur_date, Fachabitur_activity = st.columns((1,2))
-        with Fachabitur_date:
-            st.markdown("08/2015 – 07/2017")   
+            current_activity_date, current_activity = st.columns((1,2))
 
-        with Fachabitur_activity:
-            st.markdown(""" **Vocational baccalaureate in economics and administration**""")
-            st.markdown("""BBS am Pottgraben, Osnabrück""")
-            
-        st.divider()
-        Realabschluss_date, Realabschluss_activity = st.columns((1,2))
-        with Realabschluss_date:
-            st.markdown("08/2015 – 07/2017")
-        
-        with Realabschluss_activity:
-            st.markdown("""**Secondary Certificate I**""") 
-            st.markdown("""Gesamtschule Schinkel, Osnabrück""")
-        
+            with current_activity_date:
+                st.markdown("""09/2020 – jetzt""")
+                
+
+            with current_activity:
+                st.markdown("""**Bachelor of Arts in Angewandter Volkswirtschaft**
+                                im 5. Semester Hochschule Osnabrück, Osnabrück""")
+            intership_date, intership_activity = st.columns((1,2))
+
+            with intership_date:
+                st.markdown("""> 03/2023 - 06/2023""")
+            with intership_activity:
+                st.markdown("> **Praktikum bei der mso digital GmbH & Co. KG**\n\n > - Abteilung **Data & Process Analytics**")
+
+                
+            st.divider()
+            handelsfachwirt_date, handelsfachwirt_activity = st.columns((1,2))
+
+            with handelsfachwirt_date:
+                st.markdown("02/2019 – 02/2021")
+
+            with handelsfachwirt_activity:
+
+                st.markdown("""
+                            **Handelsfachwirt** 
+                            \n
+                            Bachelor of Professional in Trade and Commerce Deichmann SE, Osnabrück Nahne
+                                - Stellvertretende Leitung
+                                - Führung und Motivation der Azubis
+                                - Planung und Analyse der Filialkennzahlen
+                            """)
+                
+            st.divider()
+
+            Deichmann_KIE_date, Deichmann_KIE_activity = st.columns((1,2))
+
+            with Deichmann_KIE_date:
+                st.markdown("08/2017 – 01/2019")
+                
+            with Deichmann_KIE_activity:
+                st.markdown("""
+                            **Kaufmann im Einzelhandel**
+                            \n
+                            Deichmann SE, Osnabrück
+                            """)
+            st.divider()
+
+            Fachabitur_date, Fachabitur_activity = st.columns((1,2))
+            with Fachabitur_date:
+                st.markdown("08/2015 – 07/2017")   
+
+            with Fachabitur_activity:
+                st.markdown(""" **Fachabitur in Wirtschaft und Verwaltung**""")
+                st.markdown("""BBS am Pottgraben, Osnabrück""")
+                
+            st.divider()
+            Realabschluss_date, Realabschluss_activity = st.columns((1,2))
+            with Realabschluss_date:
+                st.markdown("08/2015 – 07/2017")
+
+            with Realabschluss_activity:
+                st.markdown("""**Sekundarabschluss I**""") 
+                st.markdown("""Gesamtschule Schinkel, Osnabrück""")
+
+        ##### E N G L I S H _ V E R S I O N ####
+
+        if 'English version' in langugage_version:
+            st.markdown(f"<div style='text-align:center;'><h1>CV</h1></div>",
+                        unsafe_allow_html=True)
+            st.divider()
+
+            url = "https://media.licdn.com/dms/image/D4E03AQGSjsIkLl4nng/profile-displayphoto-shrink_800_800/0/1678262554020?e=1693440000&v=beta&t=8tvue8VN77QL05pAIKMBV8xFarHBqKsAhM27ev-rlRg"
+
+            image = Image.open(requests.get(url, stream=True).raw)
+            resized_image = image.resize((100, 400))  # Ändern Sie die Größe nach Bedarf
+
+            col1, col2 = st.columns([2, 1])  # Aufteilung in zwei Spalten
+
+            with col1:
+                st.write("Willkommen in meinem CV!")
+                st.write("Kurze Beschreibung was man grade macht")
+                # Weitere Inhalte... 
+
+            with col2:
+                # Hier können Sie den restlichen Inhalt der Spalte platzieren
+                st.image(resized_image, use_column_width=True)
+            st.divider()
+
+            current_activity_date, current_activity = st.columns((1,2))
+
+            with current_activity_date:
+                st.markdown("""09/2020 – jetzt""")
+                
+
+            with current_activity:
+                st.markdown("""**Bachelor of Arts in Applied Economics** in the 5th semester Osnabrück University 
+                            of Applied Sciences, Osnabrück""")
+            intership_date, intership_activity = st.columns((1,2))
+
+            with intership_date:
+                st.markdown("""> 03/2023 - 06/2023""")
+            with intership_activity:
+                st.markdown("> **Internship mso digital GmbH & Co. KG**\n\n > - Department **Data & Process Analytics**")
+
+                
+            st.divider()
+            handelsfachwirt_date, handelsfachwirt_activity = st.columns((1,2))
+
+            with handelsfachwirt_date:
+                st.markdown("02/2019 – 02/2021")
+
+            with handelsfachwirt_activity:
+
+                st.markdown("""
+                            **Handelsfachwirt** 
+                            \n
+                            Bachelor of Professional in Trade and Commerce Deichmann SE, Osnabrück Nahne
+                            - Deputy management
+                            - Leading and motivating the trainees
+                            - Planning and analysis of branch key figures
+                            """)
+                
+            st.divider()
+
+            Deichmann_KIE_date, Deichmann_KIE_activity = st.columns((1,2))
+
+            with Deichmann_KIE_date:
+                st.markdown("08/2017 – 01/2019")
+                
+            with Deichmann_KIE_activity:
+                st.markdown("""
+                            **Retail sales assistant**
+                            \n
+                            Deichmann SE, Osnabrück
+                            """)
+            st.divider()
+
+            Fachabitur_date, Fachabitur_activity = st.columns((1,2))
+            with Fachabitur_date:
+                st.markdown("08/2015 – 07/2017")   
+
+            with Fachabitur_activity:
+                st.markdown(""" **Vocational baccalaureate in economics and administration**""")
+                st.markdown("""BBS am Pottgraben, Osnabrück""")
+                
+            st.divider()
+            Realabschluss_date, Realabschluss_activity = st.columns((1,2))
+            with Realabschluss_date:
+                st.markdown("08/2015 – 07/2017")
+
+            with Realabschluss_activity:
+                st.markdown("""**Secondary Certificate I**""") 
+                st.markdown("""Gesamtschule Schinkel, Osnabrück""")
