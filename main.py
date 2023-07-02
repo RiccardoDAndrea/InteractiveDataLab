@@ -948,36 +948,46 @@ elif options_sidebar == 'Contact':
             CV_title, CV_image = st.columns([2, 1])  # Aufteilung in zwei Spalten
 
             with CV_title:
-                st.write("Willkommen in meinem CV!")
                 #st_lottie(rocket_for_cv, width=400, height=300, quality='high', loop=True)
-                st.markdown(f"<div style='text-align:center;'><h5>Soft Skills</h5></div>",
+                st.markdown(f"<div style='text-align:center;'><h5>About my skills</h5></div>",
                 unsafe_allow_html=True)
-                import random
-                st.markdown('- Freude am Lernen :books:')
-                df = pd.DataFrame(
-                    {
-                        "name": ["Roadmap", "Extras", "Issues"],
-                        "url": ["https://roadmap.streamlit.app", "https://extras.streamlit.app", "https://issues.streamlit.app"],
-                        "stars": [random.randint(0, 1000) for _ in range(3)],
-                    }
-                )
-                st.dataframe(
-                            df,
-                            column_config={
-                                "name": "App name",
-                                "stars": st.column_config.NumberColumn(
-                                    "Github Stars",
-                                    help="Number of stars on GitHub",
-                                    format="%d ⭐",
-                                ),
-                                "url": st.column_config.LinkColumn("App URL"),
-                                "views_history": st.column_config.LineChartColumn(
-                                    "Views (past 30 days)", y_min=0, y_max=5000
-                                ),
-                            },
-                            hide_index=True,
-                        )
+                st.markdown('Programming languages: ')
+                st.markdown("""<p align="left">
+                <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="Git" width="40" height="40"/>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL" width="40" height="40"/>
+                <img src="https://www.vectorlogo.zone/logos/opencv/opencv-icon.svg" alt="OpenCV" width="40" height="40"/>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg" alt="Pandas" width="40" height="40"/>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="40" height="40"/>
+            </p>""", unsafe_allow_html=True)
+                st.markdown("""<p align="left">
+                <img src="https://www.vectorlogo.zone/logos/pytorch/pytorch-icon.svg" alt="PyTorch" width="40" height="40"/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" alt="Scikit-Learn" width="40" height="40"/>
+                <img src="https://seaborn.pydata.org/_images/logo-mark-lightbg.svg" alt="Seaborn" width="40" height="40"/>
+                <img src="https://www.vectorlogo.zone/logos/tensorflow/tensorflow-icon.svg" alt="TensorFlow" width="40" height="40"/>
+                <img src="https://www.r-project.org/logo/Rlogo.svg" alt="R" width="40" height="40"/>
+            </p>""", unsafe_allow_html=True)
+              
 
+
+                
+
+                
+
+                # Leere DataFrame mit Spalten erstellen
+                data = {
+                "Hard Skill": ["Python 🐍", "Machine Learning 🤖", "Datenvisualisierung 📊", "Statistik 📈"],
+                "Soft Skill": ["Problem lösen 💡", "Kommunikation 🗣️", "Kritisches Denken 🤔", "Teamarbeit 🤝"],
+            }
+            df = pd.DataFrame(data)
+
+            # Spaltenkonfigurationen festlegen
+            column_config = {
+                "Hard Skill": {},
+                "Soft Skill": {}
+            }
+
+            # DataFrame anzeigen
+            st.dataframe(df, column_config=column_config, hide_index=True, use_container_width=True)
             with CV_image:
                 # Hier können Sie den restlichen Inhalt der Spalte platzieren
                 st.image(resized_image, use_column_width=True)
@@ -1052,23 +1062,61 @@ elif options_sidebar == 'Contact':
         ##### E N G L I S H _ V E R S I O N ####
 
         if 'English version' in langugage_version:
-            st.markdown(f"<div style='text-align:center;'><h1>CV</h1></div>",
+            st.markdown(f"<div style='text-align:center;'><h1>Lebenslauf</h1></div>",
                         unsafe_allow_html=True)
             st.divider()
 
             url = "https://media.licdn.com/dms/image/D4E03AQGSjsIkLl4nng/profile-displayphoto-shrink_800_800/0/1678262554020?e=1693440000&v=beta&t=8tvue8VN77QL05pAIKMBV8xFarHBqKsAhM27ev-rlRg"
 
             image = Image.open(requests.get(url, stream=True).raw)
-            resized_image = image.resize((100, 400))  # Ändern Sie die Größe nach Bedarf
+            resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
+  # Ändern Sie die Größe nach Bedarf
 
-            col1, col2 = st.columns([2, 1])  # Aufteilung in zwei Spalten
+            CV_title, CV_image = st.columns([2, 1])  # Aufteilung in zwei Spalten
 
-            with col1:
-                st.write("Willkommen in meinem CV!")
-                st.write("Kurze Beschreibung was man grade macht")
-                # Weitere Inhalte... 
+            with CV_title:
+                #st_lottie(rocket_for_cv, width=400, height=300, quality='high', loop=True)
+                st.markdown(f"<div style='text-align:center;'><h5>Soft Skills</h5></div>",
+                unsafe_allow_html=True)
+                st.markdown('Programming languages: ')
+                st.markdown("""<p align="left">
+                <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="Git" width="40" height="40"/>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL" width="40" height="40"/>
+                <img src="https://www.vectorlogo.zone/logos/opencv/opencv-icon.svg" alt="OpenCV" width="40" height="40"/>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg" alt="Pandas" width="40" height="40"/>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="40" height="40"/>
+                </p>""", unsafe_allow_html=True)
+                
+                st.markdown("""<p align="left">
+                <img src="https://www.vectorlogo.zone/logos/pytorch/pytorch-icon.svg" alt="PyTorch" width="40" height="40"/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" alt="Scikit-Learn" width="40" height="40"/>
+                <img src="https://seaborn.pydata.org/_images/logo-mark-lightbg.svg" alt="Seaborn" width="40" height="40"/>
+                <img src="https://www.vectorlogo.zone/logos/tensorflow/tensorflow-icon.svg" alt="TensorFlow" width="40" height="40"/>
+                <img src="https://www.r-project.org/logo/Rlogo.svg" alt="R" width="40" height="40"/>
+                </p>""", unsafe_allow_html=True)
+              
 
-            with col2:
+
+                
+
+                
+
+                # Leere DataFrame mit Spalten erstellen
+                data = {
+                "Hard Skill": ["Python 🐍", "Machine Learning 🤖", "Datenvisualisierung 📊", "Statistik 📈"],
+                "Soft Skill": ["Problem lösen 💡", "Kommunikation 🗣️", "Kritisches Denken 🤔", "Teamarbeit 🤝"],
+            }
+            df = pd.DataFrame(data)
+
+            # Spaltenkonfigurationen festlegen
+            column_config = {
+                "Hard Skill": {},
+                "Soft Skill": {}
+            }
+
+            # DataFrame anzeigen
+            st.dataframe(df, column_config=column_config, hide_index=True, use_container_width=True)
+            with CV_image:
                 # Hier können Sie den restlichen Inhalt der Spalte platzieren
                 st.image(resized_image, use_column_width=True)
             st.divider()
