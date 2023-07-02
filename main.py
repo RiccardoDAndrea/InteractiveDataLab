@@ -21,7 +21,7 @@ Then follows the Machine Learning process which is structured as follows.
     - 'Remove columns',
         -> For better clarity, it is possible to remove entire columns. 
 
-    - 'Viszulisation',
+    - 'Visualisation',
         -> In the visualisation area, many different charts can be developed from 
             1. Barchart
             2. Linechart
@@ -255,11 +255,11 @@ if options_sidebar == 'Homepage':
 elif options_sidebar == 'Machine Learning':
 # Possibilitys for the use 
     overview,change_data_type, handling_missing_values, remove_columns_tab, Visualization, machine_learning = st.tabs(['Overview',
-                                                                                                                                    'Change the data type',
-                                                                                                                                    'Handling missing Values',
-                                                                                                                                    'Remove columns',
-                                                                                                                                    "Viszulisation",
-                                                                                                                                    'Machine Learning'])
+                                                                                                                        'Change the data type',
+                                                                                                                        'Handling missing Values',
+                                                                                                                        'Remove columns',
+                                                                                                                        "Visualisation",
+                                                                                                                        'Machine Learning'])
 
     # In this Section we are in Change Data types
     if uploaded_file is not None:
@@ -939,7 +939,7 @@ elif options_sidebar == 'Contact':
                         unsafe_allow_html=True)
             st.divider()
 
-            url = "https://media.licdn.com/dms/image/D4E03AQGSjsIkLl4nng/profile-displayphoto-shrink_800_800/0/1678262554020?e=1693440000&v=beta&t=8tvue8VN77QL05pAIKMBV8xFarHBqKsAhM27ev-rlRg"
+            url = "https://media.licdn.com/dms/image/D4E03AQEd2xmgjhXwKA/profile-displayphoto-shrink_200_200/0/1688307591094?e=1694044800&v=beta&t=tiYzuqdmC-PkicoG_EK5949roKHiKp6EJ6iQHZOPm3U"
 
             image = Image.open(requests.get(url, stream=True).raw)
             resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
@@ -1022,9 +1022,9 @@ elif options_sidebar == 'Contact':
                             **Handelsfachwirt** 
                             \n
                             Bachelor of Professional in Trade and Commerce Deichmann SE, Osnabrück Nahne
-                                - Stellvertretende Leitung
-                                - Führung und Motivation der Azubis
-                                - Planung und Analyse der Filialkennzahlen
+                            - Stellvertretende Leitung
+                            - Führung und Motivation der Azubis
+                            - Planung und Analyse der Filialkennzahlen
                             """)
                 
             st.divider()
@@ -1059,14 +1059,15 @@ elif options_sidebar == 'Contact':
                 st.markdown("""**Sekundarabschluss I**""") 
                 st.markdown("""Gesamtschule Schinkel, Osnabrück""")
 
-        ##### E N G L I S H _ V E R S I O N ####
-
+        ###########################################################################################################################################################################
+        ##### E N G L I S H _ V E R S I O N #######################################################################################################################################
+        ###########################################################################################################################################################################
         if 'English version' in langugage_version:
             st.markdown(f"<div style='text-align:center;'><h1>Lebenslauf</h1></div>",
                         unsafe_allow_html=True)
             st.divider()
 
-            url = "https://media.licdn.com/dms/image/D4E03AQGSjsIkLl4nng/profile-displayphoto-shrink_800_800/0/1678262554020?e=1693440000&v=beta&t=8tvue8VN77QL05pAIKMBV8xFarHBqKsAhM27ev-rlRg"
+            url = "https://media.licdn.com/dms/image/D4E03AQEd2xmgjhXwKA/profile-displayphoto-shrink_200_200/0/1688307591094?e=1694044800&v=beta&t=tiYzuqdmC-PkicoG_EK5949roKHiKp6EJ6iQHZOPm3U"
 
             image = Image.open(requests.get(url, stream=True).raw)
             resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
@@ -1085,15 +1086,14 @@ elif options_sidebar == 'Contact':
                 <img src="https://www.vectorlogo.zone/logos/opencv/opencv-icon.svg" alt="OpenCV" width="40" height="40"/>
                 <img src="https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg" alt="Pandas" width="40" height="40"/>
                 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="40" height="40"/>
-                </p>""", unsafe_allow_html=True)
-                
+            </p>""", unsafe_allow_html=True)
                 st.markdown("""<p align="left">
                 <img src="https://www.vectorlogo.zone/logos/pytorch/pytorch-icon.svg" alt="PyTorch" width="40" height="40"/>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" alt="Scikit-Learn" width="40" height="40"/>
                 <img src="https://seaborn.pydata.org/_images/logo-mark-lightbg.svg" alt="Seaborn" width="40" height="40"/>
                 <img src="https://www.vectorlogo.zone/logos/tensorflow/tensorflow-icon.svg" alt="TensorFlow" width="40" height="40"/>
                 <img src="https://www.r-project.org/logo/Rlogo.svg" alt="R" width="40" height="40"/>
-                </p>""", unsafe_allow_html=True)
+            </p>""", unsafe_allow_html=True)
               
 
 
