@@ -943,16 +943,42 @@ elif options_sidebar == 'Contact':
 
             image = Image.open(requests.get(url, stream=True).raw)
             resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
+  # Ändern Sie die Größe nach Bedarf
 
-            col1, col2 = st.columns([2, 1])  # Aufteilung in zwei Spalten
+            CV_title, CV_image = st.columns([2, 1])  # Aufteilung in zwei Spalten
 
-            with col1:
+            with CV_title:
                 st.write("Willkommen in meinem CV!")
-                st.write("Kurze Beschreibung was man grade macht")   
-                st_lottie(rocket_for_cv, width=400, height=300, quality='high', loop=True)
+                #st_lottie(rocket_for_cv, width=400, height=300, quality='high', loop=True)
+                st.markdown(f"<div style='text-align:center;'><h5>Soft Skills</h5></div>",
+                unsafe_allow_html=True)
+                import random
+                st.markdown('- Freude am Lernen :books:')
+                df = pd.DataFrame(
+                    {
+                        "name": ["Roadmap", "Extras", "Issues"],
+                        "url": ["https://roadmap.streamlit.app", "https://extras.streamlit.app", "https://issues.streamlit.app"],
+                        "stars": [random.randint(0, 1000) for _ in range(3)],
+                    }
+                )
+                st.dataframe(
+                            df,
+                            column_config={
+                                "name": "App name",
+                                "stars": st.column_config.NumberColumn(
+                                    "Github Stars",
+                                    help="Number of stars on GitHub",
+                                    format="%d ⭐",
+                                ),
+                                "url": st.column_config.LinkColumn("App URL"),
+                                "views_history": st.column_config.LineChartColumn(
+                                    "Views (past 30 days)", y_min=0, y_max=5000
+                                ),
+                            },
+                            hide_index=True,
+                        )
 
-
-            with col2:
+            with CV_image:
                 # Hier können Sie den restlichen Inhalt der Spalte platzieren
                 st.image(resized_image, use_column_width=True)
             st.divider()
