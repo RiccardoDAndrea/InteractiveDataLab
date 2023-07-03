@@ -941,7 +941,7 @@ elif options_sidebar == 'Contact':
 
             url = "https://media.licdn.com/dms/image/D4E03AQEd2xmgjhXwKA/profile-displayphoto-shrink_200_200/0/1688307591094?e=1694044800&v=beta&t=tiYzuqdmC-PkicoG_EK5949roKHiKp6EJ6iQHZOPm3U"
 
-            image = Image.open(requests.get(url, stream=True).raw)
+            image = Image.open(requests.get(url, stream = True).raw)
             resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
   # Ändern Sie die Größe nach Bedarf
 
@@ -949,9 +949,8 @@ elif options_sidebar == 'Contact':
 
             with CV_title:
                 #st_lottie(rocket_for_cv, width=400, height=300, quality='high', loop=True)
-                st.markdown(f"<div style='text-align:center;'><h5>About my skills</h5></div>",
+                st.markdown(f"<div style='text-align:center;'><h5>Fertigkeiten</h5></div>",
                 unsafe_allow_html=True)
-                st.markdown('Programming languages: ')
                 st.markdown("""<p align="left">
                 <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="Git" width="40" height="40"/>
                 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL" width="40" height="40"/>
