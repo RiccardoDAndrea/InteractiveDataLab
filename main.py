@@ -965,12 +965,6 @@ elif options_sidebar == 'Contact':
                 <img src="https://www.vectorlogo.zone/logos/tensorflow/tensorflow-icon.svg" alt="TensorFlow" width="40" height="40"/>
                 <img src="https://www.r-project.org/logo/Rlogo.svg" alt="R" width="40" height="40"/>
             </p>""", unsafe_allow_html=True)
-              
-
-
-                
-
-                
 
                 # Leere DataFrame mit Spalten erstellen
                 data = {
@@ -1058,11 +1052,11 @@ elif options_sidebar == 'Contact':
                 st.markdown("""**Sekundarabschluss I**""") 
                 st.markdown("""Gesamtschule Schinkel, Osnabrück""")
 
-        ###########################################################################################################################################################################
-        ##### E N G L I S H _ V E R S I O N #######################################################################################################################################
-        ###########################################################################################################################################################################
+ ###########################################################################################################################################################################
+ ########### E N G L I S H _ V E R S I O N #######################################################################################################################################
+ ###########################################################################################################################################################################
         if 'English version' in langugage_version:
-            st.markdown(f"<div style='text-align:center;'><h1>Lebenslauf</h1></div>",
+            st.markdown(f"<div style='text-align:center;'><h1>Curriculum Vitae</h1></div>",
                         unsafe_allow_html=True)
             st.divider()
 
@@ -1076,9 +1070,8 @@ elif options_sidebar == 'Contact':
 
             with CV_title:
                 #st_lottie(rocket_for_cv, width=400, height=300, quality='high', loop=True)
-                st.markdown(f"<div style='text-align:center;'><h5>Soft Skills</h5></div>",
+                st.markdown(f"<div style='text-align:center;'><h5>Skills</h5></div>",
                 unsafe_allow_html=True)
-                st.markdown('Programming languages: ')
                 st.markdown("""<p align="left">
                 <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="Git" width="40" height="40"/>
                 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL" width="40" height="40"/>
@@ -1102,9 +1095,9 @@ elif options_sidebar == 'Contact':
 
                 # Leere DataFrame mit Spalten erstellen
                 data = {
-                "Hard Skill": ["Python 🐍", "Machine Learning 🤖", "Datenvisualisierung 📊", "Statistik 📈"],
-                "Soft Skill": ["Problem lösen 💡", "Kommunikation 🗣️", "Kritisches Denken 🤔", "Teamarbeit 🤝"],
-            }
+                        "Hard Skill": ["Python 🐍", "Machine Learning 🤖", "Data Visualization 📊", "Statistics 📈"],
+                        "Soft Skill": ["Problem Solving 💡", "Communication 🗣️", "Critical Thinking 🤔", "Teamwork 🤝"],
+                    }
             df = pd.DataFrame(data)
 
             # Spaltenkonfigurationen festlegen

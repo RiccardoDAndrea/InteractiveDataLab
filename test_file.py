@@ -31,7 +31,12 @@ def dataframe_from_url():
     return dataset_regression
 
 dataset_under = dataframe_from_url()
-print(dataset_under)
+dataset_under
+
+df = pd.read_csv('/Users/riccardo/Library/CloudStorage/OneDrive-HSOS/Python/Datensätze/all_data.txt')
+print(df.shape)
+
+
 
 
 
