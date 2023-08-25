@@ -120,7 +120,7 @@ options_sidebar = st.sidebar.radio(
     ('Homepage',
     'Machine Learning',
     "Object detection",
-    "Stock Market Dashboard",
+    "Stock market dashboard",
     'Contact'))
 
 
@@ -870,8 +870,8 @@ elif options_sidebar == 'Object detection':
         st.write(type(bytes_data))
 
 elif options_sidebar == 'Stock market dashboard':
-    st.title('Aktien test')
-   
+
+    import test_for_import
 
 
 
