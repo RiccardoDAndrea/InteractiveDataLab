@@ -80,9 +80,6 @@ import os
 import requests
 from PIL import Image
 
-# streamlit run app.py --server.maxMessageSize = 1028
-
-
 ################################################################################################################
 ############### Hier werden die Lottie files eingesetzt  #######################################################
 ################################################################################################################
@@ -123,6 +120,7 @@ options_sidebar = st.sidebar.radio(
     ('Homepage',
     'Machine Learning',
     "Object detection",
+    "Stock Market Dashboard",
     'Contact'))
 
 
@@ -871,7 +869,9 @@ elif options_sidebar == 'Object detection':
         # Should output: <class 'bytes'>
         st.write(type(bytes_data))
 
-
+elif options_sidebar == 'Stock market dashboard':
+    st.title('Aktien test')
+   
 
 
 
