@@ -31,7 +31,7 @@ for percent_complete in range(100):
         #     data[(ticker, col)] = stock_data[col]
         # stock_data['Formatted Date'] = stock_data.index.strftime('%Y-%m')
         # data[(ticker, 'Formatted Date')] = stock_data['Formatted Date']
-        data = pd.read_csv('stock_data.csv')   
+        data = pd.read_csv('Dataset/stock_data.csv')   
            
 st.dataframe(data)
 

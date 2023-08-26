@@ -871,7 +871,7 @@ elif options_sidebar == 'Object detection':
 
 elif options_sidebar == 'Stock market dashboard':
 
-    import files.stock_overlay as stock_overlay
+    from python_files import stock_overlay
 
 
 
