@@ -114,7 +114,7 @@ rocket_for_cv = load_lottieurl('https://assets4.lottiefiles.com/packages/lf20_at
 
 ####################  H O M E P A G E   ########################################################################    
 
-st.title('Regression Analyses') 
+st.title('Portfolie Projects') 
 options_sidebar = st.sidebar.radio(
     'Select an option',
     ('Homepage',
@@ -871,7 +871,7 @@ elif options_sidebar == 'Object detection':
 
 elif options_sidebar == 'Stock market dashboard':
 
-    import test_for_import
+    import stock_overlay
 
 
 
