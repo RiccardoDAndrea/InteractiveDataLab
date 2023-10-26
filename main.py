@@ -162,7 +162,7 @@ if options_sidebar == 'Machine Learning':
     selected_datasets = st.sidebar.selectbox('Choose your Dataset:', options=datasets)
 
     if 'Supermarket dataset' in selected_datasets:
-        dataset_url = "https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/feature_dataset/Dataset/supermarket_sales%20.csv"
+        dataset_url = "https://github.com/RiccardoDAndrea/Streamlit-Regression-App/blob/main/Dataset/supermarket_sales%20.csv"
         uploaded_file = dataframe_from_url(dataset_url)
     elif 'Wage dataset' in selected_datasets:
         dataset_url = "https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/feature_dataset/Dataset/wage.csv"
@@ -870,8 +870,7 @@ elif options_sidebar == 'Object detection':
         st.write(type(bytes_data))
 
 elif options_sidebar == 'Stock market dashboard':
-
-    from python_files import stock_overlay
+    from python_files import stock_overlay 
 
 
 
