@@ -1059,6 +1059,7 @@ elif options_sidebar == 'Contact':
                         unsafe_allow_html=True)
             st.divider()
 
+            url = "https://media.licdn.com/dms/image/D4D03AQG-a7zlIBBcYw/profile-displayphoto-shrink_800_800/0/1699013217528?e=1704326400&v=beta&t=NAWAas_NHznblsOZpugDM3bDGE3FR7VssU4CRbBWbUs"
 
             image = Image.open(requests.get(url, stream=True).raw)
             resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
@@ -1085,11 +1086,6 @@ elif options_sidebar == 'Contact':
                 <img src="https://www.r-project.org/logo/Rlogo.svg" alt="R" width="40" height="40"/>
             </p>""", unsafe_allow_html=True)
               
-
-
-                
-
-                
 
                 # Leere DataFrame mit Spalten erstellen
                 data = {
