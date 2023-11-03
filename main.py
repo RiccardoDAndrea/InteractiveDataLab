@@ -938,7 +938,7 @@ elif options_sidebar == 'Contact':
                         unsafe_allow_html=True)
             st.divider()
 
-            url = "https://media.licdn.com/dms/image/D4E03AQEd2xmgjhXwKA/profile-displayphoto-shrink_200_200/0/1688307591094?e=1694044800&v=beta&t=tiYzuqdmC-PkicoG_EK5949roKHiKp6EJ6iQHZOPm3U"
+            url = "https://media.licdn.com/dms/image/D4D03AQG-a7zlIBBcYw/profile-displayphoto-shrink_800_800/0/1699013217528?e=1704326400&v=beta&t=NAWAas_NHznblsOZpugDM3bDGE3FR7VssU4CRbBWbUs"
 
             image = Image.open(requests.get(url, stream = True).raw)
             resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
