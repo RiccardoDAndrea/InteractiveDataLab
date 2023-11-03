@@ -2,7 +2,7 @@
 The following script was created to give users the opportunity to learn how to handle a simple machine learning concept.
 
 1. the user starts on the home page
---> Afterwards he has the possibility to choose between the section 
+--> Afterwards the User has the possibility to choose between the section 
 
 2. Machine learning
 Here the user has the possibility to choose between two predefined datasets or to use his own dataset. As well as to choose the column separator freely.
@@ -80,9 +80,6 @@ import os
 import requests
 from PIL import Image
 
-# streamlit run app.py --server.maxMessageSize = 1028
-
-
 ################################################################################################################
 ############### Hier werden die Lottie files eingesetzt  #######################################################
 ################################################################################################################
@@ -117,12 +114,13 @@ rocket_for_cv = load_lottieurl('https://assets4.lottiefiles.com/packages/lf20_at
 
 ####################  H O M E P A G E   ########################################################################    
 
-st.title('Regression Analyses') 
+st.title('Portfolie Projects') 
 options_sidebar = st.sidebar.radio(
     'Select an option',
     ('Homepage',
     'Machine Learning',
     "Object detection",
+    "Stock market dashboard",
     'Contact'))
 
 
@@ -164,10 +162,10 @@ if options_sidebar == 'Machine Learning':
     selected_datasets = st.sidebar.selectbox('Choose your Dataset:', options=datasets)
 
     if 'Supermarket dataset' in selected_datasets:
-        dataset_url = "https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/feature_dataset/Dataset/supermarket_sales%20.csv"
+        dataset_url = "https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/main/Dataset/supermarket_sales%20.csv"
         uploaded_file = dataframe_from_url(dataset_url)
     elif 'Wage dataset' in selected_datasets:
-        dataset_url = "https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/feature_dataset/Dataset/wage.csv"
+        dataset_url = "https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/main/Dataset/wage.csv"
         uploaded_file = dataframe_from_url(dataset_url)
     elif 'Own dataset' in selected_datasets:
         uploaded_file = dataframe()
@@ -871,7 +869,8 @@ elif options_sidebar == 'Object detection':
         # Should output: <class 'bytes'>
         st.write(type(bytes_data))
 
-
+elif options_sidebar == 'Stock market dashboard':
+    from python_files import stock_overlay 
 
 
 

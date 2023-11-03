@@ -9,7 +9,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 from matplotlib import pyplot as plt
 from io import BytesIO
-import markdown2
+
 #### G E T _ S T O C K _ P R I C E S ####
 
 tickers = ['AAPL', 'BYDDF', 'EONGY', 'LNVGF', 'NIO', 'PLUN.F', 'TSLA', 'TKA.DE', 'XIACF']
