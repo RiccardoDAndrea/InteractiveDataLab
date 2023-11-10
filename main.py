@@ -908,7 +908,7 @@ elif options_sidebar == 'Contact':
 
             <h3 align="left">Connect with me:</h3>
             <p align="left">
-                <a href="https://linkedin.com/in/riccardo-d-andrea-670426234" target="_blank">LinkedIn</a> |
+                <a href="https://www.linkedin.com/in/riccardo-dandrea-670426234/" target="_blank">LinkedIn</a> |
                 <a href="https://stackoverflow.com/users/19773284" target="_blank">Stack Overflow</a>
             </p>
 
