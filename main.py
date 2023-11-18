@@ -859,18 +859,12 @@ elif options_sidebar == 'Machine Learning':
 ##########################################################################################
 
 elif options_sidebar == 'Object detection':
-    st.title('Falken Auge')
-    img_file_buffer = st.camera_input("Take a picture")
+    from python_files import main_object_detection
 
-    if img_file_buffer is not None:
-        # To read image file buffer as bytes:
-        bytes_data = img_file_buffer.getvalue()
-        # Check the type of bytes_data:
-        # Should output: <class 'bytes'>
-        st.write(type(bytes_data))
 
+###### S T O C K _ O V E R L A Y ##########
 elif options_sidebar == 'Stock market dashboard':
-    from python_files import stock_overlay 
+    from python_files import main_stock_overlay 
 
 
 
