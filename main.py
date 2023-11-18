@@ -859,11 +859,11 @@ elif options_sidebar == 'Machine Learning':
 ##########################################################################################
 
 elif options_sidebar == 'Object detection':
-    from . import main_object_detection
+    from python_files import main_object_detection
 
 ###### S T O C K _ O V E R L A Y ##########
 elif options_sidebar == 'Stock market dashboard':
-    from . import main_stock_overlay 
+    from python_files import main_stock_overlay 
 
 elif options_sidebar == 'Contact':
-    from . import main_contact 
+    from python_files import main_contact 
