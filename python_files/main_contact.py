@@ -15,6 +15,7 @@ contact_possibilities = option_menu("Contact",
                                 orientation = 'horizontal', 
 
                                 default_index = 0)
+
 if 'Contact' in contact_possibilities:
        
     st.markdown('''
@@ -53,7 +54,7 @@ if 'Contact' in contact_possibilities:
             </p>
         ''', unsafe_allow_html=True)
         
-if 'Vita' in contact_possibilities:
+    if 'Vita' in contact_possibilities:
        
         langugage_version = st.radio('Which langauge do you want the CV', ['German version', 
                                                                            'English version'])
