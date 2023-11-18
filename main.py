@@ -863,8 +863,10 @@ elif options_sidebar == 'Object detection':
 
 ###### S T O C K _ O V E R L A Y ##########
 elif options_sidebar == 'Stock market dashboard':
-    from python_files import main_stock_overlay 
     st.write("""*Currently under development*""")
+    st.stop()
+    from python_files import main_stock_overlay 
+    
 
 elif options_sidebar == 'Contact':
     from python_files import main_contact 
