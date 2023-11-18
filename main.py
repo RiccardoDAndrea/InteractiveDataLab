@@ -871,17 +871,4 @@ elif options_sidebar == 'Stock market dashboard':
 
 
 elif options_sidebar == 'Contact':
-
-    contact_possibilities = option_menu("Contact", 
-                                       ["Contact",
-                                        'Vita'], 
-
-                                icons = ['bi-send-fill', 'person-badge-fill'], 
-
-                                menu_icon = "cast",
-
-                                orientation = 'horizontal', 
-
-                                default_index = 0)
-    if 'Contact' in contact_possibilities:
-       from python_files import main_contact 
+    from python_files import main_contact 
