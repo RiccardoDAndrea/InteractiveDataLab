@@ -265,27 +265,48 @@ elif options_sidebar == 'Machine Learning':
         with overview:
                 st.write('In the follwoing Tab you can get a :blue[Overview of your data.] It will only show the first :keycap_ten: rows')
                 st.dataframe(uploaded_file.head(10),use_container_width=True)
-                expander_head = st.expander(':orange[More details about the df.head() method and why its important]')
-                expander_head.markdown("""When you're working with big data, you don't always want to repeat the whole 
-                                        process of reloading the data. Especially when an API is connected, this can be time intensive. 
-                                        The Head function df.head() of Pandas gives you the first 5 lines.""")
+                expander_head = st.expander(':grey[ :information_source: More details about the df.head() method and why it\'s important]')
+                expander_head.info("""
+                    When dealing with extensive datasets, repeatedly reloading the entire dataset can be impractical. 
+                    The `df.head()` method in Pandas comes in handy in such situations.
+
+                    This method provides a quick glimpse by showing you the first 5 rows of your data. 
+                    It offers a swift overview of the data structure, including column names, data types, and sample data. 
+                    This is particularly useful for making rapid decisions about data cleaning, transformation, or analysis, 
+                    all without the need to reload the entire dataset. 
+                    It saves time and ensures efficient utilization of computational resources.
+                """)
+
                 st.divider()
 
                 st.write('Here you can get an overview of your data')
                 st.dataframe(uploaded_file.describe(),use_container_width=True)
-                expander_describe = st.expander(':orange[More details about the describe method and why its important]')
-                expander_describe.write(""" Now let's look at the df.describe function and see if this of all functions is so powerfull.
-                                            The describe function not only shows us the rows and columns but also gives us the median. 
-                                            So if we build a machine learning model and we get a prediction value that is significantly higher than the max value and the median,
-                                            we know that our model is not good at calculating prediction values. """)
+                expander_describe = st.expander(':grey[:information_source: More details about the describe method and its importance]')
+                expander_describe.info("""
+                    Let's delve into the power of the `df.describe()` function. This function offers more than just a summary of rows and columns; 
+                    it provides essential statistical insights. 
+
+                    The describe function not only reveals the basic statistics like mean and standard deviation but also includes the median. 
+                    This is particularly valuable when building machine learning models. For instance, if a prediction value from your model 
+                    significantly deviates from the maximum value and the median provided by describe, it indicates potential issues with your model's predictions.
+
+                    In essence, df.describe() empowers you to quickly grasp the distribution and central tendencies of your data, 
+                    enabling you to make informed decisions about the performance and reliability of your models.
+                """)
+
                 st.divider()
 
                 st.write('Here are the NaN values in your data')
                 st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
-                expander_NaN = st.expander(':orange[What are NaN values and why should you pay attention to them]')
-                expander_NaN.write(""" NaN stands for "Not a Number" and refers to missing or invalid values in a data set. NaN values can come in many forms, including missing values, incorrect entries, or other invalid values.
-                                       As a Data Scientist or Analyst, it is important to pay attention to NaN values as they can skew or distort the data set. For example, when we perform a statistical analysis or train a 
-                                       machine learning model, missing values can lead to incorrect conclusions or worse predictions.""")
+                expander_NaN = st.expander(':grey[:information_source: What are NaN values and why should you pay attention to them ?]')
+                expander_NaN.info("""
+                                    NaN stands for "Not a Number" and denotes missing or invalid values within a dataset. These values can manifest as missing entries, incorrect data, or other forms of invalid information.
+
+                                    For Data Scientists or Analysts, it's crucial to be vigilant about NaN values because they have the potential to distort the dataset. 
+                                    When conducting statistical analyses or training machine learning models, the presence of missing values can lead to erroneous conclusions or, in the case of models, inaccurate predictions.
+
+                                    Addressing NaN values through appropriate handling methods is essential for maintaining the integrity and accuracy of your analyses and models.
+                                """)
                 st.divider()
 
         ## Here can the use change the data types if its neccarsary
@@ -861,12 +882,12 @@ elif options_sidebar == 'Machine Learning':
 elif options_sidebar == 'Object detection':
     st.warning("""*Currently under development*""")
     st.stop()
-    from python_files import main_object_detection
-###### S T O C K _ O V E R L A Y ##########
-elif options_sidebar == 'Stock market dashboard':
-    st.warning("""*Currently under development*""")
-    st.stop()
-    from python_files import main_stock_overlay 
+#     from python_files import main_object_detection
+# ###### S T O C K _ O V E R L A Y ##########
+# elif options_sidebar == 'Stock market dashboard':
+#     st.warning("""*Currently under development*""")
+#     st.stop()
+#     from python_files import main_stock_overlay 
     
 
 elif options_sidebar == 'Contact':
@@ -877,289 +898,289 @@ elif options_sidebar == 'Contact':
                                     orientation='horizontal', 
                                     default_index=0)
 
-if "Contact" in contact_possibilities:
+    if "Contact" in contact_possibilities:
 
-    st.markdown('''
-        <h1 align="center">Hi 👋, I'm Riccardo D'Andrea</h1>
-        <h3 align="center">A passionate Data Scientist from Germany</h3>
+        st.markdown('''
+            <h1 align="center">Hi 👋, I'm Riccardo D'Andrea</h1>
+            <h3 align="center">A passionate Data Scientist from Germany</h3>
 
-        <p>
-            I'm currently working on a Streamlit Regression App, where I explore the fascinating world of machine learning and data analysis. 📊🔬
-        </p>
+            <p>
+                I'm currently working on a Streamlit Regression App, where I explore the fascinating world of machine learning and data analysis. 📊🔬
+            </p>
 
-        <p>
-            Learning about object detection and classification has been my recent focus, and I'm excited to dive deeper into this field. 🕵️‍♂️🔍
-        </p>
+            <p>
+                Learning about object detection and classification has been my recent focus, and I'm excited to dive deeper into this field. 🕵️‍♂️🔍
+            </p>
 
-        <p>
-            If you have any questions or just want to chat about anything related to data science, feel free to reach out to me. I'm always open for discussions and collaborations! 💬📫
-        </p>
+            <p>
+                If you have any questions or just want to chat about anything related to data science, feel free to reach out to me. I'm always open for discussions and collaborations! 💬📫
+            </p>
 
-        <h3 align="left">Connect with me:</h3>
-        <p align="left">
-            <a href="https://www.linkedin.com/in/riccardo-dandrea-670426234/" target="_blank">LinkedIn</a> |
-            <a href="https://stackoverflow.com/users/19773284" target="_blank">Stack Overflow</a>
-        </p>
+            <h3 align="left">Connect with me:</h3>
+            <p align="left">
+                <a href="https://www.linkedin.com/in/riccardo-dandrea-670426234/" target="_blank">LinkedIn</a> |
+                <a href="https://stackoverflow.com/users/19773284" target="_blank">Stack Overflow</a>
+            </p>
 
-        <h3 align="left">Languages and Tools:</h3>
-        <p align="left">
-            <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="Git" width="40" height="40"/>
-            <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL" width="40" height="40"/>
-            <img src="https://www.vectorlogo.zone/logos/opencv/opencv-icon.svg" alt="OpenCV" width="40" height="40"/>
-            <img src="https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg" alt="Pandas" width="40" height="40"/>
-            <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="40" height="40"/>
-            <img src="https://www.vectorlogo.zone/logos/pytorch/pytorch-icon.svg" alt="PyTorch" width="40" height="40"/>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" alt="Scikit-Learn" width="40" height="40"/>
-            <img src="https://seaborn.pydata.org/_images/logo-mark-lightbg.svg" alt="Seaborn" width="40" height="40"/>
-            <img src="https://www.vectorlogo.zone/logos/tensorflow/tensorflow-icon.svg" alt="TensorFlow" width="40" height="40"/>
-        </p>
-    ''', unsafe_allow_html=True)
+            <h3 align="left">Languages and Tools:</h3>
+            <p align="left">
+                <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="Git" width="40" height="40"/>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL" width="40" height="40"/>
+                <img src="https://www.vectorlogo.zone/logos/opencv/opencv-icon.svg" alt="OpenCV" width="40" height="40"/>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg" alt="Pandas" width="40" height="40"/>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="40" height="40"/>
+                <img src="https://www.vectorlogo.zone/logos/pytorch/pytorch-icon.svg" alt="PyTorch" width="40" height="40"/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" alt="Scikit-Learn" width="40" height="40"/>
+                <img src="https://seaborn.pydata.org/_images/logo-mark-lightbg.svg" alt="Seaborn" width="40" height="40"/>
+                <img src="https://www.vectorlogo.zone/logos/tensorflow/tensorflow-icon.svg" alt="TensorFlow" width="40" height="40"/>
+            </p>
+        ''', unsafe_allow_html=True)
 
-if "Vita" in contact_possibilities:
+    if "Vita" in contact_possibilities:
 
-    langugage_version = st.radio('Which langauge do you want the CV', ['German version', 
-                                                                        'English version'])
-        
-    ##### G E R M A N _ V E R S I O N ####
+        langugage_version = st.radio('Which langauge do you want the CV', ['German version', 
+                                                                            'English version'])
+            
+        ##### G E R M A N _ V E R S I O N ####
 
-    if 'German version' in langugage_version:
-        st.markdown(f"<div style='text-align:center;'><h1>Lebenslauf</h1></div>",
+        if 'German version' in langugage_version:
+            st.markdown(f"<div style='text-align:center;'><h1>Lebenslauf</h1></div>",
+                            unsafe_allow_html=True)
+            st.divider()
+
+            url = "https://media.licdn.com/dms/image/D4D03AQG-a7zlIBBcYw/profile-displayphoto-shrink_800_800/0/1699013217528?e=1704326400&v=beta&t=NAWAas_NHznblsOZpugDM3bDGE3FR7VssU4CRbBWbUs"
+
+            image = Image.open(requests.get(url, stream = True).raw)
+            resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
+        # Ändern Sie die Größe nach Bedarf
+
+            CV_title, CV_image = st.columns([2, 1])  # Aufteilung in zwei Spalten
+
+            with CV_title:
+                #st_lottie(rocket_for_cv, width=400, height=300, quality='high', loop=True)
+                st.markdown(f"<div style='text-align:center;'><h5>Fertigkeiten</h5></div>",
+                unsafe_allow_html=True)
+                st.markdown("""<p align="left">
+                <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="Git" width="40" height="40"/>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL" width="40" height="40"/>
+                <img src="https://www.vectorlogo.zone/logos/opencv/opencv-icon.svg" alt="OpenCV" width="40" height="40"/>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg" alt="Pandas" width="40" height="40"/>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="40" height="40"/>
+            </p>""", unsafe_allow_html=True)
+                st.markdown("""<p align="left">
+                <img src="https://www.vectorlogo.zone/logos/pytorch/pytorch-icon.svg" alt="PyTorch" width="40" height="40"/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" alt="Scikit-Learn" width="40" height="40"/>
+                <img src="https://seaborn.pydata.org/_images/logo-mark-lightbg.svg" alt="Seaborn" width="40" height="40"/>
+                <img src="https://www.vectorlogo.zone/logos/tensorflow/tensorflow-icon.svg" alt="TensorFlow" width="40" height="40"/>
+                <img src="https://www.r-project.org/logo/Rlogo.svg" alt="R" width="40" height="40"/>
+            </p>""", unsafe_allow_html=True)
+
+                # Leere DataFrame mit Spalten erstellen
+                data = {
+                "Hard Skill": ["Python 🐍", "Machine Learning 🤖", "Datenvisualisierung 📊", "Statistik 📈"],
+                "Soft Skill": ["Problem lösen 💡", "Kommunikation 🗣️", "Kritisches Denken 🤔", "Teamarbeit 🤝"],
+            }
+            df = pd.DataFrame(data)
+
+            # Spaltenkonfigurationen festlegen
+            column_config = {
+                "Hard Skill": {},
+                "Soft Skill": {}
+            }
+
+            # DataFrame anzeigen
+            st.dataframe(df, column_config=column_config, hide_index=True, use_container_width=True)
+            with CV_image:
+                # Hier können Sie den restlichen Inhalt der Spalte platzieren
+                st.image(resized_image, use_column_width=True)
+            st.divider()
+
+            current_activity_date, current_activity = st.columns((1,2))
+
+            with current_activity_date:
+                st.markdown("""09/2020 – jetzt""")
+                
+
+            with current_activity:
+                st.markdown("""**Bachelor of Arts in Angewandter Volkswirtschaft**
+                                im 5. Semester Hochschule Osnabrück, Osnabrück""")
+            intership_date, intership_activity = st.columns((1,2))
+
+            with intership_date:
+                st.markdown("""> 03/2023 - 06/2023""")
+            with intership_activity:
+                st.markdown("> **Praktikum bei der mso digital GmbH & Co. KG**\n\n > - Abteilung **Data & Process Analytics**")
+
+                
+            st.divider()
+            handelsfachwirt_date, handelsfachwirt_activity = st.columns((1,2))
+
+            with handelsfachwirt_date:
+                st.markdown("02/2019 – 02/2021")
+
+            with handelsfachwirt_activity:
+
+                st.markdown("""
+                            **Handelsfachwirt** 
+                            \n
+                            Bachelor of Professional in Trade and Commerce Deichmann SE, Osnabrück Nahne
+                            - Stellvertretende Leitung
+                            - Führung und Motivation der Azubis
+                            - Planung und Analyse der Filialkennzahlen
+                            """)
+                
+            st.divider()
+
+            Deichmann_KIE_date, Deichmann_KIE_activity = st.columns((1,2))
+
+            with Deichmann_KIE_date:
+                st.markdown("08/2017 – 01/2019")
+                
+            with Deichmann_KIE_activity:
+                st.markdown("""
+                            **Kaufmann im Einzelhandel**
+                            \n
+                            Deichmann SE, Osnabrück
+                            """)
+            st.divider()
+
+            Fachabitur_date, Fachabitur_activity = st.columns((1,2))
+            with Fachabitur_date:
+                st.markdown("08/2015 – 07/2017")   
+
+            with Fachabitur_activity:
+                st.markdown(""" **Fachabitur in Wirtschaft und Verwaltung**""")
+                st.markdown("""BBS am Pottgraben, Osnabrück""")
+                
+            st.divider()
+            Realabschluss_date, Realabschluss_activity = st.columns((1,2))
+            with Realabschluss_date:
+                st.markdown("08/2015 – 07/2017")
+
+            with Realabschluss_activity:
+                st.markdown("""**Sekundarabschluss I**""") 
+                st.markdown("""Gesamtschule Schinkel, Osnabrück""")
+
+        ###########################################################################################################################################################################
+        ########### E N G L I S H _ V E R S I O N #######################################################################################################################################
+        ###########################################################################################################################################################################
+        if 'English version' in langugage_version:
+            st.markdown(f"<div style='text-align:center;'><h1>Curriculum Vitae</h1></div>",
                         unsafe_allow_html=True)
-        st.divider()
+            st.divider()
 
-        url = "https://media.licdn.com/dms/image/D4D03AQG-a7zlIBBcYw/profile-displayphoto-shrink_800_800/0/1699013217528?e=1704326400&v=beta&t=NAWAas_NHznblsOZpugDM3bDGE3FR7VssU4CRbBWbUs"
+            url = "https://media.licdn.com/dms/image/D4D03AQG-a7zlIBBcYw/profile-displayphoto-shrink_800_800/0/1699013217528?e=1704326400&v=beta&t=NAWAas_NHznblsOZpugDM3bDGE3FR7VssU4CRbBWbUs"
 
-        image = Image.open(requests.get(url, stream = True).raw)
-        resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
-    # Ändern Sie die Größe nach Bedarf
+            image = Image.open(requests.get(url, stream=True).raw)
+            resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
+        # Ändern Sie die Größe nach Bedarf
 
-        CV_title, CV_image = st.columns([2, 1])  # Aufteilung in zwei Spalten
+            CV_title, CV_image = st.columns([2, 1])  # Aufteilung in zwei Spalten
 
-        with CV_title:
-            #st_lottie(rocket_for_cv, width=400, height=300, quality='high', loop=True)
-            st.markdown(f"<div style='text-align:center;'><h5>Fertigkeiten</h5></div>",
-            unsafe_allow_html=True)
-            st.markdown("""<p align="left">
-            <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="Git" width="40" height="40"/>
-            <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL" width="40" height="40"/>
-            <img src="https://www.vectorlogo.zone/logos/opencv/opencv-icon.svg" alt="OpenCV" width="40" height="40"/>
-            <img src="https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg" alt="Pandas" width="40" height="40"/>
-            <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="40" height="40"/>
-        </p>""", unsafe_allow_html=True)
-            st.markdown("""<p align="left">
-            <img src="https://www.vectorlogo.zone/logos/pytorch/pytorch-icon.svg" alt="PyTorch" width="40" height="40"/>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" alt="Scikit-Learn" width="40" height="40"/>
-            <img src="https://seaborn.pydata.org/_images/logo-mark-lightbg.svg" alt="Seaborn" width="40" height="40"/>
-            <img src="https://www.vectorlogo.zone/logos/tensorflow/tensorflow-icon.svg" alt="TensorFlow" width="40" height="40"/>
-            <img src="https://www.r-project.org/logo/Rlogo.svg" alt="R" width="40" height="40"/>
-        </p>""", unsafe_allow_html=True)
+            with CV_title:
+                #st_lottie(rocket_for_cv, width=400, height=300, quality='high', loop=True)
+                st.markdown(f"<div style='text-align:center;'><h5>Skills</h5></div>",
+                unsafe_allow_html=True)
+                st.markdown("""<p align="left">
+                <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="Git" width="40" height="40"/>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL" width="40" height="40"/>
+                <img src="https://www.vectorlogo.zone/logos/opencv/opencv-icon.svg" alt="OpenCV" width="40" height="40"/>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg" alt="Pandas" width="40" height="40"/>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="40" height="40"/>
+            </p>""", unsafe_allow_html=True)
+                st.markdown("""<p align="left">
+                <img src="https://www.vectorlogo.zone/logos/pytorch/pytorch-icon.svg" alt="PyTorch" width="40" height="40"/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" alt="Scikit-Learn" width="40" height="40"/>
+                <img src="https://seaborn.pydata.org/_images/logo-mark-lightbg.svg" alt="Seaborn" width="40" height="40"/>
+                <img src="https://www.vectorlogo.zone/logos/tensorflow/tensorflow-icon.svg" alt="TensorFlow" width="40" height="40"/>
+                <img src="https://www.r-project.org/logo/Rlogo.svg" alt="R" width="40" height="40"/>
+            </p>""", unsafe_allow_html=True)
+                
 
-            # Leere DataFrame mit Spalten erstellen
-            data = {
-            "Hard Skill": ["Python 🐍", "Machine Learning 🤖", "Datenvisualisierung 📊", "Statistik 📈"],
-            "Soft Skill": ["Problem lösen 💡", "Kommunikation 🗣️", "Kritisches Denken 🤔", "Teamarbeit 🤝"],
-        }
-        df = pd.DataFrame(data)
+                # Leere DataFrame mit Spalten erstellen
+                data = {
+                        "Hard Skill": ["Python 🐍", "Machine Learning 🤖", "Data Visualization 📊", "Statistics 📈"],
+                        "Soft Skill": ["Problem Solving 💡", "Communication 🗣️", "Critical Thinking 🤔", "Teamwork 🤝"],
+                    }
+            df = pd.DataFrame(data)
 
-        # Spaltenkonfigurationen festlegen
-        column_config = {
-            "Hard Skill": {},
-            "Soft Skill": {}
-        }
+            # Spaltenkonfigurationen festlegen
+            column_config = {
+                "Hard Skill": {},
+                "Soft Skill": {}
+            }
 
-        # DataFrame anzeigen
-        st.dataframe(df, column_config=column_config, hide_index=True, use_container_width=True)
-        with CV_image:
-            # Hier können Sie den restlichen Inhalt der Spalte platzieren
-            st.image(resized_image, use_column_width=True)
-        st.divider()
+            # DataFrame anzeigen
+            st.dataframe(df, column_config=column_config, hide_index=True, use_container_width=True)
+            with CV_image:
+                # Hier können Sie den restlichen Inhalt der Spalte platzieren
+                st.image(resized_image, use_column_width=True)
+            st.divider()
 
-        current_activity_date, current_activity = st.columns((1,2))
+            current_activity_date, current_activity = st.columns((1,2))
 
-        with current_activity_date:
-            st.markdown("""09/2020 – jetzt""")
-            
+            with current_activity_date:
+                st.markdown("""09/2020 – jetzt""")
+                
 
-        with current_activity:
-            st.markdown("""**Bachelor of Arts in Angewandter Volkswirtschaft**
-                            im 5. Semester Hochschule Osnabrück, Osnabrück""")
-        intership_date, intership_activity = st.columns((1,2))
+            with current_activity:
+                st.markdown("""**Bachelor of Arts in Applied Economics** in the 5th semester Osnabrück University 
+                            of Applied Sciences, Osnabrück""")
+            intership_date, intership_activity = st.columns((1,2))
 
-        with intership_date:
-            st.markdown("""> 03/2023 - 06/2023""")
-        with intership_activity:
-            st.markdown("> **Praktikum bei der mso digital GmbH & Co. KG**\n\n > - Abteilung **Data & Process Analytics**")
+            with intership_date:
+                st.markdown("""> 03/2023 - 06/2023""")
+            with intership_activity:
+                st.markdown("> **Internship mso digital GmbH & Co. KG**\n\n > - Department **Data & Process Analytics**")
 
-            
-        st.divider()
-        handelsfachwirt_date, handelsfachwirt_activity = st.columns((1,2))
+                
+            st.divider()
+            handelsfachwirt_date, handelsfachwirt_activity = st.columns((1,2))
 
-        with handelsfachwirt_date:
-            st.markdown("02/2019 – 02/2021")
+            with handelsfachwirt_date:
+                st.markdown("02/2019 – 02/2021")
 
-        with handelsfachwirt_activity:
+            with handelsfachwirt_activity:
 
-            st.markdown("""
-                        **Handelsfachwirt** 
-                        \n
-                        Bachelor of Professional in Trade and Commerce Deichmann SE, Osnabrück Nahne
-                        - Stellvertretende Leitung
-                        - Führung und Motivation der Azubis
-                        - Planung und Analyse der Filialkennzahlen
-                        """)
-            
-        st.divider()
+                st.markdown("""
+                            **Handelsfachwirt** 
+                            \n
+                            Bachelor of Professional in Trade and Commerce Deichmann SE, Osnabrück Nahne
+                            - Deputy management
+                            - Leading and motivating the trainees
+                            - Planning and analysis of branch key figures
+                            """)
+                
+            st.divider()
 
-        Deichmann_KIE_date, Deichmann_KIE_activity = st.columns((1,2))
+            Deichmann_KIE_date, Deichmann_KIE_activity = st.columns((1,2))
 
-        with Deichmann_KIE_date:
-            st.markdown("08/2017 – 01/2019")
-            
-        with Deichmann_KIE_activity:
-            st.markdown("""
-                        **Kaufmann im Einzelhandel**
-                        \n
-                        Deichmann SE, Osnabrück
-                        """)
-        st.divider()
+            with Deichmann_KIE_date:
+                st.markdown("08/2017 – 01/2019")
+                
+            with Deichmann_KIE_activity:
+                st.markdown("""
+                            **Retail sales assistant**
+                            \n
+                            Deichmann SE, Osnabrück
+                            """)
+            st.divider()
 
-        Fachabitur_date, Fachabitur_activity = st.columns((1,2))
-        with Fachabitur_date:
-            st.markdown("08/2015 – 07/2017")   
+            Fachabitur_date, Fachabitur_activity = st.columns((1,2))
+            with Fachabitur_date:
+                st.markdown("08/2015 – 07/2017")   
 
-        with Fachabitur_activity:
-            st.markdown(""" **Fachabitur in Wirtschaft und Verwaltung**""")
-            st.markdown("""BBS am Pottgraben, Osnabrück""")
-            
-        st.divider()
-        Realabschluss_date, Realabschluss_activity = st.columns((1,2))
-        with Realabschluss_date:
-            st.markdown("08/2015 – 07/2017")
+            with Fachabitur_activity:
+                st.markdown(""" **Vocational baccalaureate in economics and administration**""")
+                st.markdown("""BBS am Pottgraben, Osnabrück""")
+                
+            st.divider()
+            Realabschluss_date, Realabschluss_activity = st.columns((1,2))
+            with Realabschluss_date:
+                st.markdown("08/2015 – 07/2017")
 
-        with Realabschluss_activity:
-            st.markdown("""**Sekundarabschluss I**""") 
-            st.markdown("""Gesamtschule Schinkel, Osnabrück""")
+            with Realabschluss_activity:
+                st.markdown("""**Secondary Certificate I**""") 
+                st.markdown("""Gesamtschule Schinkel, Osnabrück""") 
 
-    ###########################################################################################################################################################################
-    ########### E N G L I S H _ V E R S I O N #######################################################################################################################################
-    ###########################################################################################################################################################################
-    if 'English version' in langugage_version:
-        st.markdown(f"<div style='text-align:center;'><h1>Curriculum Vitae</h1></div>",
-                    unsafe_allow_html=True)
-        st.divider()
-
-        url = "https://media.licdn.com/dms/image/D4D03AQG-a7zlIBBcYw/profile-displayphoto-shrink_800_800/0/1699013217528?e=1704326400&v=beta&t=NAWAas_NHznblsOZpugDM3bDGE3FR7VssU4CRbBWbUs"
-
-        image = Image.open(requests.get(url, stream=True).raw)
-        resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
-    # Ändern Sie die Größe nach Bedarf
-
-        CV_title, CV_image = st.columns([2, 1])  # Aufteilung in zwei Spalten
-
-        with CV_title:
-            #st_lottie(rocket_for_cv, width=400, height=300, quality='high', loop=True)
-            st.markdown(f"<div style='text-align:center;'><h5>Skills</h5></div>",
-            unsafe_allow_html=True)
-            st.markdown("""<p align="left">
-            <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="Git" width="40" height="40"/>
-            <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL" width="40" height="40"/>
-            <img src="https://www.vectorlogo.zone/logos/opencv/opencv-icon.svg" alt="OpenCV" width="40" height="40"/>
-            <img src="https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg" alt="Pandas" width="40" height="40"/>
-            <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="40" height="40"/>
-        </p>""", unsafe_allow_html=True)
-            st.markdown("""<p align="left">
-            <img src="https://www.vectorlogo.zone/logos/pytorch/pytorch-icon.svg" alt="PyTorch" width="40" height="40"/>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" alt="Scikit-Learn" width="40" height="40"/>
-            <img src="https://seaborn.pydata.org/_images/logo-mark-lightbg.svg" alt="Seaborn" width="40" height="40"/>
-            <img src="https://www.vectorlogo.zone/logos/tensorflow/tensorflow-icon.svg" alt="TensorFlow" width="40" height="40"/>
-            <img src="https://www.r-project.org/logo/Rlogo.svg" alt="R" width="40" height="40"/>
-        </p>""", unsafe_allow_html=True)
-            
-
-            # Leere DataFrame mit Spalten erstellen
-            data = {
-                    "Hard Skill": ["Python 🐍", "Machine Learning 🤖", "Data Visualization 📊", "Statistics 📈"],
-                    "Soft Skill": ["Problem Solving 💡", "Communication 🗣️", "Critical Thinking 🤔", "Teamwork 🤝"],
-                }
-        df = pd.DataFrame(data)
-
-        # Spaltenkonfigurationen festlegen
-        column_config = {
-            "Hard Skill": {},
-            "Soft Skill": {}
-        }
-
-        # DataFrame anzeigen
-        st.dataframe(df, column_config=column_config, hide_index=True, use_container_width=True)
-        with CV_image:
-            # Hier können Sie den restlichen Inhalt der Spalte platzieren
-            st.image(resized_image, use_column_width=True)
-        st.divider()
-
-        current_activity_date, current_activity = st.columns((1,2))
-
-        with current_activity_date:
-            st.markdown("""09/2020 – jetzt""")
-            
-
-        with current_activity:
-            st.markdown("""**Bachelor of Arts in Applied Economics** in the 5th semester Osnabrück University 
-                        of Applied Sciences, Osnabrück""")
-        intership_date, intership_activity = st.columns((1,2))
-
-        with intership_date:
-            st.markdown("""> 03/2023 - 06/2023""")
-        with intership_activity:
-            st.markdown("> **Internship mso digital GmbH & Co. KG**\n\n > - Department **Data & Process Analytics**")
-
-            
-        st.divider()
-        handelsfachwirt_date, handelsfachwirt_activity = st.columns((1,2))
-
-        with handelsfachwirt_date:
-            st.markdown("02/2019 – 02/2021")
-
-        with handelsfachwirt_activity:
-
-            st.markdown("""
-                        **Handelsfachwirt** 
-                        \n
-                        Bachelor of Professional in Trade and Commerce Deichmann SE, Osnabrück Nahne
-                        - Deputy management
-                        - Leading and motivating the trainees
-                        - Planning and analysis of branch key figures
-                        """)
-            
-        st.divider()
-
-        Deichmann_KIE_date, Deichmann_KIE_activity = st.columns((1,2))
-
-        with Deichmann_KIE_date:
-            st.markdown("08/2017 – 01/2019")
-            
-        with Deichmann_KIE_activity:
-            st.markdown("""
-                        **Retail sales assistant**
-                        \n
-                        Deichmann SE, Osnabrück
-                        """)
-        st.divider()
-
-        Fachabitur_date, Fachabitur_activity = st.columns((1,2))
-        with Fachabitur_date:
-            st.markdown("08/2015 – 07/2017")   
-
-        with Fachabitur_activity:
-            st.markdown(""" **Vocational baccalaureate in economics and administration**""")
-            st.markdown("""BBS am Pottgraben, Osnabrück""")
-            
-        st.divider()
-        Realabschluss_date, Realabschluss_activity = st.columns((1,2))
-        with Realabschluss_date:
-            st.markdown("08/2015 – 07/2017")
-
-        with Realabschluss_activity:
-            st.markdown("""**Secondary Certificate I**""") 
-            st.markdown("""Gesamtschule Schinkel, Osnabrück""") 
-
-    #from python_files import main_contact
+        #from python_files import main_contact
