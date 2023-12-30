@@ -18,42 +18,56 @@ def load_lottieurl(url:str):
         return None
     return r.json()
 
+### START OF THE WEBPAGE ### 
+
+st.title('Stock Dashboard') 
 no_data_avaible_female = load_lottieurl('https://lottie.host/70333dae-5d9d-4887-ac38-25dcbfe23e80/3TCrl817lO.json')
 stock_options = st.multiselect(
     'What are your Stocks',
     options = ['AAPL', 'BYDDF', 'EONGY', 'LNVGF', 'NIO', 'PLUN.F', 'TSLA', 'TKA.DE', 'XIACF'])
 
-if stock_options is not None:
+if stock_options:
     button_for_the_download = st.button('Download Data for the Stocks')
+    
+    start_date, end_date = st.columns((1, 2))
+    
+    with start_date:
+        start_date_input = st.date_input("Start")
+    with end_date:
+        end_date_input = st.date_input("Last day")
+    
     if button_for_the_download:
         progress_text = "Operation in progress. Please wait."
         my_bar = st.progress(0, text=progress_text)
         
-        for percent_complete in range(100):
-            time.sleep(0.02)
-            my_bar.progress(percent_complete + 1, text=progress_text)
-        
-        data = pd.DataFrame()  # Sie erstellen ein leeres DataFrame, aber später überschreiben Sie es direkt mit Daten aus einer CSV-Datei.
-        end_date = datetime.today()
-        start_date = end_date - timedelta(days=2 * 365)
-        
+        close_df = pd.DataFrame()
         for stock_option in stock_options:
-            # Hier scheinen Sie die Daten aus einer CSV-Datei zu lesen, anstatt sie von einer API wie yfinance herunterzuladen.
-            data = pd.read_csv('Dataset/stock_data.csv')
-            if data.empty:
-                st.write('NO Data')
-    st.dataframe(data)  # Sie zeigen das DataFrame innerhalb der Schleife an, was dazu führt, dass es mehrmals angezeigt wird.
+            data = yf.download(stock_option, start=start_date_input, end=end_date_input)
+            if 'Close' in data.columns:
+                close_df[stock_option] = data['Close']
+        if not close_df.empty:
+            close_df.reset_index(inplace=True)  # Hinzufügen der ausgewählten Startdatum-Spalte
+            close_df['Date'] = pd.to_datetime(close_df['Date']).dt.date  # Hier wird nur das Datum extrahiert
+            st.dataframe(close_df, hide_index=True)
+        else:
+            st.warning("No data available.")
+
+
+
+if len(stock_options) == 0:
+    st.markdown("**you have nothing entered**")        
+    no_data_found = load_lottieurl('https://lottie.host/70333dae-5d9d-4887-ac38-25dcbfe23e80/3TCrl817lO.json')   
+    st_lottie( no_data_found,
+                quality='high',
+                width=650,
+                height=400)
         
-        
-
-        
 
 
 
 
 
 
-### mit einer csv es versuchen da versuche begrenzt sind 
 
 
 
