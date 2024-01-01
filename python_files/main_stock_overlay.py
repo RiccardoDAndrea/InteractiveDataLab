@@ -8,7 +8,8 @@ import requests
 import plotly.express as px
 import plotly.io as pio
 import plotly.graph_objs as go
-
+import requests
+from bs4 import BeautifulSoup
 
 def load_lottieurl(url:str):
     """ 
@@ -21,6 +22,28 @@ def load_lottieurl(url:str):
     if r.status_code != 200:
         return None
     return r.json()
+
+
+def get_quote_table(ticker):
+    url = f"https://finance.yahoo.com/quote/{ticker}"
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        tables = soup.find_all('table')
+        
+        if len(tables) >= 2:
+            data = tables[0].find_all('tr') + tables[1].find_all('tr')
+            quote_data = {row.find('td', class_='C($primaryColor)').text: row.find('td', class_='Ta(end)').text for row in data}
+            return quote_data
+        else:
+            print("Error: Unable to find tables on the Yahoo Finance page.")
+    else:
+        print(f"Error: Unable to fetch data from {url}. Status code: {response.status_code}")
+
+
+
+
 
 
 
@@ -68,24 +91,27 @@ if button_for_the_download:
             st.markdown('## Line Chart')
             line_chart = px.line(close_df, x='Date', y=stock_options, title='Stock Prices Over Time')
             st.plotly_chart(line_chart)
-            
-            # P/E Ratio
-            st.markdown('## P/E Ratio')
-            pe_ratio_value = None
-            if len(stock_options) > 0:
-                # Get P/E ratio for the first stock option
-                try:
-                    stock_data = yf.Ticker(stock_options[0])
-                    pe_ratio_value = stock_data.info['trailingPE']
-                except Exception as e:
-                    st.warning(f"Error retrieving P/E ratio for {stock_options[0]}: {e}")
-            
-            if pe_ratio_value is not None:
-                st.metric(label="P/E Ratio", value=pe_ratio_value)
-            else:
-                st.warning("Unable to retrieve P/E ratio.")
+                       
+            # P/E Ratio and other metrics
+            st.markdown('## Metrics')
+            st.columns()
+            for stock_option in stock_options:
+                stock_info = get_quote_table(stock_option)
+                if stock_info:
+                    PE_Ratio = stock_info.get('PE Ratio (TTM)', 'N/A')
+                    st.metric(label=f"P/E Ratio ({stock_option})", value=PE_Ratio)
+                    dividends_data = yf.Ticker(stock_option).dividends
+                    if not dividends_data.empty:
+                        last_dividend = str(dividends_data.iloc[-1])
+                        st.metric(label=f"Last Dividend ({stock_option})", value=last_dividend)
+                    else:
+                        st.warning(f"No dividend data available for {stock_option}")
+                else:
+                    st.warning(f"Unable to retrieve data for {stock_option}")
+
         else:
             st.warning("No data available.")
+
          
 
  
