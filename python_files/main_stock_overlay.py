@@ -1,15 +1,18 @@
 import streamlit as st
 from streamlit_lottie import st_lottie
 import yfinance as yf
-from datetime import datetime, timedelta
 import pandas as pd
-import time
 import requests
 import plotly.express as px
 import plotly.io as pio
 import plotly.graph_objs as go
 import requests
 from bs4 import BeautifulSoup
+import newspaper
+import nltk
+nltk.download('punkt')
+
+
 
 def load_lottieurl(url:str):
     """ 
@@ -51,8 +54,11 @@ def get_quote_table(ticker):
 
 st.title('Stock Dashboard') 
 no_data_avaible_female = load_lottieurl('https://lottie.host/70333dae-5d9d-4887-ac38-25dcbfe23e80/3TCrl817lO.json')
-
-stock_options = st.text_input("Enter your Stocks (comma-separated)")
+info_text_stocks = st.expander('Information on how to find you Stocks ?')
+with info_text_stocks:
+        st.info("""If you want to find your stock, go to https://de.finance.yahoo.com/ and enter only the ticker symbol of the 
+                stock on the Streamlit page. For example, Apple would be 'APPL'""", icon="ℹ️")
+stock_options = st.text_input("Enter your Stocks (comma-separated)",value='AAPL, TSLA')
 stock_options = [stock.strip() for stock in stock_options.split(',')]  # Teilen Sie die Eingabe am Komma und entfernen Sie Leerzeichen
 
 
@@ -85,7 +91,7 @@ if button_for_the_download:
         if not close_df.empty:
             close_df.reset_index(inplace=True)
             close_df['Date'] = pd.to_datetime(close_df['Date']).dt.date
-            st.dataframe(close_df, hide_index=True)
+            st.dataframe(close_df, hide_index=True, use_container_width=True)
             
             # Line Chart
             st.markdown('## Line Chart')
@@ -94,23 +100,60 @@ if button_for_the_download:
                        
             # P/E Ratio and other metrics
             st.markdown('## Metrics')
-            st.columns()
+            PE_ratio_col, dividends_col = st.columns(spec=(2,1))
             for stock_option in stock_options:
                 stock_info = get_quote_table(stock_option)
                 if stock_info:
                     PE_Ratio = stock_info.get('PE Ratio (TTM)', 'N/A')
-                    st.metric(label=f"P/E Ratio ({stock_option})", value=PE_Ratio)
+                    with PE_ratio_col:
+                        st.metric(label=f"P/E Ratio ({stock_option})", value=PE_Ratio)
                     dividends_data = yf.Ticker(stock_option).dividends
-                    if not dividends_data.empty:
-                        last_dividend = str(dividends_data.iloc[-1])
-                        st.metric(label=f"Last Dividend ({stock_option})", value=last_dividend)
-                    else:
-                        st.warning(f"No dividend data available for {stock_option}")
+                    with dividends_col:
+                        if not dividends_data.empty:
+                            last_dividend = str(dividends_data.iloc[-1])
+                            st.metric(label=f"Last Dividend ({stock_option}) in EUR", value=last_dividend)
+                        else:
+                            st.warning(f"No dividend data available for {stock_option}")
                 else:
                     st.warning(f"Unable to retrieve data for {stock_option}")
 
         else:
             st.warning("No data available.")
+newspaper_expander = st.expander(label="News about your Stocks")
+
+with newspaper_expander:
+
+    # Lists to store text and summary for each stock
+    texts = []
+    summaries = []
+
+    for stock in stock_options:
+        st.header(f"News for {stock}")
+        url = f'https://finance.yahoo.com/quote/{stock}/news?p={stock}/'
+        
+        article = newspaper.Article(url)
+        try:
+            article.download()
+            article.parse()
+            article.nlp()
+
+            texts.append(article.text)
+            summaries.append(article.summary)
+            
+            st.divider()
+
+        except Exception as e:
+            st.error(f"Error processing news for {stock}: {e}")
+
+    # Displaying tabs for each stock
+    for i, stock in enumerate(stock):
+        st.header(f"News for {stock}")
+        tab1, tab2 = st.tabs([f'{stock} - Full Text', f'{stock} - Summary'])
+        with tab1:
+            st.write(texts[i])
+        with tab2:
+            st.write(summaries[i])
+        st.divider()
 
          
 
