@@ -75,63 +75,117 @@ else :
     with end_date:
         end_date_input = st.date_input("Last day")
 
-button_for_the_download = st.button('Download Data for the Stocks')
-if button_for_the_download:
-        progress_text = "Operation in progress. Please wait."
-        my_bar = st.progress(0, 
-                             text=progress_text)
+    close_df = pd.DataFrame()
+
+    for stock_option in stock_options:
+        data = yf.download(stock_option, 
+                            start=start_date_input, 
+                            end=end_date_input)
         
-        close_df = pd.DataFrame()
+        if 'Close' in data.columns:
+            close_df[stock_option] = data['Close']
+    if not close_df.empty:
+        close_df.reset_index(inplace=True)
+        close_df['Date'] = pd.to_datetime(close_df['Date']).dt.date
 
-        for stock_option in stock_options:
-            data = yf.download(stock_option, 
-                               start=start_date_input, 
-                               end=end_date_input)
-            
-            if 'Close' in data.columns:
-                close_df[stock_option] = data['Close']
-        if not close_df.empty:
-            close_df.reset_index(inplace=True)
-            close_df['Date'] = pd.to_datetime(close_df['Date']).dt.date
+        st.dataframe(close_df, hide_index=True, 
+                        use_container_width=True)
+        Overview,Company_Information = st.tabs(['Overview', 
+                                                'Company Information'])    
+        # L I N E _ C H A R T
+        with Overview:
+            charts_vis = st.expander(label="Viszualisation")
+            with charts_vis:
+                st.markdown('## Line Chart')
+                stocks_to_display = st.multiselect('Which Stocks should be displayed in the Chart ?',
+                            options= stock_options)
+                line_chart = px.line(close_df, 
+                                        x='Date', 
+                                        y=stocks_to_display, 
+                                        title='Stock Prices Over Time')
+                
+                st.plotly_chart(line_chart, use_container_width=True)
 
-            st.dataframe(close_df, hide_index=True, 
-                         use_container_width=True)
-            
-            # Line Chart
-            st.markdown('## Line Chart')
-            line_chart = px.line(close_df, 
-                                 x='Date', 
-                                 y=stock_options, 
-                                 title='Stock Prices Over Time')
-            
-            st.plotly_chart(line_chart)
-                       
-            # P/E Ratio and other metrics
-            st.markdown('## Metrics')
-            PE_ratio_col, dividends_col = st.columns(spec=(2,1))
+
+
+            # M E T R I C S
+            metrics_expander = st.expander(label="Metrics")
+            with metrics_expander:
+                st.markdown('## Metrics')
+                metrics_filter = st.multiselect(label="Which Metrics do you want to display ?",
+                                                options=['PE Ratio (TTM)', 'Dividends'])
+
+                PE_ratio_col, dividends_col = st.columns(spec=(2, 1))
+
+                for stock_option in stock_options:
+                    stock_info = get_quote_table(stock_option)
+
+                    if stock_info:
+                        if 'PE Ratio (TTM)' in metrics_filter:
+
+                            PE_Ratio = stock_info.get('PE Ratio (TTM)', 'N/A')
+                            with PE_ratio_col:
+                                st.metric(label=f"P/E Ratio ({stock_option})",
+                                        value=PE_Ratio)
+                        if 'Dividends' in metrics_filter:
+
+                            dividends_data = yf.Ticker(stock_option).dividends
+
+                            with dividends_col:
+                                if not dividends_data.empty:
+                                    last_dividend = str(dividends_data.iloc[-1])
+                                    st.metric(label=f"Last Dividend ({stock_option}) in EUR",
+                                            value=last_dividend)
+                                else:
+                                    st.warning(f"No dividend data available for {stock_option}")
+                    else:
+                        st.warning(f"Unable to retrieve data for {stock_option}")
+        
+        with Company_Information:
+            Company_info_to_display = st.multiselect('Which Financial information should be displayed?', options=["EBITDA", 
+                                                                                                                  "Revenue", 
+                                                                                                                  "Short Ratio",
+                                                                                                                  "Operating Income"])
+            EBITDA_col, Revenue_col = st.columns(2)
+            Short_ratio_col, Operating_income_col = st.columns(2)
 
             for stock_option in stock_options:
-                stock_info = get_quote_table(stock_option)
+                Company_stock = yf.Ticker(stock_option)
+                financials = Company_stock.get_financials()
 
-                if stock_info:
-                    PE_Ratio = stock_info.get('PE Ratio (TTM)', 'N/A')
-                    with PE_ratio_col:
-                        st.metric(label=f"P/E Ratio ({stock_option})", 
-                                  value=PE_Ratio)
-                    dividends_data = yf.Ticker(stock_option).dividends
+                with EBITDA_col:
+                    if 'EBITDA' in Company_info_to_display:
+                        ebitda_data = financials.loc['EBITDA', :]
+                        st.subheader(f"{stock_option} - EBITDA:")
+                        st.write(ebitda_data)
 
-                    with dividends_col:
-                        if not dividends_data.empty:
-                            last_dividend = str(dividends_data.iloc[-1])
-                            st.metric(label=f"Last Dividend ({stock_option}) in EUR", 
-                                      value=last_dividend)
-                        else:
-                            st.warning(f"No dividend data available for {stock_option}")
-                else:
-                    st.warning(f"Unable to retrieve data for {stock_option}")
+                with Revenue_col:
+                    if 'Revenue' in Company_info_to_display:
+                        revenue = financials.loc['CostOfRevenue':'TotalRevenue']
+                        revenue = revenue / 1000000000
+                        revenue = revenue.T
+                        st.subheader(f"{stock_option} - Revenue:")
+                        st.write(revenue)
 
-        else:
-            st.warning("No data available.")
+                with Short_ratio_col:
+                    if 'Short Ratio' in Company_info_to_display:
+                        short_ratio = Company_stock.info.get('shortRatio', 'N/A')
+                        st.subheader(f"{stock_option} - Short Ratio:")
+                        st.metric(label='Short Ratio', value=str(short_ratio))
+
+                with Operating_income_col:
+                    if 'Operating Income' in Company_info_to_display:
+                        operating_income = financials.loc['OperatingIncome']
+                        normalized_operating_income = operating_income / 1_000_000_000
+                        transposed_operating_income = normalized_operating_income.T
+
+                        st.subheader(f"{stock_option} - Operating Income:")
+                        st.write(transposed_operating_income)
+
+                
+        
+
+st.divider()
 newspaper_expander = st.expander(label="News about your Stocks")
 
 with newspaper_expander:
@@ -142,29 +196,31 @@ with newspaper_expander:
         st.header(f"News for {stock_option}")
         url = f'https://finance.yahoo.com/quote/{stock_option}/'  # Ändern Sie dies entsprechend Ihrer Website oder Newsquelle
         article = newspaper.Article(url)
-       
+    
         try:
             article.download()
             article.parse()
             authors = article.authors
             article_meta_data = article.meta_data
             article_published_date = article_meta_data.get('article:published_time', 'N/A')
-            st.write("Authors:", ', '.join(authors))
-            st.write("Published Date:", article_published_date)
+            #st.write("Authors:", ', '.join(authors))
+            #st.write("Published Date:", article_published_date)
             article.nlp()
 
             tab1, tab2 = st.tabs(['Full Text', 'Summary'])
             with tab1:
-                st.write(article.authors)
-                st.write(article_published_date)
+                #st.write(article.authors)
+                #st.write(article_published_date)
                 st.write(article.text)
 
             with tab2:
-                st.write(article.authors)
+                #st.write(article.authors)
                 st.write(article.summary)
 
         except Exception as e:
             st.error(f"Error processing news for {stock_option}: {e}")
+    else:
+        st.warning("No data available.")
 
 
 
