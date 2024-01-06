@@ -84,6 +84,7 @@ else :
         
         if 'Close' in data.columns:
             close_df[stock_option] = data['Close']
+
     if not close_df.empty:
         close_df.reset_index(inplace=True)
         close_df['Date'] = pd.to_datetime(close_df['Date']).dt.date
@@ -113,76 +114,170 @@ else :
             with metrics_expander:
                 st.markdown('## Metrics')
                 metrics_filter = st.multiselect(label="Which Metrics do you want to display ?",
-                                                options=['PE Ratio (TTM)', 'Dividends'])
+                                                options=['PE Ratio (TTM)', 
+                                                         'Dividends',
+                                                         'PE Ratio',
+                                                         'P/B ratio',
+                                                         'Debt-to-Equity Ratio',
+                                                         'Free Cash Flow',
+                                                         'PEG Ratio',
+                                                         'metric_8'
+                                                        ])
 
-                PE_ratio_col, dividends_col = st.columns(spec=(2, 1))
+                PE_ratio_ttm_col, dividends_col = st.columns(spec=(2, 1))
+                PE_Ratio_col, PB_ratio_col = st.columns(spec=(2, 1))
+                debt_equity_ratio_col, Free_cash_flow_col = st.columns(spec=(2, 1))
+                PEG_ratio_col, metric_8_col = st.columns(spec=(2, 1))
 
                 for stock_option in stock_options:
                     stock_info = get_quote_table(stock_option)
 
                     if stock_info:
+
                         if 'PE Ratio (TTM)' in metrics_filter:
-
                             PE_Ratio = stock_info.get('PE Ratio (TTM)', 'N/A')
-                            with PE_ratio_col:
+                            with PE_ratio_ttm_col:
                                 st.metric(label=f"P/E Ratio ({stock_option})",
-                                        value=PE_Ratio)
+                                          value=PE_Ratio)
+                                
                         if 'Dividends' in metrics_filter:
-
                             dividends_data = yf.Ticker(stock_option).dividends
-
                             with dividends_col:
                                 if not dividends_data.empty:
                                     last_dividend = str(dividends_data.iloc[-1])
                                     st.metric(label=f"Last Dividend ({stock_option}) in EUR",
                                             value=last_dividend)
                                 else:
-                                    st.warning(f"No dividend data available for {stock_option}")
-                    else:
-                        st.warning(f"Unable to retrieve data for {stock_option}")
-        
+                                    st.info(f"No dividend data available for {stock_option}")
+                        
+                        
+                        if 'PE Ratio' in metrics_filter:
+                            stock_info = yf.Ticker(stock_option).info
+                            pe_ratio = stock_info.get('trailingPE', 'N/A')
+                            with PE_Ratio_col:
+                                st.metric(label=f"P/E Ratio ({stock_option})", value=pe_ratio)
+                        else:
+                            st.warning(f"No P/E Ratio data available for {stock_option}")
+
+                        if 'P/B ratio' in metrics_filter:
+                            stock_info = yf.Ticker(stock_option).info
+                            pb_ratio = stock_info.get('priceToBook', 'N/A')
+                            with PB_ratio_col:
+                                st.metric(label=f"P/B Ratio ({stock_option})", value=pb_ratio)
+                        else:
+                            st.warning(f"No P/B Ratio data available for {stock_option}")
+
+                        if 'Debt-to-Equity Ratio' in metrics_filter:
+                            stock_info = yf.Ticker(stock_option).info
+                            debt_equity_ratio = stock_info.get('debtToEquity', 'N/A')
+                            with debt_equity_ratio_col:
+                                st.metric(label=f"Debt-to-Equity Ratio ({stock_option})", value=debt_equity_ratio)
+                        else:
+                            st.warning(f"No Debt-to-Equity data available for {stock_option}")
+                        
+                        if 'Free Cash Flow' in metrics_filter:
+                            Free_cash_flow = yf.Ticker(stock_option)
+                            Free_cash_flow_df = Free_cash_flow.cash_flow.loc['Free Cash Flow']
+
+                            # Extrahiere nur das Datum
+                            Free_cash_flow_df.index = Free_cash_flow_df.index.date
+
+                            with Free_cash_flow_col:
+                                st.dataframe(data=Free_cash_flow_df, use_container_width=False)                       
+                        else:
+                            st.warning(f"No Free Cash Flow data available for {stock_option}")
+                        
+                        if 'PEG Ratio' in metrics_filter:
+                            with PEG_ratio_col:
+                                st.write('Test')
+                        else:
+                            st.warning(f"No PEG Ratio data available for {stock_option}")
+                        if 'metric_8' in metrics_filter:
+                            
+                            aapl_info = yf.Ticker(stock_option).get_info()
+                            aapl_info['longBusinessSummary']
+                            with metric_8_col:
+                                st.write(aapl_info['longBusinessSummary'])
+                        
+                        st.divider()
+
+
+
+
         with Company_Information:
-            Company_info_to_display = st.multiselect('Which Financial information should be displayed?', options=["EBITDA", 
-                                                                                                                  "Revenue", 
-                                                                                                                  "Short Ratio",
-                                                                                                                  "Operating Income"])
-            EBITDA_col, Revenue_col = st.columns(2)
-            Short_ratio_col, Operating_income_col = st.columns(2)
+            company_information_expander = st.expander(label='Company Information')
+            Company_vizualisation = st.expander(label="Vizusalisation of the Company Key Numbers")
+            with company_information_expander:
+                Company_info_to_display = st.multiselect('Which Financial information should be displayed?', options=["EBITDA", 
+                                                                                                                    "Revenue", 
+                                                                                                                    "Short Ratio",
+                                                                                                                    "Operating Income"])
+                EBITDA_col, Revenue_col = st.columns(2)
+                Short_ratio_col, Operating_income_col = st.columns(2)
 
-            for stock_option in stock_options:
-                Company_stock = yf.Ticker(stock_option)
-                financials = Company_stock.get_financials()
+                for stock_option in stock_options:
+                    Company_stock = yf.Ticker(stock_option)
+                    financials = Company_stock.get_financials()
 
-                with EBITDA_col:
-                    if 'EBITDA' in Company_info_to_display:
-                        ebitda_data = financials.loc['EBITDA', :]
-                        st.subheader(f"{stock_option} - EBITDA:")
-                        st.write(ebitda_data)
+                    with EBITDA_col:
+                        if 'EBITDA' in Company_info_to_display:
+                            ebitda_data = financials.loc['EBITDA', :]
+                            st.subheader(f"{stock_option} - EBITDA:")
+                            st.write(ebitda_data)
 
-                with Revenue_col:
-                    if 'Revenue' in Company_info_to_display:
-                        revenue = financials.loc['CostOfRevenue':'TotalRevenue']
-                        revenue = revenue / 1000000000
-                        revenue = revenue.T
-                        st.subheader(f"{stock_option} - Revenue:")
-                        st.write(revenue)
+                    with Revenue_col:
+                        if 'Revenue' in Company_info_to_display:
+                            revenue = financials.loc['CostOfRevenue':'TotalRevenue']
+                            revenue = revenue / 1000000000
+                            revenue = revenue.T
+                            st.subheader(f"{stock_option} - Revenue:")
+                            st.write(revenue)
 
-                with Short_ratio_col:
-                    if 'Short Ratio' in Company_info_to_display:
-                        short_ratio = Company_stock.info.get('shortRatio', 'N/A')
-                        st.subheader(f"{stock_option} - Short Ratio:")
-                        st.metric(label='Short Ratio', value=str(short_ratio))
+                    with Short_ratio_col:
+                        if 'Short Ratio' in Company_info_to_display:
+                            short_ratio = Company_stock.info.get('shortRatio', 'N/A')
+                            st.subheader(f"{stock_option} - Short Ratio:")
+                            st.metric(label='Short Ratio', value=str(short_ratio))
 
-                with Operating_income_col:
-                    if 'Operating Income' in Company_info_to_display:
-                        operating_income = financials.loc['OperatingIncome']
-                        normalized_operating_income = operating_income / 1_000_000_000
-                        transposed_operating_income = normalized_operating_income.T
+                    with Operating_income_col:
+                        if 'Operating Income' in Company_info_to_display:
+                            operating_income = financials.loc['OperatingIncome']
+                            normalized_operating_income = operating_income / 1_000_000_000
+                            transposed_operating_income = normalized_operating_income.T
 
-                        st.subheader(f"{stock_option} - Operating Income:")
-                        st.write(transposed_operating_income)
+                            st.subheader(f"{stock_option} - Operating Income:")
+                            st.write(transposed_operating_income)
+                            
+            with Company_vizualisation :
+                Company_info_to_display_vis = st.multiselect(label='Which Vizualisation do you want?', options=["EBITDA", 
+                                                                                                                "Revenue", 
+                                                                                                                "Operating Income"])
+                if 'EBITDA' in Company_info_to_display_vis:
+                    ebitda_data = financials.loc['EBITDA', :]
+                    ebitda_df = pd.DataFrame(ebitda_data).reset_index()  # Resetting index to convert the index to a column
+                    ebitda_df = ebitda_df.rename(columns={'index': 'Date'})
+                    bar_chart_EBITDA = px.bar(ebitda_df,
+                        title='EBITDA Over Time',
+                        x='Date',
+                        y='EBITDA',
+                        text_auto=True)
+                    st.plotly_chart(bar_chart_EBITDA, use_container_width=True)
 
+                if 'Operating Income' in Company_info_to_display_vis:
+                # Display the chart using Streamlit
+                    revenue = financials.loc['OperatingIncome']
+                    revenue = revenue/1000000000
+                    revenue_df = pd.DataFrame(revenue).reset_index()  # Resetting index to convert the index to a column
+                    revenue_df = revenue_df.rename(columns={'index': 'Date'})
+                    bar_chart_OperatingIncome = px.bar(revenue_df,
+                        title='Operating Income Over Time',
+                        x='Date',
+                        y='OperatingIncome',
+                        text_auto=True)
+                    st.plotly_chart(bar_chart_OperatingIncome, use_container_width=True)
                 
+                
+                    
         
 
 st.divider()
