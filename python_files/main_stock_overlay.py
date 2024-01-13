@@ -22,8 +22,12 @@ def load_lottieurl(url:str):
     if r.status_code != 200:
         return None
     return r.json()
+### L O T T I E _ A N I M A T I O N _ S T A R T
+no_options_choosen = load_lottieurl('https://lottie.host/afb47212-38e1-4ec5-975d-50eddac6ec7f/oiOK9YPj3b.json')
+no_metric_choosen = load_lottieurl('https://lottie.host/c74ab8f3-eeff-45a6-86e1-122efa01fe85/MJAkJKqTYl.json')
 
 
+### L O T T I E _ A N I M A T I O N _ E N D 
 def get_quote_table(ticker):
     url = f"https://finance.yahoo.com/quote/{ticker}"
     response = requests.get(url)
@@ -47,13 +51,14 @@ def get_quote_table(ticker):
 ### START OF THE WEBPAGE ### 
 
 st.title('Stock Dashboard') 
-no_data_avaible = load_lottieurl('https://lottie.host/afb47212-38e1-4ec5-975d-50eddac6ec7f/oiOK9YPj3b.json')
+
+
 
 info_text_stocks = st.expander('Information on how to find you Stocks ?')
 with info_text_stocks:
 
         st.info("""If you want to find your stock, go to https://de.finance.yahoo.com/ and enter only the ticker symbol of the 
-                stock on the Streamlit page. For example, Apple would be 'APPL'""", icon="ℹ️")
+                stock on the Streamlit page. For example, Apple would be 'AAPL'""", icon="ℹ️")
 
 stock_options = st.text_input("Enter your Stocks (comma-separated)",
                               value='AAPL, TSLA')
@@ -76,9 +81,14 @@ for stock_option in stock_options:
         
         if 'Close' in data.columns:
             close_df[stock_option] = data['Close']
+            
     except Exception as e:
         st.warning('Enter your Stocks')
-        st_lottie(no_data_avaible)
+        st_lottie(no_options_choosen, 
+                  width=700, 
+                  height=500, 
+                  loop=True, 
+                  quality='medium')
 
 # Check if close_df ]
 
@@ -86,19 +96,20 @@ if not close_df.empty:
     close_df.reset_index(inplace=True)
     close_df['Date'] = pd.to_datetime(close_df['Date']).dt.date
 
-    st.dataframe(close_df, hide_index=True, 
-                    use_container_width=True)
-    Overview,Company_Information = st.tabs(['Overview', 
+    st.dataframe(close_df, 
+                 hide_index=True, 
+                 use_container_width=True)
+    stock_Overview,Company_Information = st.tabs(['Stock Overview', 
                                             'Company Information'])    
     # L I N E _ C H A R T
-    with Overview:
+    with stock_Overview:
         
         # M E T R I C S 
         metrics_expander = st.expander(label="Metrics")
         with metrics_expander:
             st.markdown('## Metrics')
             metrics_filter = st.multiselect(label="Which Metrics do you want to display ?",
-                                            options=['PE Ratio (TTM)', 
+                                            options=[   'Trailing PE', 
                                                         'Dividends',
                                                         'PE Ratio',
                                                         'P/B ratio',
@@ -108,82 +119,92 @@ if not close_df.empty:
                                                         'metric_8'
                                                     ])
             
+            if len(metrics_filter) == 0:
+                st.info('Choose your Metrics')
+                st_lottie(no_metric_choosen, 
+                  width=700, 
+                  height=500, 
+                  loop=True, 
+                  quality='medium')
+                
             
-            # C O L _ O R G A N I Z A T I O N _ S T A R T
-            PE_ratio_ttm_col, dividends_col = st.columns(spec=(2, 1))
-            PE_Ratio_col, PB_ratio_col = st.columns(spec=(2, 1))
-            debt_equity_ratio_col, Free_cash_flow_col = st.columns(spec=(2, 1))
-            PEG_ratio_col, metric_8_col = st.columns(spec=(2, 1))
-            # C O L _ O R G A N I Z A T I O N _ E N D
+
 
             # M E T R I C S _ F I L T E R _ S T A R T
             if metrics_filter:
-                if 'PE Ratio (TTM)' in metrics_filter:
-                    stock_info = yf.Ticker(stock_option).info
-                    PE_Ratio = stock_info.get('PE Ratio (TTM)', 'N/A')
-                    with PE_ratio_ttm_col:
-                        st.metric(label=f"P/E Ratio ({stock_option})",
-                                    value=PE_Ratio)
+                for stock_option in stock_options:    
+
+                    
+                    if 'Trailing PE' in metrics_filter:
+                            stock_info = yf.Ticker(stock_option).info
+                            PE_Ratio_ttm = stock_info.get('trailingPE', 'N/A')
+                            if PE_Ratio_ttm != 'N/A':
+                                    st.metric(label=f"trailing PE **({stock_option}**)",
+                                                value=PE_Ratio_ttm)
+                            else:
+                                st.info(f'No data available for trailing PE of **{stock_option}**')
                 
-                if 'Dividends' in metrics_filter:
-                    dividends_data = yf.Ticker(stock_option).dividends
-                    with dividends_col:
+                    
+                    if 'Dividends' in metrics_filter:
+                        dividends_data = yf.Ticker(stock_option).dividends
                         if not dividends_data.empty:
-                            last_dividend = str(dividends_data.iloc[-1])
-                            st.metric(label=f"Last Dividend ({stock_option}) in EUR",
-                                    value=last_dividend)
+                                last_dividend = dividends_data.iloc[-1]
+                                last_dividend_str = f"{last_dividend:.2f} EUR"  # Format the dividend value
+                                st.metric(label=f"Last Dividend ({stock_option}) in EUR", value=last_dividend_str)
                         else:
-                            st.info(f"No dividend data available for {stock_option}")
-                
-                if 'PE Ratio' in metrics_filter:
-                    stock_info = yf.Ticker(stock_option).info
-                    pe_ratio = stock_info.get('trailingPE', 'N/A')
-                    with PE_Ratio_col:
+                            st.info(f'No dividend data available or {stock_option} does not pay dividends.')    
+
+                        
+                    if 'PE Ratio' in metrics_filter:
+                        stock_info = yf.Ticker(stock_option).info
+                        pe_ratio = stock_info.get('trailingPE', 'N/A')
                         st.metric(label=f"P/E Ratio ({stock_option})", value=pe_ratio)
-                else:
-                    st.warning(f"No P/E Ratio data available for {stock_option}")
+                    
 
-                if 'P/B ratio' in metrics_filter:
-                    stock_info = yf.Ticker(stock_option).info
-                    pb_ratio = stock_info.get('priceToBook', 'N/A')
-                    with PB_ratio_col:
+                    if 'P/B ratio' in metrics_filter:
+                        stock_info = yf.Ticker(stock_option).info
+                        pb_ratio = stock_info.get('priceToBook', 'N/A')
                         st.metric(label=f"P/B Ratio ({stock_option})", value=pb_ratio)
-                
-                else:
-                    st.warning(f"No P/B Ratio data available for {stock_option}")
+                    
 
-                if 'Debt-to-Equity Ratio' in metrics_filter:
-                    stock_info = yf.Ticker(stock_option).info
-                    debt_equity_ratio = stock_info.get('debtToEquity', 'N/A')
-                    with debt_equity_ratio_col:
-                        st.metric(label=f"Debt-to-Equity Ratio ({stock_option})", value=debt_equity_ratio)
-                else:
-                    st.warning(f"No Debt-to-Equity data available for {stock_option}")
-                
-                if 'Free Cash Flow' in metrics_filter:
-                    Free_cash_flow = yf.Ticker(stock_option)
-                    Free_cash_flow_df = Free_cash_flow.cash_flow.loc['Free Cash Flow']
+                    if 'Debt-to-Equity Ratio' in metrics_filter:
+                        stock_info = yf.Ticker(stock_option).info
+                        debt_equity_ratio = stock_info.get('debtToEquity', 'N/A')
+                        
+                        if debt_equity_ratio != 'N/A':
+                            st.metric(label=f"Debt-to-Equity Ratio ({stock_option})", value=debt_equity_ratio)
+                        else:
+                            st.write('No data retrieved')
+                        
 
-                    # Extrahiere nur das Datum
-                    Free_cash_flow_df.index = Free_cash_flow_df.index.date
+                    if 'Free Cash Flow' in metrics_filter:
+                        Free_cash_flow = yf.Ticker(stock_option)
+                        Free_cash_flow_df = Free_cash_flow.cash_flow.loc['Free Cash Flow']
+                        Free_cash_flow_df.index = Free_cash_flow_df.index.date
 
-                    with Free_cash_flow_col:
-                        st.dataframe(data=Free_cash_flow_df, use_container_width=False)                       
-                else:
-                    st.warning(f"No Free Cash Flow data available for {stock_option}")
-                
-                if 'PEG Ratio' in metrics_filter:
-                    with PEG_ratio_col:
+                        bar_chart_free_cash_flow = px.bar(
+                            x=Free_cash_flow_df.index,  # Use the date index as x-axis
+                            y=Free_cash_flow_df.values,  # Use the Free Cash Flow values as y-axis
+                            labels={'x': 'Date', 'y': 'Free Cash Flow'},
+                            title=f'Free Cash Flow Over Time ({stock_option})',
+                            text_auto=True
+                        )
+
+                        st.plotly_chart(bar_chart_free_cash_flow, 
+                                        use_container_width=True)
+
+
+                    if 'PEG Ratio' in metrics_filter:
+                        #with PEG_ratio_col:
                         st.write('Test')
-                else:
-                    st.warning(f"No PEG Ratio data available for {stock_option}")
-                
-                
-                st.divider()
-                # M E T R I C S _ F I L T E R _ E N D
-            
+                    st.divider()
+                    
 
-        # V I S Z U A L I S A T I O N _ S T A R T
+
+                    # M E T R I C S _ F I L T E R _ E N D
+                
+
+            # V I S Z U A L I S A T I O N _ S T A R T
         charts_vis = st.expander(label="Viszualisation")
         with charts_vis:
             st.markdown('## Line Chart')
@@ -196,7 +217,7 @@ if not close_df.empty:
             
             st.plotly_chart(line_chart, use_container_width=True)
 
-        # V I S Z U A L I S A T I O N _ E N D      
+            # V I S Z U A L I S A T I O N _ E N D      
                 
 
 
@@ -206,10 +227,11 @@ if not close_df.empty:
         company_information_expander = st.expander(label='Company Information')
         Company_vizualisation = st.expander(label="Vizusalisation of the Company Key Numbers")
         with company_information_expander:
-            Company_info_to_display = st.multiselect('Which Financial information should be displayed?', options=["EBITDA", 
-                                                                                                                "Revenue", 
-                                                                                                                "Short Ratio",
-                                                                                                                "Operating Income"])
+            Company_info_to_display = st.multiselect('Which Financial information should be displayed?', 
+                                                     options=["EBITDA", 
+                                                             "Revenue", 
+                                                             "Short Ratio",
+                                                             "Operating Income"])
             EBITDA_col, Revenue_col = st.columns(2)
             Short_ratio_col, Operating_income_col = st.columns(2)
 
@@ -279,9 +301,9 @@ if not close_df.empty:
 st.divider()
 newspaper_expander = st.expander(label="News about your Stocks")
 
-# GET NEWS FOR THE COMPANY
+# G E T _ N E W S _ F O R _ C O M P A N Y _ S T A R T
 with newspaper_expander:
-    stock_options = st.text_input("Enter your Stocks (comma-separated)", value='AAPL, TSLA', key="input_news")
+    stock_options = st.text_input("Enter your Stocks (comma-separated)", value=stock_option, key="input_news")
     stocks = [stock.strip() for stock in stock_options.split(',')]
 
     for stock_option in stocks:
@@ -313,6 +335,8 @@ with newspaper_expander:
             st.error(f"Error processing news for {stock_option}: {e}")
     else:
         st.warning("No data available.")
+        
+# G E T _ N E W S _ F O R _ C O M P A N Y _ E N D
 
 
 
