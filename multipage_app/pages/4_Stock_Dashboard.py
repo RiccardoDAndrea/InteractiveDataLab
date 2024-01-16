@@ -92,7 +92,7 @@ for stock_option in stock_options:
                 loop=True, 
                 quality='medium')
 
-
+# Check if close_df ]
 
 if not close_df.empty:
     close_df.reset_index(inplace=True)
@@ -102,8 +102,8 @@ if not close_df.empty:
                 hide_index=True, 
                 use_container_width=True)
     stock_Overview,Company_Information = st.tabs(['Stock Overview', 
-                                                  'Company Information'])    
-
+                                            'Company Information'])    
+    # L I N E _ C H A R T
     with stock_Overview:
         
         # M E T R I C S 
@@ -234,157 +234,156 @@ if not close_df.empty:
 
 
 # C O M P A N Y _ I N F O R M A T I O N _ M E T R I C S _ S T A R T
-    with Company_Information:
-        company_information_expander = st.expander(label='Company Information')
-        Company_vizualisation = st.expander(label="Vizusalisation of the Company Key Numbers")
+with Company_Information:
+    company_information_expander = st.expander(label='Company Information')
+    Company_vizualisation = st.expander(label="Vizusalisation of the Company Key Numbers")
 
-        with company_information_expander:
-            Company_info_to_display = st.multiselect('Which Financial information should be displayed?', 
-                                                        options=["Business Summary",
-                                                                "EBITDA", 
-                                                                "Revenue", 
-                                                                "Short Ratio",
-                                                                "Operating Income"])
+    with company_information_expander:
+        Company_info_to_display = st.multiselect('Which Financial information should be displayed?', 
+                                                    options=["Business Summary",
+                                                            "EBITDA", 
+                                                            "Revenue", 
+                                                            "Short Ratio",
+                                                            "Operating Income"])
         
-            if len(Company_info_to_display) == 0:
-                st.info("Choose your Information you want to Display", icon="ℹ️")
-                st_lottie(no_company_information_choosen)
-
-
-            for stock_option in stock_options:
-                Company_stock = yf.Ticker(stock_option)
-                financials = Company_stock.get_financials()
-
-                if 'Business Summary' in Company_info_to_display:
-                    stock_info = yf.Ticker(stock_option)
-                    BusinessSummary = stock_info.get_info()
-                    
-                    # Extrahiere den Text des langen Geschäftszusammenfassungsfelds
-                    long_summary = BusinessSummary.get('longBusinessSummary', '')
-                    
-                    # Zeige den Text mit Markdown-Formatierung an
-                    st.markdown(f"**Business Summary for :orange[**{stock_option}**]:**")
-                    st.markdown(long_summary)
-
-
-                if 'EBITDA' in Company_info_to_display:
-                    ebitda_data = financials.loc['EBITDA', :]
-                    st.subheader(f":orange[**{stock_option}**] - EBITDA:")
-                    st.write(ebitda_data)
-
-                
-                if 'Revenue' in Company_info_to_display:
-                    revenue = financials.loc['CostOfRevenue':'TotalRevenue']
-                    revenue = revenue / 1000000000
-                    revenue = revenue.T
-                    st.subheader(f":orange[**{stock_option}**] - Revenue:")
-                    st.write(revenue)
-
-                
-                if 'Short Ratio' in Company_info_to_display:
-                    short_ratio = Company_stock.info.get('shortRatio', 'N/A')
-                    st.subheader(f":orange[**{stock_option}**] - Short Ratio:")
-                    st.metric(label='Short Ratio', value=str(short_ratio))
-
-                
-                if 'Operating Income' in Company_info_to_display:
-                    operating_income = financials.loc['OperatingIncome']
-                    normalized_operating_income = operating_income / 1_000_000_000
-                    transposed_operating_income = normalized_operating_income.T
-
-                    st.subheader(f":orange[**{stock_option}**] - Operating Income:")
-                    st.write(transposed_operating_income)
-                        
-                    st.divider()
-                        
-        with Company_vizualisation :
-            Company_info_to_display_vis = st.multiselect(label='Which Vizualisation do you want?', options=["EBITDA", 
-                                                                                                            "Revenue", 
-                                                                                                            "Operating Income"])
-            
-
-            if len( Company_info_to_display_vis) == 0:
-                st.info('Choose you Chart Vizualisation', icon="ℹ️")
-                st_lottie(no_chart_choosen,
-                            width=700, 
-                            height=500, 
-                            loop=True, 
-                            quality='medium')
-
-
-
-                if 'EBITDA' in Company_info_to_display_vis:
-                    ebitda_data = financials.loc['EBITDA', :]
-                    ebitda_df = pd.DataFrame(ebitda_data).reset_index()  # Resetting index to convert the index to a column
-                    ebitda_df = ebitda_df.rename(columns={'index': 'Date'})
-                    bar_chart_EBITDA = px.bar(ebitda_df,
-                        title='EBITDA Over Time',
-                        x='Date',
-                        y='EBITDA',
-                        text_auto=True)
-                    st.plotly_chart(bar_chart_EBITDA, use_container_width=True)
-
-                if 'Operating Income' in Company_info_to_display_vis:
-                # Display the chart using Streamlit
-                    revenue = financials.loc['OperatingIncome']
-                    revenue = revenue/1000000000
-                    revenue_df = pd.DataFrame(revenue).reset_index()  # Resetting index to convert the index to a column
-                    revenue_df = revenue_df.rename(columns={'index': 'Date'})
-                    bar_chart_OperatingIncome = px.bar(revenue_df,
-                        title='Operating Income Over Time',
-                        x='Date',
-                        y='OperatingIncome',
-                        text_auto=True)
-                    st.plotly_chart(bar_chart_OperatingIncome, use_container_width=True)
-    
-# C O M P A N Y _ I N F O R M A T I O N _ M E T R I C S _ E N D        
-
-    st.divider()
-    newspaper_expander = st.expander(label="News about your Stocks")
-
-    # G E T _ N E W S _ F O R _ C O M P A N Y _ S T A R T
-    with newspaper_expander:
+        if len(Company_info_to_display) == 0:
+            st.info("Choose your Information you want to Display", icon="ℹ️")
+            st_lottie(no_company_information_choosen)
 
 
         for stock_option in stock_options:
-            st.header(f"News for {stock_option}")
-            url = f'https://finance.yahoo.com/quote/{stock_option}/'  # Ändern Sie dies entsprechend Ihrer Website oder Newsquelle
-            article = newspaper.Article(url)
+            Company_stock = yf.Ticker(stock_option)
+            financials = Company_stock.get_financials()
 
-            try:
-                article.download()
-                article.parse()
-                authors = article.authors
-                article_meta_data = article.meta_data
-                article_published_date = article_meta_data.get('article:published_time', 'N/A')
-                #st.write("Authors:", ', '.join(authors))
-                #st.write("Published Date:", article_published_date)
-                article.nlp()
+            if 'Business Summary' in Company_info_to_display:
+                stock_info = yf.Ticker(stock_option)
+                BusinessSummary = stock_info.get_info()
+                
+                # Extrahiere den Text des langen Geschäftszusammenfassungsfelds
+                long_summary = BusinessSummary.get('longBusinessSummary', '')
+                
+                # Zeige den Text mit Markdown-Formatierung an
+                st.markdown(f"**Business Summary for :orange[**{stock_option}**]:**")
+                st.markdown(long_summary)
 
-                tab1, tab2 = st.tabs(['Full Text', 'Summary'])
-                with tab1:
-                    #st.write(article.authors)
-                    #st.write(article_published_date)
-                    st.write(article.text)
 
-                with tab2:
-                    #st.write(article.authors)
-                    st.write(article.summary)
+            if 'EBITDA' in Company_info_to_display:
+                ebitda_data = financials.loc['EBITDA', :]
+                st.subheader(f":orange[**{stock_option}**] - EBITDA:")
+                st.write(ebitda_data)
 
-            except Exception as e:
-                st.error(f"Error processing news for {stock_option}: {e}")
+            
+            if 'Revenue' in Company_info_to_display:
+                revenue = financials.loc['CostOfRevenue':'TotalRevenue']
+                revenue = revenue / 1000000000
+                revenue = revenue.T
+                st.subheader(f":orange[**{stock_option}**] - Revenue:")
+                st.write(revenue)
+
+            
+            if 'Short Ratio' in Company_info_to_display:
+                short_ratio = Company_stock.info.get('shortRatio', 'N/A')
+                st.subheader(f":orange[**{stock_option}**] - Short Ratio:")
+                st.metric(label='Short Ratio', value=str(short_ratio))
+
+            
+            if 'Operating Income' in Company_info_to_display:
+                operating_income = financials.loc['OperatingIncome']
+                normalized_operating_income = operating_income / 1_000_000_000
+                transposed_operating_income = normalized_operating_income.T
+
+                st.subheader(f":orange[**{stock_option}**] - Operating Income:")
+                st.write(transposed_operating_income)
+                    
+                st.divider()
+                    
+    with Company_vizualisation :
+        Company_info_to_display_vis = st.multiselect(label='Which Vizualisation do you want?', options=["EBITDA", 
+                                                                                                        "Revenue", 
+                                                                                                        "Operating Income"])
+        
+
+        if len( Company_info_to_display_vis) == 0:
+            st.info('Choose you Chart Vizualisation', icon="ℹ️")
+            st_lottie(no_chart_choosen,
+                        width=700, 
+                        height=500, 
+                        loop=True, 
+                        quality='medium')
+
+
+
+            if 'EBITDA' in Company_info_to_display_vis:
+                ebitda_data = financials.loc['EBITDA', :]
+                ebitda_df = pd.DataFrame(ebitda_data).reset_index()  # Resetting index to convert the index to a column
+                ebitda_df = ebitda_df.rename(columns={'index': 'Date'})
+                bar_chart_EBITDA = px.bar(ebitda_df,
+                    title='EBITDA Over Time',
+                    x='Date',
+                    y='EBITDA',
+                    text_auto=True)
+                st.plotly_chart(bar_chart_EBITDA, use_container_width=True)
+
+            if 'Operating Income' in Company_info_to_display_vis:
+            # Display the chart using Streamlit
+                revenue = financials.loc['OperatingIncome']
+                revenue = revenue/1000000000
+                revenue_df = pd.DataFrame(revenue).reset_index()  # Resetting index to convert the index to a column
+                revenue_df = revenue_df.rename(columns={'index': 'Date'})
+                bar_chart_OperatingIncome = px.bar(revenue_df,
+                    title='Operating Income Over Time',
+                    x='Date',
+                    y='OperatingIncome',
+                    text_auto=True)
+                st.plotly_chart(bar_chart_OperatingIncome, use_container_width=True)
+    
+# C O M P A N Y _ I N F O R M A T I O N _ M E T R I C S _ E N D        
+
+st.divider()
+newspaper_expander = st.expander(label="News about your Stocks")
+
+# G E T _ N E W S _ F O R _ C O M P A N Y _ S T A R T
+with newspaper_expander:
+
+
+    for stock_option in stock_options:
+        st.header(f"News for {stock_option}")
+        url = f'https://finance.yahoo.com/quote/{stock_option}/'  # Ändern Sie dies entsprechend Ihrer Website oder Newsquelle
+        article = newspaper.Article(url)
+
+        try:
+            article.download()
+            article.parse()
+            authors = article.authors
+            article_meta_data = article.meta_data
+            article_published_date = article_meta_data.get('article:published_time', 'N/A')
+            #st.write("Authors:", ', '.join(authors))
+            #st.write("Published Date:", article_published_date)
+            article.nlp()
+
+            tab1, tab2 = st.tabs(['Full Text', 'Summary'])
+            with tab1:
+                #st.write(article.authors)
+                #st.write(article_published_date)
+                st.write(article.text)
+
+            with tab2:
+                #st.write(article.authors)
+                st.write(article.summary)
+
+        except Exception as e:
+            st.error(f"Error processing news for {stock_option}: {e}")
+
+    
+# G E T _ N E W S _ F O R _ C O M P A N Y _ E N D
+
+
 
         
-    # G E T _ N E W S _ F O R _ C O M P A N Y _ E N D
-
-
-
-        
 
 
         
         
-
 
 
 
