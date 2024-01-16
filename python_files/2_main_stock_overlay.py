@@ -22,12 +22,16 @@ def load_lottieurl(url:str):
     if r.status_code != 200:
         return None
     return r.json()
+
+
 ### L O T T I E _ A N I M A T I O N _ S T A R T
 no_options_choosen = load_lottieurl('https://lottie.host/afb47212-38e1-4ec5-975d-50eddac6ec7f/oiOK9YPj3b.json')
 no_metric_choosen = load_lottieurl('https://lottie.host/c74ab8f3-eeff-45a6-86e1-122efa01fe85/MJAkJKqTYl.json')
 no_chart_choosen = load_lottieurl('https://lottie.host/68f31367-9664-481e-b15b-b4abcd8f2366/z9KBlfIHRC.json')
 no_company_information_choosen = load_lottieurl('https://lottie.host/6cb318a1-c1ea-4c58-afe0-c2dc7d2d6c85/yUCs9rpnwY.json')
 ### L O T T I E _ A N I M A T I O N _ E N D 
+
+
 def get_quote_table(ticker):
     url = f"https://finance.yahoo.com/quote/{ticker}"
     response = requests.get(url)
@@ -59,7 +63,7 @@ with info_text_stocks:
         st.info("""If you want to find your stock, go to https://de.finance.yahoo.com/ and enter only the ticker symbol of the 
                 stock on the Streamlit page. For example, Apple would be 'AAPL'""", icon="ℹ️")
 
-stock_options = st.text_input("Enter your Stocks (comma-separated)", value='AAPL, TSLA, EOAN.DE')
+stock_options = st.text_input("Enter your Stocks (comma-separated)", value='AAPL, TSLA')
 stock_options = [stock.strip() for stock in stock_options.split(',')]  # Teilen Sie die Eingabe am Komma und entfernen Sie Leerzeichen    
 
 
@@ -71,59 +75,59 @@ with end_date:
 
 
 
-close_df = pd.DataFrame()
+    close_df = pd.DataFrame()
 
-for stock_option in stock_options:
-    try:
-        data = yf.download(stock_option, start=start_date_input, end=end_date_input)
-        
-        if 'Close' in data.columns:
-            close_df[stock_option] = data['Close']
+    for stock_option in stock_options:
+        try:
+            data = yf.download(stock_option, start=start_date_input, end=end_date_input)
             
-    except Exception as e:
-        st.warning('Enter your Stocks')
-        st_lottie(no_options_choosen, 
-                  width=700, 
-                  height=500, 
-                  loop=True, 
-                  quality='medium')
+            if 'Close' in data.columns:
+                close_df[stock_option] = data['Close']
+                
+        except Exception as e:
+            st.warning('Enter your Stocks')
+            st_lottie(no_options_choosen, 
+                    width=700, 
+                    height=500, 
+                    loop=True, 
+                    quality='medium')
 
-# Check if close_df ]
+    # Check if close_df ]
 
-if not close_df.empty:
-    close_df.reset_index(inplace=True)
-    close_df['Date'] = pd.to_datetime(close_df['Date']).dt.date
+    if not close_df.empty:
+        close_df.reset_index(inplace=True)
+        close_df['Date'] = pd.to_datetime(close_df['Date']).dt.date
 
-    st.dataframe(close_df, 
-                 hide_index=True, 
-                 use_container_width=True)
-    stock_Overview,Company_Information = st.tabs(['Stock Overview', 
-                                            'Company Information'])    
-    # L I N E _ C H A R T
-    with stock_Overview:
-        
-        # M E T R I C S 
-        metrics_expander = st.expander(label="Metrics")
-        with metrics_expander:
-            st.markdown('## Metrics')
-            metrics_filter = st.multiselect(label="Which Metrics do you want to display ?",
-                                            options=[   'Trailing PE', 
-                                                        'Dividends',
-                                                        'PE Ratio',
-                                                        'P/B ratio',
-                                                        'Debt-to-Equity Ratio',
-                                                        'Free Cash Flow',
-                                                        'PEG Ratio',
-                                                        'metric_8'
-                                                    ])
+        st.dataframe(close_df, 
+                    hide_index=True, 
+                    use_container_width=True)
+        stock_Overview,Company_Information = st.tabs(['Stock Overview', 
+                                                'Company Information'])    
+        # L I N E _ C H A R T
+        with stock_Overview:
             
-            if len(metrics_filter) == 0:
-                st.info('Choose you metrics', icon="ℹ️")
-                st_lottie(no_metric_choosen, 
-                  width=700, 
-                  height=500, 
-                  loop=True, 
-                  quality='medium')
+            # M E T R I C S 
+            metrics_expander = st.expander(label="Metrics")
+            with metrics_expander:
+                st.markdown('## Metrics')
+                metrics_filter = st.multiselect(label="Which Metrics do you want to display ?",
+                                                options=[   'Trailing PE', 
+                                                            'Dividends',
+                                                            'PE Ratio',
+                                                            'P/B ratio',
+                                                            'Debt-to-Equity Ratio',
+                                                            'Free Cash Flow',
+                                                            'PEG Ratio',
+                                                            'metric_8'
+                                                        ])
+                
+                if len(metrics_filter) == 0:
+                    st.info('Choose you metrics', icon="ℹ️")
+                    st_lottie(no_metric_choosen, 
+                    width=700, 
+                    height=500, 
+                    loop=True, 
+                    quality='medium')
                 
             
 
