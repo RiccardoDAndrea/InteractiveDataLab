@@ -86,28 +86,26 @@ def load_lottieurl(url:str):
     return r.json()
 
 working_men = load_lottieurl('https://assets1.lottiefiles.com/packages/lf20_w6dptksf.json')
-no_date_col = load_lottieurl('https://assets8.lottiefiles.com/packages/lf20_0pgmwzt3.json')
-removed_date_column = load_lottieurl('https://assets3.lottiefiles.com/packages/lf20_ovo7L6.json')
-no_data_avaible = load_lottieurl('https://assets7.lottiefiles.com/packages/lf20_rjn0esjh.json')
 machine_learning_explanation = load_lottieurl('https://assets7.lottiefiles.com/packages/lf20_LmW6VioIWc.json')
 deep_learning_explanation = load_lottieurl('https://assets6.lottiefiles.com/packages/lf20_sibnlnc9.json')
 objection_detection_explanation = load_lottieurl('https://assets9.lottiefiles.com/packages/lf20_th55Gb.json')
-question_with_NaN_values = load_lottieurl('https://assets7.lottiefiles.com/packages/lf20_lKvkGl.json')
-no_X_variable_lottie = load_lottieurl('https://assets10.lottiefiles.com/packages/lf20_ydo1amjm.json')
-value_is_zero_in_train_size = load_lottieurl('https://assets7.lottiefiles.com/packages/lf20_usmfx6bp.json')
-wrong_data_type_ML = load_lottieurl('https://assets5.lottiefiles.com/packages/lf20_2frpohrv.json')
-rocket_for_cv = load_lottieurl('https://assets4.lottiefiles.com/packages/lf20_atskiwym.json')
+stock_dashboard_explanation = load_lottieurl('https://lottie.host/562bdf3a-49ea-4c06-941b-706dced0741e/wV9uEdTUyV.json')
 ################################################################################################################
 ################################################################################################################
 
 
 ####################  H O M E P A G E   ########################################################################    
-st.set_page_config(page_title="Multipage App",
-                   page_icon="🧊")
-
-
-
-
+st.set_page_config(
+    page_title="Ex-stream-ly Cool App",
+    page_icon="🧊",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': 'https://www.extremelycoolapp.com/help',
+        'Report a bug': "https://www.extremelycoolapp.com/bug",
+        'About': "# This is a header. This is an *extremely* cool app!"
+    }
+)
 
 
 st.write('# :blue[Welcome]')
@@ -118,6 +116,7 @@ st.write("""to my Regression App. My name is **Riccardo D'Andrea** and in this w
             You will find in the navigation bar on the left side of your screen different 
             navigation points where I will explain metrics, functions as understandable as possible.
             So I suggest you just upload a .csv or a .txt file and let it start.""")
+
 st.warning("Hold your horses! This page is still under construction. Don't be surprised if you encounter a wild error or two. But fear not! I'm on the case, working my coding magic to make it all better!")
 
 
@@ -131,9 +130,12 @@ st.divider()
 # Give the user a sort overview what the different section in the homepage
 explination_homepage = option_menu("Main Menu", 
                                     ["Machine Learning",
-                                    'Object detection'], 
+                                    'Object detection',
+                                    "Stock Dashboard"], 
 
-                            icons = ['house', 'gear'], 
+                            icons = ['bar-chart-line-fill', 
+                                     'eye-fill',
+                                     'building-up'], 
 
                             menu_icon = "cast",
 
@@ -178,4 +180,24 @@ if 'Object detection' in explination_homepage:
     object recognition, we can identify and track everything. But be careful! If you send the 
     object recognition programme to a party, it might try to detect each pair of shoes as a 
     separate object - and that probably wouldn't get it very far!""")
+
+if 'Stock Dashboard' in explination_homepage:
+
+    st.markdown(f"<div style='text-align:center;'><h1>Stock Dashboard</h1></div>",
+                unsafe_allow_html=True)
+    
+    st_lottie(stock_dashboard_explanation, 
+                width= 700, 
+                height=200, 
+                quality='high')
+
+    st.write("""Think of your stock dashboard as your financial GPS – always navigating through the twists and turns of the market. 
+             It's like having a money-savvy sidekick, let's call it 'StockSavvy,' who keeps an eye on your investments and talks numbers with a touch of wit.
+             StockSavvy is your financial wingman, ready for action as you stare at the peaks and valleys of your stock adventures. It's not just a messenger of financial updates; 
+             it's a comedian in a suit, cracking jokes when the market roller coaster takes unexpected turns.
+             But StockSavvy is more than laughs; it's a memory maestro. Reminding you to take a coffee break, because a caffeinated investor is a happy investor. 
+             Celebrating gains with virtual confetti and consoling you through losses with a digital pat on the back, saying, 'Don't worry, we'll bounce back!'
+             With a stock dashboard, your investment journey becomes a comedy show, and StockSavvy is your financial stand-up, making the financial world a bit more entertaining, 
+             one trade at a time.""")
+
 
