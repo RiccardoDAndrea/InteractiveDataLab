@@ -103,6 +103,7 @@ if not close_df.empty:
                 use_container_width=True)
     stock_Overview,Company_Information = st.tabs(['Stock Overview', 
                                                   'Company Information'])    
+
     with stock_Overview:
         
         # M E T R I C S 
@@ -234,8 +235,6 @@ if not close_df.empty:
 
 # C O M P A N Y _ I N F O R M A T I O N _ M E T R I C S _ S T A R T
     with Company_Information:
-
-        # M E T R I C S
         company_information_expander = st.expander(label='Company Information')
         Company_vizualisation = st.expander(label="Vizusalisation of the Company Key Numbers")
 
