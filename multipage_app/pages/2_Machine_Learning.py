@@ -4,7 +4,6 @@ import plotly.express as px
 from streamlit_lottie import st_lottie
 import requests
 import numpy as np
-from streamlit_option_menu import option_menu
 import plotly.graph_objs as go
 import plotly.io as pio
 from matplotlib import pyplot as plt
@@ -12,10 +11,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from math import sqrt
-import statsmodels.api as sm
 import os
 import requests
-from PIL import Image
+
 
 def load_lottieurl(url:str):
     """ 
