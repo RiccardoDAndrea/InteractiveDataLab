@@ -69,9 +69,9 @@ stock_options = [stock.strip() for stock in stock_options.split(',')]  # Teilen 
 
 start_date, end_date = st.columns(2)
 with start_date:
-    start_date_input = st.date_input("Start",format="DD/MM/YYYY")
+    start_date_input = st.date_input("Start")
 with end_date:
-    end_date_input = st.date_input("Last day",format="DD/MM/YYYY" )
+    end_date_input = st.date_input("Last day")
 
 
 
