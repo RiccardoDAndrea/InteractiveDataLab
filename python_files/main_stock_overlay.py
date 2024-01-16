@@ -26,7 +26,7 @@ def load_lottieurl(url:str):
 no_options_choosen = load_lottieurl('https://lottie.host/afb47212-38e1-4ec5-975d-50eddac6ec7f/oiOK9YPj3b.json')
 no_metric_choosen = load_lottieurl('https://lottie.host/c74ab8f3-eeff-45a6-86e1-122efa01fe85/MJAkJKqTYl.json')
 no_chart_choosen = load_lottieurl('https://lottie.host/68f31367-9664-481e-b15b-b4abcd8f2366/z9KBlfIHRC.json')
-
+no_company_information_choosen = load_lottieurl('https://lottie.host/6cb318a1-c1ea-4c58-afe0-c2dc7d2d6c85/yUCs9rpnwY.json')
 ### L O T T I E _ A N I M A T I O N _ E N D 
 def get_quote_table(ticker):
     url = f"https://finance.yahoo.com/quote/{ticker}"
@@ -233,6 +233,7 @@ if not close_df.empty:
     with Company_Information:
         company_information_expander = st.expander(label='Company Information')
         Company_vizualisation = st.expander(label="Vizusalisation of the Company Key Numbers")
+
         with company_information_expander:
             Company_info_to_display = st.multiselect('Which Financial information should be displayed?', 
                                                      options=["Business Summary",
@@ -241,6 +242,10 @@ if not close_df.empty:
                                                              "Short Ratio",
                                                              "Operating Income"])
            
+            if len(Company_info_to_display) == 0:
+                st.info("Choose your Information you want to Display", icon="ℹ️")
+                st_lottie(no_company_information_choosen)
+
 
             for stock_option in stock_options:
                 Company_stock = yf.Ticker(stock_option)
@@ -286,36 +291,48 @@ if not close_df.empty:
                     st.subheader(f":orange[**{stock_option}**] - Operating Income:")
                     st.write(transposed_operating_income)
                         
-                st.divider()
+                    st.divider()
                         
         with Company_vizualisation :
             Company_info_to_display_vis = st.multiselect(label='Which Vizualisation do you want?', options=["EBITDA", 
                                                                                                             "Revenue", 
                                                                                                             "Operating Income"])
-            if 'EBITDA' in Company_info_to_display_vis:
-                ebitda_data = financials.loc['EBITDA', :]
-                ebitda_df = pd.DataFrame(ebitda_data).reset_index()  # Resetting index to convert the index to a column
-                ebitda_df = ebitda_df.rename(columns={'index': 'Date'})
-                bar_chart_EBITDA = px.bar(ebitda_df,
-                    title='EBITDA Over Time',
-                    x='Date',
-                    y='EBITDA',
-                    text_auto=True)
-                st.plotly_chart(bar_chart_EBITDA, use_container_width=True)
+            
 
-            if 'Operating Income' in Company_info_to_display_vis:
-            # Display the chart using Streamlit
-                revenue = financials.loc['OperatingIncome']
-                revenue = revenue/1000000000
-                revenue_df = pd.DataFrame(revenue).reset_index()  # Resetting index to convert the index to a column
-                revenue_df = revenue_df.rename(columns={'index': 'Date'})
-                bar_chart_OperatingIncome = px.bar(revenue_df,
-                    title='Operating Income Over Time',
-                    x='Date',
-                    y='OperatingIncome',
-                    text_auto=True)
-                st.plotly_chart(bar_chart_OperatingIncome, use_container_width=True)
-    
+            if len( Company_info_to_display_vis) == 0:
+                st.info('Choose you Chart Vizualisation', icon="ℹ️")
+                st_lottie(no_chart_choosen,
+                          width=700, 
+                          height=500, 
+                          loop=True, 
+                          quality='medium')
+
+
+
+                if 'EBITDA' in Company_info_to_display_vis:
+                    ebitda_data = financials.loc['EBITDA', :]
+                    ebitda_df = pd.DataFrame(ebitda_data).reset_index()  # Resetting index to convert the index to a column
+                    ebitda_df = ebitda_df.rename(columns={'index': 'Date'})
+                    bar_chart_EBITDA = px.bar(ebitda_df,
+                        title='EBITDA Over Time',
+                        x='Date',
+                        y='EBITDA',
+                        text_auto=True)
+                    st.plotly_chart(bar_chart_EBITDA, use_container_width=True)
+
+                if 'Operating Income' in Company_info_to_display_vis:
+                # Display the chart using Streamlit
+                    revenue = financials.loc['OperatingIncome']
+                    revenue = revenue/1000000000
+                    revenue_df = pd.DataFrame(revenue).reset_index()  # Resetting index to convert the index to a column
+                    revenue_df = revenue_df.rename(columns={'index': 'Date'})
+                    bar_chart_OperatingIncome = px.bar(revenue_df,
+                        title='Operating Income Over Time',
+                        x='Date',
+                        y='OperatingIncome',
+                        text_auto=True)
+                    st.plotly_chart(bar_chart_OperatingIncome, use_container_width=True)
+        
     # C O M P A N Y _ I N F O R M A T I O N _ M E T R I C S _ E N D        
 
 st.divider()
@@ -323,10 +340,9 @@ newspaper_expander = st.expander(label="News about your Stocks")
 
 # G E T _ N E W S _ F O R _ C O M P A N Y _ S T A R T
 with newspaper_expander:
-    stock_options = st.text_input("Enter your Stocks (comma-separated)", value=stock_option, key="input_news")
-    stocks = [stock.strip() for stock in stock_options.split(',')]
+    
 
-    for stock_option in stocks:
+    for stock_option in stock_options:
         st.header(f"News for {stock_option}")
         url = f'https://finance.yahoo.com/quote/{stock_option}/'  # Ändern Sie dies entsprechend Ihrer Website oder Newsquelle
         article = newspaper.Article(url)
@@ -353,8 +369,7 @@ with newspaper_expander:
 
         except Exception as e:
             st.error(f"Error processing news for {stock_option}: {e}")
-    else:
-        st.warning("No data available.")
+ 
         
 # G E T _ N E W S _ F O R _ C O M P A N Y _ E N D
 
