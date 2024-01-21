@@ -124,8 +124,8 @@ if not close_df.empty:
             if len(metrics_filter) == 0:
                 st.info('Choose you metrics', icon="ℹ️")
                 st_lottie(no_metric_choosen, 
-                width=700, 
-                height=500, 
+                width=1650,
+                height=400, 
                 loop=True, 
                 quality='medium')
             
@@ -223,8 +223,8 @@ if not close_df.empty:
         else:
             st.info('Choose you Chart Vizualisation', icon="ℹ️")
             st_lottie(no_chart_choosen,
-                        width=700, 
-                        height=500, 
+                        width=1650,
+                        height=400, 
                         loop=True, 
                         quality='medium')
 
@@ -248,7 +248,11 @@ with Company_Information:
         
         if len(Company_info_to_display) == 0:
             st.info("Choose your Information you want to Display", icon="ℹ️")
-            st_lottie(no_company_information_choosen)
+            st_lottie(no_company_information_choosen,
+                      width=1650,
+                      height=400,
+                      loop=True,
+                      quality='high')
 
 
         for stock_option in stock_options:
@@ -306,10 +310,10 @@ with Company_Information:
         if len( Company_info_to_display_vis) == 0:
             st.info('Choose you Chart Vizualisation', icon="ℹ️")
             st_lottie(no_chart_choosen,
-                        width=700, 
-                        height=500, 
+                        width=1650,
+                        height=400, 
                         loop=True, 
-                        quality='medium')
+                        quality='high')
 
 
 

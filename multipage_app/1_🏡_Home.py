@@ -60,6 +60,8 @@ If YOU see any improvements, potential errors or optimisation potential please d
 
 # https://riccardo-dandrea.streamlit.app/
 """
+## streamlit run 1_🏡_Home.py
+
 
 import streamlit as st 
 from streamlit_lottie import st_lottie
@@ -96,15 +98,10 @@ stock_dashboard_explanation = load_lottieurl('https://lottie.host/562bdf3a-49ea-
 
 ####################  H O M E P A G E   ########################################################################    
 st.set_page_config(
-    page_title="Ex-stream-ly Cool App",
+    page_title="Portfolio Projects",
     page_icon="🧊",
     layout="wide",
-    initial_sidebar_state="expanded",
-    menu_items={
-        'Get Help': 'https://www.extremelycoolapp.com/help',
-        'Report a bug': "https://www.extremelycoolapp.com/bug",
-        'About': "# This is a header. This is an *extremely* cool app!"
-    }
+    initial_sidebar_state="expanded"
 )
 
 
@@ -122,8 +119,9 @@ st.warning("Hold your horses! This page is still under construction. Don't be su
 
 st_lottie( working_men,
             quality='high',
-            width=650,
-            height=400)
+            width=1500,
+            height=400,
+                )
 
 st.divider()
 
@@ -148,9 +146,10 @@ if 'Machine Learning' in explination_homepage:
     st.markdown(f"<div style='text-align:center;'><h1>Machine Learning</h1></div>",
                 unsafe_allow_html=True)
     
-    st_lottie(machine_learning_explanation, width= 700, 
-                                            height=200, 
-                                            quality='high')
+    st_lottie(machine_learning_explanation, 
+              width=1500,
+              height=400,
+              quality='high')
     
     st.write("""Imagine you're on Netflix and looking for a good movie. But don't worry, 
                 you don't have to spend hours scrolling through endless lists of movies - 
@@ -169,9 +168,9 @@ if 'Object detection' in explination_homepage:
                 unsafe_allow_html=True)
     
     st_lottie(objection_detection_explanation, 
-                                            width= 700, 
-                                            height=200, 
-                                            quality='high')
+                width=1500,
+                height=400, 
+                quality='high')
     
     st.write("""Object recognition is like a robot that scans its environment and identifies 
     any object that is in its way. It's like a waiter who, every time he serves a new dish, 
@@ -187,8 +186,8 @@ if 'Stock Dashboard' in explination_homepage:
                 unsafe_allow_html=True)
     
     st_lottie(stock_dashboard_explanation, 
-                width= 700, 
-                height=200, 
+                width=1500,
+                height=400,
                 quality='high')
 
     st.write("""Think of your stock dashboard as your financial GPS – always navigating through the twists and turns of the market. 
