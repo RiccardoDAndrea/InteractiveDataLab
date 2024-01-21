@@ -97,6 +97,7 @@ stock_dashboard_explanation = load_lottieurl('https://lottie.host/562bdf3a-49ea-
 
 
 ####################  H O M E P A G E   ########################################################################    
+
 st.set_page_config(
     page_title="Portfolio Projects",
     page_icon="🧊",
@@ -107,14 +108,22 @@ st.set_page_config(
 
 st.write('# :blue[Welcome]')
 
-st.write("""to my Regression App. My name is **Riccardo D'Andrea** and in this website I will guide you through some machine learning 
-            processes and explain things as best I 
-            can so that we :blue[**all understand why machine learning is so great.**]
-            You will find in the navigation bar on the left side of your screen different 
-            navigation points where I will explain metrics, functions as understandable as possible.
-            So I suggest you just upload a .csv or a .txt file and let it start.""")
+st.write("""Welcome to my portfolio homepage! 🚀 Here, I, :blue[Riccardo D'Andrea], 
+            an avid :blue[data enthusiast], proudly showcase my projects. Join me on 
+            an exciting journey into the realm of :blue[machine learning]. 🤖 On this 
+            website, you'll explore not only a :blue[stock market dashboard] and an 
+            :blue[object detection system] but also feel the contagious passion of a 
+            data enthusiast. 📊 As a dedicated follower of data science, my 
+            mission is to transform these concepts into tangible projects 
+            through thorough research and hands-on practice. 🛠️ Come along and 
+            witness how I turn my passion for data into captivating projects. 
+            🌐 Experience firsthand how data has the power to change the world, 
+            and let the possibilities inspire you! 💡""")
 
-st.warning("Hold your horses! This page is still under construction. Don't be surprised if you encounter a wild error or two. But fear not! I'm on the case, working my coding magic to make it all better!")
+st.warning("""Hold your horses! This page is still under construction. 
+              Don't be surprised 
+              if you encounter a wild error or two. But fear not! I'm on the case, 
+              working my coding magic to make it all better!""")
 
 
 st_lottie( working_men,
@@ -151,14 +160,16 @@ if 'Machine Learning' in explination_homepage:
               height=400,
               quality='high')
     
-    st.write("""Imagine you're on Netflix and looking for a good movie. But don't worry, 
-                you don't have to spend hours scrolling through endless lists of movies - 
-                thanks to machine learning, Netflix will recommend exactly what you want 
-                to see! And if you get hungry during the movie, Amazon can even suggest 
-                what kind of pizza to order based on your preferences and ordering history. 
-                But be careful,if you identify yourself with a selfie,the facial recognition 
-                program might think you're a robot and lock you out - but hey,we're working 
-                on it!""")
+    st.write("""Picture this: You're on Netflix, craving a good movie night. 
+                No need to spend hours scrolling through endless lists, thanks 
+                to machine learning! Netflix now tailors recommendations to 
+                exactly what you want to see. 🎬 And if hunger strikes mid-movie, 
+                Amazon's got your back, suggesting the perfect pizza based on your 
+                preferences and order history. 🍕 But here's a fun twist: if you 
+                try to identify yourself with a selfie, watch out! The facial 
+                recognition program might mistakenly think you're a robot and 
+                lock you out. 😄 Don't worry, though – we're working on perfecting 
+                that glitch! 🤖✨""")
     
 #### Explination of what is Objection Detection
 if 'Object detection' in explination_homepage:
@@ -172,13 +183,15 @@ if 'Object detection' in explination_homepage:
                 height=400, 
                 quality='high')
     
-    st.write("""Object recognition is like a robot that scans its environment and identifies 
-    any object that is in its way. It's like a waiter who, every time he serves a new dish, 
-    immediately recognises what's on it and whether it contains nuts or gluten so he can warn 
-    the allergy sufferers among the guests. Whether it's cars, buildings or faces - thanks to 
-    object recognition, we can identify and track everything. But be careful! If you send the 
-    object recognition programme to a party, it might try to detect each pair of shoes as a 
-    separate object - and that probably wouldn't get it very far!""")
+    st.write("""Imagine object recognition as a robot navigating its surroundings, 
+                swiftly identifying any object in its path. 🤖 It's akin to 
+                having a waiter who, with each new dish served, instantly 
+                recognizes its contents, checking for nuts or gluten to alert 
+                guests with allergies. 🍽️ Whether it's cars, buildings, or faces, 
+                object recognition allows us to identify and track everything in 
+                our environment.
+
+But here's a humorous twist: if you send the object recognition program to a party, it might hilariously attempt to label each pair of shoes as a separate object. 👠👞 That might not be the most practical application, but it sure adds a touch of whimsy to the capabilities of object recognition! 😄🌐""")
 
 if 'Stock Dashboard' in explination_homepage:
 
@@ -190,13 +203,20 @@ if 'Stock Dashboard' in explination_homepage:
                 height=400,
                 quality='high')
 
-    st.write("""Think of your stock dashboard as your financial GPS – always navigating through the twists and turns of the market. 
-             It's like having a money-savvy sidekick, let's call it 'StockSavvy,' who keeps an eye on your investments and talks numbers with a touch of wit.
-             StockSavvy is your financial wingman, ready for action as you stare at the peaks and valleys of your stock adventures. It's not just a messenger of financial updates; 
-             it's a comedian in a suit, cracking jokes when the market roller coaster takes unexpected turns.
-             But StockSavvy is more than laughs; it's a memory maestro. Reminding you to take a coffee break, because a caffeinated investor is a happy investor. 
-             Celebrating gains with virtual confetti and consoling you through losses with a digital pat on the back, saying, 'Don't worry, we'll bounce back!'
-             With a stock dashboard, your investment journey becomes a comedy show, and StockSavvy is your financial stand-up, making the financial world a bit more entertaining, 
-             one trade at a time.""")
+    st.write("""Introducing your stock dashboard, your financial GPS navigating the
+                twists and turns of the market! 📈 Imagine it as your money-savvy 
+                sidekick – let's call it 'StockSavvy.' This savvy companion keeps a 
+                vigilant eye on your investments and discusses numbers with a touch 
+                of wit.
+                StockSavvy is not just a messenger of financial updates; it's your 
+                financial wingman, ready for action as you navigate the peaks and 
+                valleys of your stock adventures. 🚀 Picture it as a comedian in a 
+                suit, cracking jokes when the market roller coaster takes unexpected 
+                turns.
+                But StockSavvy offers more than just laughs; it's a memory maestro. 
+                It reminds you to take a coffee break, because a caffeinated investor is a happy investor. ☕📉 Celebrating gains with virtual confetti and consoling you through losses with a digital pat on the back, saying, 'Don't worry, we'll bounce back!'
+                With a stock dashboard, your investment journey becomes a comedy show, 
+                and StockSavvy is your financial stand-up, making the financial world a 
+                bit more entertaining, one trade at a time. 🎤💸""")
 
 
