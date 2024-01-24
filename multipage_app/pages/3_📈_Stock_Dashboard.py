@@ -109,6 +109,7 @@ if not close_df.empty:
         st.markdown('## Metrics')
         metrics_filter = st.multiselect(label="Which Metrics do you want to display ?",
                                         options=[   'Business Summary',
+                                                    'Stock Performance',
                                                     'Trailing PE', 
                                                     'Dividends',
                                                     'PE Ratio',
@@ -157,6 +158,33 @@ if not close_df.empty:
                     # Zeige den Text mit Markdown-Formatierung an
                     st.markdown(f"**Business Summary for :orange[**{stock_option}**]:**")
                     st.markdown(long_summary)
+
+                if 'Stock Performance' in metrics_filter:
+                    st.markdown('## Line Chart')
+                  
+                    # Allow user to select companies to show
+                    
+                    selected_companies = st.multiselect('Which companies to show?', options=stock_options, default=stock_options)
+                    
+                    # Filter the dataframe based on selected companies
+                    close_df_selected = close_df[selected_companies]
+                    
+                    # Create a line chart using plotly.express
+                    line_chart = px.line(close_df_selected, 
+                                        x=close_df_selected.index, 
+                                        y=selected_companies, 
+                                        title=f'Stock Prices Over Time - {", ".join(selected_companies)}')
+                    
+                    # Update layout for better visualization
+                    line_chart.update_layout(
+                        xaxis_title='Date',
+                        yaxis_title='Stock Price',
+                        legend_title='Companies',
+                        title=dict(text=f'Stock Prices Over Time - {", ".join(selected_companies)}', x=0.5),
+                    )
+                    
+                    st.plotly_chart(line_chart, use_container_width=True)       
+
 
 
                 with Trailing_PE_col:
