@@ -25,12 +25,15 @@ def load_lottieurl(url:str):
 
 
 ### L O T T I E _ A N I M A T I O N _ S T A R T
+
 no_options_choosen = load_lottieurl('https://lottie.host/afb47212-38e1-4ec5-975d-50eddac6ec7f/oiOK9YPj3b.json')
 no_metric_choosen = load_lottieurl('https://lottie.host/c74ab8f3-eeff-45a6-86e1-122efa01fe85/MJAkJKqTYl.json')
 no_chart_choosen = load_lottieurl('https://lottie.host/68f31367-9664-481e-b15b-b4abcd8f2366/z9KBlfIHRC.json')
 no_company_information_choosen = load_lottieurl('https://lottie.host/6cb318a1-c1ea-4c58-afe0-c2dc7d2d6c85/yUCs9rpnwY.json')
+
 ### L O T T I E _ A N I M A T I O N _ E N D 
 
+### G E T _ T H E _ D A T A _ S T A R T 
 
 def get_quote_table(ticker):
     url = f"https://finance.yahoo.com/quote/{ticker}"
@@ -51,6 +54,7 @@ def get_quote_table(ticker):
     else:
         print(f"Error: Unable to fetch data from {url}. Status code: {response.status_code}")
 
+### G E T _ T H E _ D A T A _ E N D
 
 ### START OF THE WEBPAGE ### 
 
@@ -68,8 +72,10 @@ stock_options = [stock.strip() for stock in stock_options.split(',')]  # Teilen 
 
 
 start_date, end_date = st.columns(2)
+
 with start_date:
     start_date_input = st.date_input("Start")
+
 with end_date:
     end_date_input = st.date_input("Last day")
 
@@ -79,7 +85,9 @@ close_df = pd.DataFrame()
 
 for stock_option in stock_options:
     try:
-        data = yf.download(stock_option, start=start_date_input, end=end_date_input)
+        data = yf.download(stock_option, 
+                           start=start_date_input, 
+                           end=end_date_input)
         
         if 'Close' in data.columns:
             close_df[stock_option] = data['Close']
@@ -92,7 +100,6 @@ for stock_option in stock_options:
                 loop=True, 
                 quality='medium')
 
-# Check if close_df ]
 
 if not close_df.empty:
     close_df.reset_index(inplace=True)
@@ -107,6 +114,8 @@ if not close_df.empty:
     metrics_expander = st.expander(label="Metrics")
     with metrics_expander:
         st.markdown('## Metrics')
+        show_explanation = st.toggle('Show Metric Explanations')
+
         metrics_filter = st.multiselect(label="Which Metrics do you want to display ?",
                                         options=[   'Business Summary',
                                                     'Stock Performance',
@@ -119,49 +128,203 @@ if not close_df.empty:
                                                     'PEG Ratio',
                                                     'EBITDA', 
                                                     'Revenue', 
-                                                    'Short Ratio'
-                                                ])
-        
+                                                    'Short Ratio'])
+        # comes when the user dont choose any metrics
         if len(metrics_filter) == 0:
             st.info('Choose you metrics', icon="ℹ️")
             st_lottie(no_metric_choosen, 
-            width=1650,
-            height=400, 
-            loop=True, 
-            quality='medium')
+                        width=1650,
+                        height=400, 
+                        loop=True, 
+                        quality='medium')
         
     
-
+        if show_explanation == False:
 
     # M E T R I C S _ F I L T E R _ S T A R T
-        if metrics_filter:
+            if metrics_filter:
+                
+                for stock_option in stock_options:
+                    # get data from the API generell Information    
+                    Company_stock = yf.Ticker(stock_option)
+
+                    # get data from the API financial information
+                    financials = Company_stock.get_financials()
+                    
+                    ### M E T R I C S _ S T A R T 
+                    if 'Business Summary' in metrics_filter:
+                        stock_info = yf.Ticker(stock_option)
+                        BusinessSummary = stock_info.get_info()
+                        long_summary = BusinessSummary.get('longBusinessSummary', '')
+                        st.markdown(f"**Business Summary for :orange[**{stock_option}**]:**")
+                        st.markdown(long_summary)
+
+                    if 'Stock Performance' in metrics_filter:
+                        st.markdown('## Line Chart')
+                    
+                        # Allow user to select companies to show
+                        
+                        selected_companies = st.multiselect('Which companies to show?', options=stock_options, default=stock_options)
+                        
+                        # Filter the dataframe based on selected companies
+                        close_df_selected = close_df[selected_companies]
+                        
+                        # Create a line chart using plotly.express
+                        line_chart = px.line(close_df_selected, 
+                                            x=close_df_selected.index, 
+                                            y=selected_companies, 
+                                            title=f'Stock Prices Over Time - {", ".join(selected_companies)}')
+                        
+                        # Update layout for better visualization
+                        line_chart.update_layout(
+                            xaxis_title='Date',
+                            yaxis_title='Stock Price',
+                            legend_title='Companies',
+                            title=dict(text=f'Stock Prices Over Time - {", ".join(selected_companies)}', x=0.5),
+                        )
+                        
+                        st.plotly_chart(line_chart, use_container_width=True)       
+
+                    Trailing_PE_col, Dividends_col = st.columns(2)
+
+                    with Trailing_PE_col:
+                        if 'Trailing PE' in metrics_filter:
+                                stock_info = yf.Ticker(stock_option).info
+                                PE_Ratio_ttm = stock_info.get('trailingPE', 'N/A')
+                                if PE_Ratio_ttm != 'N/A':
+                                        st.metric(label=f"trailing PE (:orange[***{stock_option}***])",
+                                                    value=PE_Ratio_ttm)
+                                else:
+                                    st.info(f'No data available for trailing PE of **{stock_option}**')
+                    
+
+                    with Dividends_col:
+                        if 'Dividends' in metrics_filter:
+                            dividends_data = yf.Ticker(stock_option).dividends
+                            if not dividends_data.empty:
+                                    last_dividend = dividends_data.iloc[-1]
+                                    last_dividend_str = f"{last_dividend:.2f} EUR"  # Format the dividend value
+                                    st.metric(label=f"Last Dividend (:orange[***{stock_option}***] in EUR)", value=last_dividend_str)
+                            else:
+                                st.info(f'No dividend data available or (:orange[***{stock_option}***]) does not pay dividends.')    
+
+                    PE_Ratio_col,P_B_ratio_col = st.columns(2)
+
+                    with PE_Ratio_col:   
+                        if 'PE Ratio' in metrics_filter:
+                            stock_info = yf.Ticker(stock_option).info
+                            pe_ratio = stock_info.get('trailingPE', 'N/A')
+                            st.metric(label=f"P/E Ratio (:orange[***{stock_option}***])", value=pe_ratio)
+                    
+
+                    with P_B_ratio_col:
+                        if 'P/B ratio' in metrics_filter:
+                            stock_info = yf.Ticker(stock_option).info
+                            pb_ratio = stock_info.get('priceToBook', 'N/A')
+                            st.metric(label=f"P/B Ratio (:orange[***{stock_option}***])", value=pb_ratio)
+                    
+                    Debt_to_Equity_Ratio_col, Free_cash_flow_col = st.columns(2)
+
+                    with Debt_to_Equity_Ratio_col:
+                        if 'Debt-to-Equity Ratio' in metrics_filter:
+                            stock_info = yf.Ticker(stock_option).info
+                            debt_equity_ratio = stock_info.get('debtToEquity', 'N/A')
+                            
+                            if debt_equity_ratio != 'N/A':
+                                st.metric(label=f"Debt-to-Equity Ratio (:orange[***{stock_option}***])", value=debt_equity_ratio)
+                            else:
+                                st.write('No data retrieved')
+                        
+                
+                    if 'Free Cash Flow' in metrics_filter:
+                        Free_cash_flow = yf.Ticker(stock_option)
+                        Free_cash_flow_df = Free_cash_flow.cash_flow.loc['Free Cash Flow']
+                        Free_cash_flow_df.index = Free_cash_flow_df.index.date
+                        st.subheader(f":orange[**{stock_option}**] - Free Cash Flow Over time:")
+
+                        bar_chart_free_cash_flow = px.bar(
+                            x=Free_cash_flow_df.index,  # Use the date index as x-axis
+                            y=Free_cash_flow_df.values,  # Use the Free Cash Flow values as y-axis
+                            labels={'x': 'Date', 'y': 'Free Cash Flow'},
+                            text_auto=True
+                        )
+                        bar_chart_free_cash_flow.update_layout(
+                            xaxis=dict(showgrid=True),
+                            yaxis=dict(showgrid=True)
+    )
+
+                        st.plotly_chart(bar_chart_free_cash_flow, 
+                                        use_container_width=True)
+
+
+                    if 'EBITDA' in metrics_filter:
+                        Company_stock = yf.Ticker(stock_option)
+                        EBITDA_df = Company_stock.financials.loc['EBITDA']
+                        EBITDA_df = pd.DataFrame(EBITDA_df)
+                        EBITDA_df.index.names = ['Date']
+                        EBITDA_df = EBITDA_df.reset_index()
+                        st.subheader(f":orange[**{stock_option}**] - EBITDA Over Time:")
+                        bar_chart_free_cash_flow = px.bar(EBITDA_df, 
+                                                        x='Date', 
+                                                        y='EBITDA', 
+                                                        text_auto=True)
+                        st.plotly_chart(bar_chart_free_cash_flow, use_container_width=True)
+
+                
+                    if 'Revenue' in metrics_filter:
+                        financials = Company_stock.get_financials()
+                        revenue = financials.loc['OperatingIncome':'OperatingExpense'].T
+                        revenue.index.names = ['Date']
+                        revenue = revenue.reset_index()
+                        revenue['OperatingIncome'] = revenue['OperatingIncome'].astype(float)
+                        revenue['OperatingExpense'] = revenue['OperatingExpense'].astype(float)
+
+                        # Automatische Skalierung
+                        scaling_factor = max(revenue[['OperatingIncome', 'OperatingExpense']].max()) / 10000000
+                        revenue[['OperatingIncome', 'OperatingExpense']] /= scaling_factor
+                        st.subheader(f":orange[**{stock_option}**] - Operating Income and Expense Over Time:")
+                        # Create a bar chart using plotly.express
+                        bar_chart_revenue = px.bar(revenue, x='Date', y=['OperatingIncome', 'OperatingExpense'], barmode='group',
+                                    labels={'value': f'Amount (scaled by {scaling_factor:.0f})', 'variable': 'Category'},
+                                        text_auto=True)
+                        bar_chart_revenue.update_layout(
+                            xaxis=dict(showgrid=True),
+                            yaxis=dict(showgrid=True))
+
+                        st.plotly_chart(bar_chart_revenue, 
+                                        use_container_width=True)
+
+                    short_ratio_col, operating_income_col = st.columns(2)
+
+                    with short_ratio_col:
+                        if 'Short Ratio' in metrics_filter:
+                            short_ratio = Company_stock.info.get('shortRatio', 'N/A')
+                            st.subheader(f":orange[**{stock_option}**] - Short Ratio:")
+                            st.metric(label='Short Ratio', value=str(short_ratio))
+                    st.divider()            
+
+                
+        if show_explanation == True:            
+            if metrics_filter:
             
-            for stock_option in stock_options:    
-                Company_stock = yf.Ticker(stock_option)
-                financials = Company_stock.get_financials()
+                for stock_option in stock_options:
+                    # get data from the API generell Information    
+                    Company_stock = yf.Ticker(stock_option[0])
 
-                Trailing_PE_col, Dividends_col = st.columns(2)
-                PE_Ratio_col,P_B_ratio_col = st.columns(2)
-                Debt_to_Equity_Ratio_col, Free_cash_flow_col = st.columns(2)
-                EBITDA_col, Revenue_col = st.columns(2)
-                short_ratio_col, operating_income_col = st.columns(2)
-                EBITDA_col, Operating_Income_col = st.columns(2)
-
-
+                    # get data from the API financial information
+                    financials = Company_stock.get_financials()
+                    
+                    ### M E T R I C S _ S T A R T 
                 if 'Business Summary' in metrics_filter:
                     stock_info = yf.Ticker(stock_option)
                     BusinessSummary = stock_info.get_info()
-                
-                    # Extrahiere den Text des langen Geschäftszusammenfassungsfelds
                     long_summary = BusinessSummary.get('longBusinessSummary', '')
-                    
-                    # Zeige den Text mit Markdown-Formatierung an
                     st.markdown(f"**Business Summary for :orange[**{stock_option}**]:**")
                     st.markdown(long_summary)
 
                 if 'Stock Performance' in metrics_filter:
                     st.markdown('## Line Chart')
-                  
+                
                     # Allow user to select companies to show
                     
                     selected_companies = st.multiselect('Which companies to show?', options=stock_options, default=stock_options)
@@ -185,8 +348,7 @@ if not close_df.empty:
                     
                     st.plotly_chart(line_chart, use_container_width=True)       
 
-
-
+                Trailing_PE_col, expl_Trailing_PE = st.columns(2)
                 with Trailing_PE_col:
                     if 'Trailing PE' in metrics_filter:
                             stock_info = yf.Ticker(stock_option).info
@@ -197,44 +359,47 @@ if not close_df.empty:
                             else:
                                 st.info(f'No data available for trailing PE of **{stock_option}**')
                 
-
-                with Dividends_col:
-                    if 'Dividends' in metrics_filter:
-                        dividends_data = yf.Ticker(stock_option).dividends
-                        if not dividends_data.empty:
-                                last_dividend = dividends_data.iloc[-1]
-                                last_dividend_str = f"{last_dividend:.2f} EUR"  # Format the dividend value
-                                st.metric(label=f"Last Dividend (:orange[***{stock_option}***] in EUR)", value=last_dividend_str)
-                        else:
-                            st.info(f'No dividend data available or (:orange[***{stock_option}***]) does not pay dividends.')    
+                with expl_Trailing_PE:
+                    if 'Trailing PE' in metrics_filter:
+                        st.info(f"""Data for *Trailing PE* (Price-to-Earnings ratio)
+                                 of **{stock_option}** is not available. 
+                                 The *Trailing PE* indicates how the current 
+                                 stock price relates to past earnings per share. 
+                                 It is a key indicator for stock valuation.""")
 
 
-                with PE_Ratio_col:   
-                    if 'PE Ratio' in metrics_filter:
-                        stock_info = yf.Ticker(stock_option).info
-                        pe_ratio = stock_info.get('trailingPE', 'N/A')
-                        st.metric(label=f"P/E Ratio (:orange[***{stock_option}***])", value=pe_ratio)
-                
+                if 'Dividends' in metrics_filter:
+                    dividends_data = yf.Ticker(stock_option).dividends
+                    if not dividends_data.empty:
+                            last_dividend = dividends_data.iloc[-1]
+                            last_dividend_str = f"{last_dividend:.2f} EUR"  # Format the dividend value
+                            st.metric(label=f"Last Dividend (:orange[***{stock_option}***] in EUR)", value=last_dividend_str)
+                    else:
+                        st.info(f'No dividend data available or (:orange[***{stock_option}***]) does not pay dividends.')    
 
-                with P_B_ratio_col:
-                    if 'P/B ratio' in metrics_filter:
-                        stock_info = yf.Ticker(stock_option).info
-                        pb_ratio = stock_info.get('priceToBook', 'N/A')
-                        st.metric(label=f"P/B Ratio (:orange[***{stock_option}***])", value=pb_ratio)
-                
 
-                with Debt_to_Equity_Ratio_col:
-                    if 'Debt-to-Equity Ratio' in metrics_filter:
-                        stock_info = yf.Ticker(stock_option).info
-                        debt_equity_ratio = stock_info.get('debtToEquity', 'N/A')
-                        
-                        if debt_equity_ratio != 'N/A':
-                            st.metric(label=f"Debt-to-Equity Ratio (:orange[***{stock_option}***])", value=debt_equity_ratio)
-                        else:
-                            st.write('No data retrieved')
+                if 'PE Ratio' in metrics_filter:
+                    stock_info = yf.Ticker(stock_option).info
+                    pe_ratio = stock_info.get('trailingPE', 'N/A')
+                    st.metric(label=f"P/E Ratio (:orange[***{stock_option}***])", value=pe_ratio)
+            
+
+                if 'P/B ratio' in metrics_filter:
+                    stock_info = yf.Ticker(stock_option).info
+                    pb_ratio = stock_info.get('priceToBook', 'N/A')
+                    st.metric(label=f"P/B Ratio (:orange[***{stock_option}***])", value=pb_ratio)
+            
+
+                if 'Debt-to-Equity Ratio' in metrics_filter:
+                    stock_info = yf.Ticker(stock_option).info
+                    debt_equity_ratio = stock_info.get('debtToEquity', 'N/A')
                     
-
-               
+                    if debt_equity_ratio != 'N/A':
+                        st.metric(label=f"Debt-to-Equity Ratio (:orange[***{stock_option}***])", value=debt_equity_ratio)
+                    else:
+                        st.write('No data retrieved')
+                    
+            
                 if 'Free Cash Flow' in metrics_filter:
                     Free_cash_flow = yf.Ticker(stock_option)
                     Free_cash_flow_df = Free_cash_flow.cash_flow.loc['Free Cash Flow']
@@ -249,8 +414,7 @@ if not close_df.empty:
                     )
                     bar_chart_free_cash_flow.update_layout(
                         xaxis=dict(showgrid=True),
-                        yaxis=dict(showgrid=True)
-)
+                        yaxis=dict(showgrid=True))
 
                     st.plotly_chart(bar_chart_free_cash_flow, 
                                     use_container_width=True)
@@ -265,48 +429,72 @@ if not close_df.empty:
                     EBITDA_df = EBITDA_df.reset_index()
                     st.subheader(f":orange[**{stock_option}**] - EBITDA Over Time:")
                     bar_chart_free_cash_flow = px.bar(EBITDA_df, 
-                                                      x='Date', 
-                                                      y='EBITDA', 
-                                                      text_auto=True)
+                                                    x='Date', 
+                                                    y='EBITDA', 
+                                                    text_auto=True)
                     st.plotly_chart(bar_chart_free_cash_flow, use_container_width=True)
 
             
 
-                
-                if 'Revenue' in metrics_filter:
-                    financials = Company_stock.get_financials()
-                    revenue = financials.loc['OperatingIncome':'OperatingExpense'].T
-                    revenue.index.names = ['Date']
-                    revenue = revenue.reset_index()
-                    revenue['OperatingIncome'] = revenue['OperatingIncome'].astype(float)
-                    revenue['OperatingExpense'] = revenue['OperatingExpense'].astype(float)
+                revenue_col, expl_revenue_col = st.columns(2)
+                with revenue_col:
+                    if 'Revenue' in metrics_filter:
+                        financials = Company_stock.get_financials()
+                        revenue = financials.loc['OperatingIncome':'OperatingExpense'].T
+                        revenue.index.names = ['Date']
+                        revenue = revenue.reset_index()
+                        revenue['OperatingIncome'] = revenue['OperatingIncome'].astype(float)
+                        revenue['OperatingExpense'] = revenue['OperatingExpense'].astype(float)
 
-                    # Automatische Skalierung
-                    scaling_factor = max(revenue[['OperatingIncome', 'OperatingExpense']].max()) / 10000000
-                    revenue[['OperatingIncome', 'OperatingExpense']] /= scaling_factor
-                    st.subheader(f":orange[**{stock_option}**] - Operating Income and Expense Over Time:")
-                    # Create a bar chart using plotly.express
-                    bar_chart_revenue = px.bar(revenue, x='Date', y=['OperatingIncome', 'OperatingExpense'], barmode='group',
-                                labels={'value': f'Amount (scaled by {scaling_factor:.0f})', 'variable': 'Category'},
-                                    text_auto=True)
-                    bar_chart_revenue.update_layout(
-                        xaxis=dict(showgrid=True),
-                        yaxis=dict(showgrid=True))
+                        # Automatische Skalierung
+                        scaling_factor = max(revenue[['OperatingIncome', 'OperatingExpense']].max()) / 10000000
+                        revenue[['OperatingIncome', 'OperatingExpense']] /= scaling_factor
+                        st.subheader(f":orange[**{stock_option}**] - Operating Income and Expense Over Time:")
+                        # Create a bar chart using plotly.express
+                        bar_chart_revenue = px.bar(revenue, x='Date', y=['OperatingIncome', 'OperatingExpense'], barmode='group',
+                                    labels={'value': f'Amount (scaled by {scaling_factor:.0f})', 'variable': 'Category'},
+                                        text_auto=True)
+                        bar_chart_revenue.update_layout(
+                            xaxis=dict(showgrid=True),
+                            yaxis=dict(showgrid=True))
 
-                    st.plotly_chart(bar_chart_revenue, 
-                                    use_container_width=True)
+                        st.plotly_chart(bar_chart_revenue, 
+                                        use_container_width=True)
+                with expl_revenue_col:
+                    if 'Revenue' in metrics_filter:
 
-            
+                        st.info(f"""
+                                    The displayed chart illustrates the trend of Operating Income and Operating Expenses over time for the company {stock_option}.
+
+                                    - **Operating Income:**
+                                    Operating Income represents the profit generated by a company from its core business operations. It is calculated by subtracting Operating Expenses from Gross Profit.
+
+                                    - **Operating Expense:**
+                                    Operating Expenses are the costs directly associated with the day-to-day business activities, such as wages, rents, and material costs.
+
+                                    The X-axis represents time, while the Y-axis shows the amounts for Operating Income and Operating Expenses. The bars in the chart provide a visual insight into the relative magnitudes of these financial metrics.
+
+                                    Please note that the chart is dynamic and can be updated by selecting different metrics in the sidebar.
+                                """)
+
+                short_ratio_col, expl_short_ratio_col = st.columns(2)
+
                 with short_ratio_col:
                     if 'Short Ratio' in metrics_filter:
                         short_ratio = Company_stock.info.get('shortRatio', 'N/A')
                         st.subheader(f":orange[**{stock_option}**] - Short Ratio:")
                         st.metric(label='Short Ratio', value=str(short_ratio))
 
+                with expl_short_ratio_col:
+                    if 'Short Ratio' in metrics_filter:
+                        st.info("""The short ratio is a financial indicator that shows the 
+                                   ratio of sold short positions to the average daily trading volume. It is calculated by 
+                                 Short Ratio . A high short ratio indicates pessimistic market sentiment, while a low ratio 
+                                may indicate little interest in short selling. Investors should consider the ratio 
+                                in the context of other factors, as it is not sufficient on its own to make investment decisions.""")
+                        st.latex(r'Short Ratio = \frac{Total Short Interest}{Average Daily Trading Volume}')
 
-               
-                
-            
+
 
                 st.divider()
             # M E T R I C S _ F I L T E R _ E N D
