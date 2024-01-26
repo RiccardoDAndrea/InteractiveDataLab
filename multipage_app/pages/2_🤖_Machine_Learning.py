@@ -458,17 +458,7 @@ if uploaded_file is not None:
                 # Anzeigen der Plot
                 st.plotly_chart(fig_correlation, use_container_width= True)
                 fig_correlationplot = go.Figure(data=fig_correlation)
-                #Umwandeln des Histogramm-Graphen in eine Bilddatei
-                img_bytes_correlationplot = pio.to_image(fig_correlationplot, format='png', width=1000, height=600, scale=2)
                 
-                #Herunterladen der Bilddatei als Button
-
-                with open('Correlation Matrix.png', 'wb') as f:
-                    f.write(img_bytes_correlationplot)
-                with open('Correlation Matrix.png', 'rb') as f:
-                    img_bytes_line = f.read()
-                    st.download_button(label='Download Correlation Matrix', data=img_bytes_correlationplot, file_name='Barplot.png')
-            
             #Ende der Correlations Matrix
             
             MachineLearning_sklearn = st.expander('Machine learning evaluation')
