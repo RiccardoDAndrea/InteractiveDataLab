@@ -138,7 +138,9 @@ if not close_df.empty:
                         loop=True, 
                         quality='medium')
         
-    
+##############################################################
+### W I T H O U T _ E X P L A N A T I O N _ I S _ O N _ S T A R T;
+##############################################################    
         if show_explanation == False:
 
     # M E T R I C S _ F I L T E R _ S T A R T
@@ -301,9 +303,19 @@ if not close_df.empty:
                             short_ratio = Company_stock.info.get('shortRatio', 'N/A')
                             st.subheader(f":orange[**{stock_option}**] - Short Ratio:")
                             st.metric(label='Short Ratio', value=str(short_ratio))
-                    st.divider()            
+                    st.divider()         
+##############################################################
+### W I T H O U T _ E X P L A N A T I O N _ I S _ O N _ E N D;
+##############################################################
+                    
 
-                
+
+
+##################################################
+### E X P L A N A T I O N _ I S _ O N _ S T A R T;
+##################################################     
+                    
+
         if show_explanation == True:            
             if metrics_filter:
             
@@ -497,8 +509,15 @@ if not close_df.empty:
 
 
                 st.divider()
+
             # M E T R I C S _ F I L T E R _ E N D
-        
+                
+
+##################################################
+### E X P L A N A T I O N _ I S _ O N _ E N D;
+##################################################           
+
+
 
     # V I S Z U A L I S A T I O N _ S T A R T
 charts_vis = st.expander(label="Chart Visualization")
@@ -547,17 +566,16 @@ with charts_vis:
 
 
 
-# C O M P A N Y _ I N F O R M A T I O N _ M E T R I C S _ S T A R T
-company_information_expander = st.expander(label='Company Information')
-Company_vizualisation = st.expander(label="Vizusalisation of the Company Key Numbers")
-
         
 # C O M P A N Y _ I N F O R M A T I O N _ M E T R I C S _ E N D        
 
 st.divider()
-newspaper_expander = st.expander(label="News about your Stocks")
+
+
 
 # G E T _ N E W S _ F O R _ C O M P A N Y _ S T A R T
+
+newspaper_expander = st.expander(label="News about your Stocks")
 with newspaper_expander:
 
 
