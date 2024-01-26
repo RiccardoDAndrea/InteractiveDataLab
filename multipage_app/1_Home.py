@@ -1,5 +1,5 @@
 
-## streamlit run 1_🏡_Home.py
+## streamlit run 1_Home.py
 
 
 import streamlit as st 
