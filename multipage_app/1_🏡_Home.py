@@ -97,12 +97,9 @@ stock_dashboard_explanation = load_lottieurl('https://lottie.host/562bdf3a-49ea-
 
 ####################  H O M E P A G E   ########################################################################    
 
+
 st.set_page_config(
-<<<<<<< HEAD:multipage_app/1_Home.py
-    page_title="Multiwebpage",
-=======
     page_title="Portfolio Projects",
->>>>>>> expl_met:multipage_app/1_🏡_Home.py
     page_icon="🧊",
     layout="wide",
     initial_sidebar_state="expanded"

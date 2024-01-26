@@ -232,7 +232,7 @@ if not close_df.empty:
                             pb_ratio = stock_info.get('priceToBook', 'N/A')
                             st.metric(label=f"P/B Ratio (:orange[***{stock_option}***])", value=pb_ratio)
                     
-                    Debt_to_Equity_Ratio_col, Free_cash_flow_col = st.columns(2)
+                    Debt_to_Equity_Ratio_col, short_ratio_col = st.columns(2)
 
                     with Debt_to_Equity_Ratio_col:
                         if 'Debt-to-Equity Ratio' in metrics_filter:
@@ -244,7 +244,12 @@ if not close_df.empty:
                             else:
                                 st.write('No data retrieved')
                         
-                
+                    with short_ratio_col:
+                        if 'Short Ratio' in metrics_filter:
+                            short_ratio = Company_stock.info.get('shortRatio', 'N/A')
+                            #st.markdown(f":orange[**{stock_option}**] - Short Ratio:")
+                            st.metric(label='Short Ratio', value=str(short_ratio))
+
                     if 'Free Cash Flow' in metrics_filter:
                         Free_cash_flow = yf.Ticker(stock_option)
                         Free_cash_flow_df = Free_cash_flow.cash_flow.loc['Free Cash Flow']
@@ -303,13 +308,9 @@ if not close_df.empty:
                         st.plotly_chart(bar_chart_revenue, 
                                         use_container_width=True)
 
-                    short_ratio_col, operating_income_col = st.columns(2)
+                    
 
-                    with short_ratio_col:
-                        if 'Short Ratio' in metrics_filter:
-                            short_ratio = Company_stock.info.get('shortRatio', 'N/A')
-                            st.subheader(f":orange[**{stock_option}**] - Short Ratio:")
-                            st.metric(label='Short Ratio', value=str(short_ratio))
+                    
                     st.divider()   
 
 ##############################################################
