@@ -705,6 +705,7 @@ if stock_option:
     stock_report_mail = st.expander(label="Personalize your weekly Stock Report")
     with stock_report_mail:
         st.info('currently under development')
+        st.info('')
 
         
 
