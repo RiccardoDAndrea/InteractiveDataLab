@@ -33,28 +33,6 @@ no_company_information_choosen = load_lottieurl('https://lottie.host/6cb318a1-c1
 
 ### L O T T I E _ A N I M A T I O N _ E N D 
 
-### G E T _ T H E _ D A T A _ S T A R T 
-
-def get_quote_table(ticker):
-    url = f"https://finance.yahoo.com/quote/{ticker}"
-    response = requests.get(url)
-    
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 
-                             'html.parser')
-        
-        tables = soup.find_all('table')
-        
-        if len(tables) >= 2:
-            data = tables[0].find_all('tr') + tables[1].find_all('tr')
-            quote_data = {row.find('td', class_='C($primaryColor)').text: row.find('td', class_='Ta(end)').text for row in data}
-            return quote_data
-        else:
-            print("Error: Unable to find tables on the Yahoo Finance page.")
-    else:
-        print(f"Error: Unable to fetch data from {url}. Status code: {response.status_code}")
-
-### G E T _ T H E _ D A T A _ E N D
 
 ### START OF THE WEBPAGE ### 
 
@@ -67,7 +45,7 @@ with info_text_stocks:
         st.info("""If you want to find your stock, go to https://de.finance.yahoo.com/ and enter only the ticker symbol of the 
                 stock on the Streamlit page. For example, Apple would be 'AAPL'""", icon="ℹ️")
 
-stock_options = st.text_input("Enter your Stocks (comma-separated)", value='AAPL, TSLA')
+stock_options = st.text_input("Enter your Stocks (comma-separated)", value = 'AAPL')
 stock_options = [stock.strip() for stock in stock_options.split(',')]  # Teilen Sie die Eingabe am Komma und entfernen Sie Leerzeichen    
 
 
@@ -80,25 +58,31 @@ with end_date:
     end_date_input = st.date_input("Last day")
 
 
-
 close_df = pd.DataFrame()
 
 for stock_option in stock_options:
     try:
-        data = yf.download(stock_option, 
-                           start=start_date_input, 
-                           end=end_date_input)
-        
-        if 'Close' in data.columns:
-            close_df[stock_option] = data['Close']
-            
+        data = yf.download(stock_option, start=start_date_input, end=end_date_input)
+
+        if not data.empty:
+            if 'Close' in data.columns:
+                close_df[stock_option] = data['Close']
+                close_df.reset_index(drop=True)
+                # Überprüfe auf NaN-Werte in der 'Close'-Spalte
+                if data['Close'].isnull().any():
+                    st.warning(f'Warnung: {stock_option} contains NaN values in the "Close" column.')
+            else:
+                st.warning(f'No "Close" column found for {stock_option}')
+        else:
+            st.warning(f'No data for {stock_option}')
     except Exception as e:
-        st.warning('Enter your Stocks')
+        st.warning(f'Error when retrieving data for {stock_option}: {str(e)}')
         st_lottie(no_options_choosen, 
                 width=700, 
                 height=500, 
                 loop=True, 
                 quality='medium')
+
 
 
 if not close_df.empty:
@@ -113,7 +97,7 @@ if not close_df.empty:
     # M E T R I C S 
     metrics_expander = st.expander(label="Metrics")
     with metrics_expander:
-        st.subheader('## Metrics')
+        st.markdown('## Metrics')
         show_explanation = st.toggle('Show Metric Explanations')
 
         metrics_filter = st.multiselect(label="Which Metrics do you want to display ?",
@@ -130,6 +114,7 @@ if not close_df.empty:
                                                     'Revenue', 
                                                     'Short Ratio'],
                                                     key=1)
+        
         # comes when the user dont choose any metrics
         if len(metrics_filter) == 0:
             st.info('Choose you metrics', icon="ℹ️")
@@ -142,6 +127,7 @@ if not close_df.empty:
 ##############################################################
 ### W I T H O U T _ E X P L A N A T I O N _ I S _ O N _ S T A R T;
 ##############################################################    
+        
         if show_explanation == False:
 
     # M E T R I C S _ F I L T E R _ S T A R T
@@ -663,42 +649,6 @@ if not close_df.empty:
     # V I S Z U A L I S A T I O N _ S T A R T
 charts_vis = st.expander(label="Chart Visualization")
 
-with charts_vis:
-    which_company, which_metric = st.columns(2)
-
-    with which_company:
-        selected_companies = st.multiselect(label='Which company to display', options=stock_options, key = 4)
-
-    with which_metric:
-        options_for_metric_vis = [
-            'Stock Price', 'Trailing PE', 'Dividends', 'PE Ratio', 'P/B ratio',
-            'Debt-to-Equity Ratio', 'Free Cash Flow', 'PEG Ratio', 
-            'EBITDA', 'Revenue', 'Short Ratio', 'Operating Income'
-        ]
-        selected_metrics = st.multiselect(label='Which metric to display', options=options_for_metric_vis, key = 5)
-
-    if 'Stock Price' in selected_metrics:
-        st.subheader('## Line Chart')
-
-        line_chart = px.line(close_df,
-                                x='Date',
-                                y=selected_companies,
-                                title=f'Stock Prices Over Time <span style="color:orange">{", ".join(selected_companies)}</span>')
-
-        st.plotly_chart(line_chart, use_container_width=True)
-    if 'Free Cash Flow' in selected_metrics:
-        for company in selected_companies:
-            company_free_cash_flow = Free_cash_flow_df[company]
-
-            bar_chart_free_cash_flow = px.bar(
-                x=company_free_cash_flow.index,  # Use the date index as x-axis
-                y=company_free_cash_flow.values,  # Use the Free Cash Flow values as y-axis
-                labels={'x': 'Date', 'y': 'Free Cash Flow'},
-                title=f'Free Cash Flow Over Time for {company} <span style="color:orange">{company}</span>',
-                text_auto=True
-            )
-
-            st.plotly_chart(bar_chart_free_cash_flow, use_container_width=True)
 
 
 
@@ -710,48 +660,51 @@ with charts_vis:
         
 # C O M P A N Y _ I N F O R M A T I O N _ M E T R I C S _ E N D        
 
-st.divider()
+
 
 
 
 # G E T _ N E W S _ F O R _ C O M P A N Y _ S T A R T
-
-newspaper_expander = st.expander(label="News about your Stocks")
-with newspaper_expander:
-
-
-    for stock_option in stock_options:
-        st.header(f"News for {stock_option}")
-        url = f'https://finance.yahoo.com/quote/{stock_option}/'  # Ändern Sie dies entsprechend Ihrer Website oder Newsquelle
-        article = newspaper.Article(url)
-
-        try:
-            article.download()
-            article.parse()
-            authors = article.authors
-            article_meta_data = article.meta_data
-            article_published_date = article_meta_data.get('article:published_time', 'N/A')
-            #st.write("Authors:", ', '.join(authors))
-            #st.write("Published Date:", article_published_date)
-            article.nlp()
-
-            tab1, tab2 = st.tabs(['Full Text', 'Summary'])
-            with tab1:
-                #st.write(article.authors)
-                #st.write(article_published_date)
-                st.write(article.text)
-
-            with tab2:
-                #st.write(article.authors)
-                st.write(article.summary)
-
-        except Exception as e:
-            st.error(f"Error processing news for {stock_option}: {e}")
-
-    
-# G E T _ N E W S _ F O R _ C O M P A N Y _ E N D
+if stock_option:
+    newspaper_expander = st.expander(label="News about your Stocks")
+    with newspaper_expander:
 
 
+        for stock_option in stock_options:
+            st.header(f"News for {stock_option}")
+            url = f'https://finance.yahoo.com/quote/{stock_option}/'  # Ändern Sie dies entsprechend Ihrer Website oder Newsquelle
+            article = newspaper.Article(url)
+
+            try:
+                article.download()
+                article.parse()
+                authors = article.authors
+                article_meta_data = article.meta_data
+                article_published_date = article_meta_data.get('article:published_time', 'N/A')
+                #st.write("Authors:", ', '.join(authors))
+                #st.write("Published Date:", article_published_date)
+                article.nlp()
+
+                tab1, tab2 = st.tabs(['Full Text', 'Summary'])
+                with tab1:
+                    #st.write(article.authors)
+                    #st.write(article_published_date)
+                    st.write(article.text)
+
+                with tab2:
+                    #st.write(article.authors)
+                    st.write(article.summary)
+
+            except Exception as e:
+                st.error(f"Error processing news for {stock_option}: {e}")
+
+        
+    # G E T _ N E W S _ F O R _ C O M P A N Y _ E N D
+
+if stock_option:
+    stock_report_mail = st.expander(label="Personalize your weekly Stock Report")
+    with stock_report_mail:
+        st.info('currently under development')
 
         
 
