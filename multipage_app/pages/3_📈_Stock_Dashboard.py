@@ -712,8 +712,7 @@ if not close_df.empty:
 
                                 *Note: EBITDA should be considered alongside other financial metrics for a comprehensive analysis.*
                                 """)
- 
-            
+ ##
 
                 revenue_col, expl_revenue_col = st.columns(2)
                 with revenue_col:
