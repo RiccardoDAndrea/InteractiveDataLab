@@ -4,9 +4,11 @@ import yfinance as yf
 import pandas as pd
 import plotly.express as px
 import requests
-from bs4 import BeautifulSoup
 import newspaper
 import nltk
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 nltk.download('punkt')
 
 
@@ -41,14 +43,24 @@ st.title('Stock Dashboard')
 
 info_text_stocks = st.expander('Information on how to find you Stocks ?')
 with info_text_stocks:
+    st.info("""If you want to find your stock, go to https://de.finance.yahoo.com/ and enter only the ticker symbol of the 
+            stock on the Streamlit page. For example, Apple would be 'AAPL'""", icon="ℹ️")
 
-        st.info("""If you want to find your stock, go to https://de.finance.yahoo.com/ and enter only the ticker symbol of the 
-                stock on the Streamlit page. For example, Apple would be 'AAPL'""", icon="ℹ️")
-
+# E N T E R _ S T O C K _ S T A R T
 stock_options = st.text_input("Enter your Stocks (comma-separated)", value = 'AAPL')
-stock_options = [stock.strip() for stock in stock_options.split(',')]  # Teilen Sie die Eingabe am Komma und entfernen Sie Leerzeichen    
+stock_options = [stock.strip() for stock in stock_options.split(',')] 
 
+if not stock_options:
+    st_lottie(no_options_choosen, 
+                width=700, 
+                height=500, 
+                loop=True, 
+                quality='medium')
+    st.warning("Please enter at least one stock symbol.")
 
+# E N T E R _ S T O C K _ E N D
+    
+# D A T E _ S E L E C T I O N _ S T A R T
 start_date, end_date = st.columns(2)
 
 with start_date:
@@ -56,6 +68,8 @@ with start_date:
 
 with end_date:
     end_date_input = st.date_input("Last day")
+
+# D A T E _ S E L E C T I O N _ E N D
 
 
 close_df = pd.DataFrame()
@@ -65,23 +79,24 @@ for stock_option in stock_options:
         data = yf.download(stock_option, start=start_date_input, end=end_date_input)
 
         if not data.empty:
+            
             if 'Close' in data.columns:
                 close_df[stock_option] = data['Close']
                 close_df.reset_index(drop=True)
+                
                 # Überprüfe auf NaN-Werte in der 'Close'-Spalte
                 if data['Close'].isnull().any():
-                    st.warning(f'Warnung: {stock_option} contains NaN values in the "Close" column.')
+                    st.warning(f'Warning: {stock_option} contains NaN values in the "Close" column.')
+            
             else:
                 st.warning(f'No "Close" column found for {stock_option}')
+        
         else:
             st.warning(f'No data for {stock_option}')
+
     except Exception as e:
         st.warning(f'Error when retrieving data for {stock_option}: {str(e)}')
-        st_lottie(no_options_choosen, 
-                width=700, 
-                height=500, 
-                loop=True, 
-                quality='medium')
+        st_lottie(no_options_choosen, width=700, height=500, loop=True, quality='medium')
 
 
 
@@ -90,8 +105,8 @@ if not close_df.empty:
     close_df['Date'] = pd.to_datetime(close_df['Date']).dt.date
 
     st.dataframe(close_df, 
-                hide_index=True, 
-                use_container_width=True)
+                    hide_index=True, 
+                    use_container_width=True)
     # L I N E _ C H A R T
         
     # M E T R I C S 
@@ -144,16 +159,20 @@ if not close_df.empty:
                     
                     ### M E T R I C S _ S T A R T 
                     if 'Business Summary' in metrics_filter:
+
                         try:
                             stock_info = yf.Ticker(stock_option)
                             
                             BusinessSummary = stock_info.get_info()
                             long_summary = BusinessSummary.get('longBusinessSummary', 'N/A')
+                            
                             if long_summary == 'N/A':
                                 st.info(f'No data available for Business Summary of (:orange[***{stock_option}***])')
+                            
                             else:
                                 st.subheader(f"**Business Summary for :orange[**{stock_option}**]:**")
                                 st.markdown(long_summary)
+                        
                         except KeyError:
                             st.info(f"No data found for Business Summary of (:orange[***{stock_option}***])")
 
@@ -166,7 +185,6 @@ if not close_df.empty:
 
                     if 'Stock Performance' in metrics_filter:
                         st.markdown('## Line Chart')
-                        
                         # Allow user to select companies to show
                         selected_companies_2 = st.multiselect('Which companies to show?', 
                                                                 options=stock_options, 
@@ -175,12 +193,14 @@ if not close_df.empty:
                         
                         if not selected_companies_2:
                             st.info("Please select at least one company to show stock performance.")
+                        
                         else:
                             # Filter the selected companies based on those present in the DataFrame
                             valid_selected_companies = [company for company in selected_companies_2 if company in close_df.columns]
                             
                             if not valid_selected_companies:
                                 st.warning("None of the selected companies were found in the data.")
+                        
                             else:
                                 # Filter the dataframe based on valid selected companies
                                 close_df_selected = close_df[valid_selected_companies]
@@ -196,52 +216,66 @@ if not close_df.empty:
                                     xaxis_title='Date',
                                     yaxis_title='Stock Price',
                                     legend_title='Companies',
-                                    title=dict(text=f'Stock Prices Over Time - {", ".join(valid_selected_companies)}', x=0.5),
-                                )
+                                    title=dict(text=f'Stock Prices Over Time - {", ".join(valid_selected_companies)}', x=0.5))
                                 
                                 st.plotly_chart(line_chart, use_container_width=True, key='line_chart_no_explanation')
+                    
+                    
                     Trailing_PE_col, Dividends_col = st.columns(2)
-
                     with Trailing_PE_col:
+
                         if 'Trailing PE' in metrics_filter:
                                 stock_info = yf.Ticker(stock_option).info
+                                
                                 try:
                                     PE_Ratio_ttm = stock_info.get('trailingPE', 'N/A')
+                                    
                                     if PE_Ratio_ttm != 'N/A':
                                             st.metric(label=f"trailing PE (:orange[***{stock_option}***])",
                                                         value=PE_Ratio_ttm)
+                                    
                                     else:
                                         st.info(f'No data available for trailing PE of (:orange[***{stock_option}***])')
+                                
                                 except KeyError:
                                     st.info(f"No data found for Free Cash Flow of (:orange[***{stock_option}***])")
 
+                                
                                 except ValueError:
                                     st.info(f"Invalid stock symbol: (:orange[***{stock_option}***])")
 
                                 except Exception as e:
                                     st.info(f"An error occurred: {e}")
 
+
                     with Dividends_col:
+                        
                         if 'Dividends' in metrics_filter:
                             dividends_data = yf.Ticker(stock_option).dividends
+                            
                             if not dividends_data.empty:
                                     last_dividend = dividends_data.iloc[-1]
                                     last_dividend_str = f"{last_dividend:.2f} EUR"  # Format the dividend value
                                     st.metric(label=f"Last Dividend (:orange[***{stock_option}***] in EUR)", value=last_dividend_str)
+                            
                             else:
                                 st.info(f'No dividend data available or (:orange[***{stock_option}***]) does not pay dividends.')    
 
                     PE_Ratio_col,P_B_ratio_col = st.columns(2)
-
                     with PE_Ratio_col:   
+
                         if 'PE Ratio' in metrics_filter:
+                            
                             try:
                                 stock_info = yf.Ticker(stock_option).info
                                 pe_ratio = stock_info.get('trailingPE', 'N/A')
+                                
                                 if pe_ratio == 'N/A':
                                     st.info(f'No data available for P/E Ratio of (:orange[***{stock_option}***])')
+                                
                                 else:
                                     st.metric(label=f"P/E Ratio (:orange[***{stock_option}***])", value=pe_ratio)
+                            
                             except KeyError:
                                 st.info(f"No data found for P/E Ratio of (:orange[***{stock_option}***])")
 
@@ -251,15 +285,21 @@ if not close_df.empty:
                             except Exception as e:
                                 st.info(f"An error occurred: {e}")
 
+
                     with P_B_ratio_col:
+                        
                         if 'P/B ratio' in metrics_filter:
+                           
                             try:
                                 stock_info = yf.Ticker(stock_option).info
                                 pb_ratio = stock_info.get('priceToBook', 'N/A')
+                                
                                 if pb_ratio == 'N/A':
                                     st.info(f'No data available for P/B Ratio of (:orange[***{stock_option}***])')
+                                
                                 else:
                                     st.metric(label=f"P/B Ratio (:orange[***{stock_option}***])", value=pb_ratio)
+                            
                             except KeyError:
                                 st.info(f"No data found for P/B Ratio of (:orange[***{stock_option}***])")
 
@@ -269,18 +309,22 @@ if not close_df.empty:
                             except Exception as e:
                                 st.info(f"An error occurred: {e}")
                     
-                    Debt_to_Equity_Ratio_col, short_ratio_col = st.columns(2)
 
+                    Debt_to_Equity_Ratio_col, short_ratio_col = st.columns(2)
                     with Debt_to_Equity_Ratio_col:
+
                         if 'Debt-to-Equity Ratio' in metrics_filter:
+                            
                             try:
                                 stock_info = yf.Ticker(stock_option).info
                                 debt_equity_ratio = stock_info.get('debtToEquity', 'N/A')
                                 
                                 if debt_equity_ratio != 'N/A':
                                     st.metric(label=f"Debt-to-Equity Ratio (:orange[***{stock_option}***])", value=debt_equity_ratio)
+                                
                                 else:
                                     st.info(f'No data available for Debt-to-Equity Ratio of (:orange[***{stock_option}***])')
+                            
                             except KeyError:
                                 st.info(f"No data found for Debt-to-Equity Ratio of (:orange[***{stock_option}***])")
 
@@ -290,22 +334,30 @@ if not close_df.empty:
                             except Exception as e:
                                 st.info(f"An error occurred: {e}")
 
+
                     with short_ratio_col:
+                        
                         if 'Short Ratio' in metrics_filter:
+                            
                             try:
                                 short_ratio = yf.Ticker(stock_option).info.get('shortRatio', 'N/A')
+                                
                                 if short_ratio != 'N/A':
                                     st.metric(label='Short Ratio', value=str(short_ratio))
+                                
                                 else:
                                     st.info(f'No data available for Short Ratio of (:orange[***{stock_option}***])')
+                            
                             except KeyError:
                                 st.info(f"No data found for Short Ratio of (:orange[***{stock_option}***])")
 
+                            
                             except ValueError:
                                 st.info(f"Invalid stock symbol: (:orange[***{stock_option}***])")
 
                             except Exception as e:
                                 st.info(f"An error occurred: {e}")
+
 
                     if 'Free Cash Flow' in metrics_filter:
                         Free_cash_flow = yf.Ticker(stock_option)
@@ -313,19 +365,16 @@ if not close_df.empty:
                         try:
                             Free_cash_flow_df = Free_cash_flow.cash_flow.loc['Free Cash Flow']
                             Free_cash_flow_df.index = Free_cash_flow_df.index.date
-
                             st.subheader(f":orange[**{stock_option}**] - Free Cash Flow Over time:")
-
                             bar_chart_free_cash_flow = px.bar(
                                 x=Free_cash_flow_df.index,  # Use the date index as x-axis
                                 y=Free_cash_flow_df.values,  # Use the Free Cash Flow values as y-axis
                                 labels={'x': 'Date', 'y': 'Free Cash Flow'},
-                                text_auto=True
-                            )
+                                text_auto=True)
+                            
                             bar_chart_free_cash_flow.update_layout(
                                 xaxis=dict(showgrid=True),
-                                yaxis=dict(showgrid=True)
-                            )
+                                yaxis=dict(showgrid=True))
 
                             st.plotly_chart(bar_chart_free_cash_flow, use_container_width=True)
 
@@ -342,6 +391,7 @@ if not close_df.empty:
                     if 'EBITDA' in metrics_filter:
                         Company_stock = yf.Ticker(stock_option)
                         try:
+
                             EBITDA_df = Company_stock.financials.loc['EBITDA']
                             EBITDA_df = pd.DataFrame(EBITDA_df)
                             EBITDA_df.index.names = ['Date']
@@ -362,8 +412,10 @@ if not close_df.empty:
                         except Exception as e:
                             st.info(f"An error occurred: {e}")
                     
+
                     if 'Revenue' in metrics_filter:
                         financials = Company_stock.get_financials()
+                        
                         try:
                             revenue = financials.loc['OperatingIncome':'OperatingExpense'].T
                             revenue.index.names = ['Date']
@@ -395,9 +447,7 @@ if not close_df.empty:
                         except Exception as e:
                             st.info(f"An error occurred: {e}")
 
-                    
 
-                    
                     st.divider()   
 
 ##############################################################
@@ -447,6 +497,7 @@ if not close_df.empty:
                         
                         if not valid_selected_companies:
                             st.warning("None of the selected companies were found in the data.")
+                        
                         else:
                             # Filter the dataframe based on valid selected companies
                             close_df_selected = close_df[valid_selected_companies]
@@ -467,18 +518,24 @@ if not close_df.empty:
                             
                             st.plotly_chart(line_chart, use_container_width=True, key='line_chart_no_explanation')       
 
+
                 Trailing_PE_col, expl_Trailing_PE = st.columns(2)
                 with Trailing_PE_col:
                     if 'Trailing PE' in metrics_filter:
+                            
                             stock_info = yf.Ticker(stock_option).info
                             PE_Ratio_ttm = stock_info.get('trailingPE', 'N/A')
+
                             if PE_Ratio_ttm != 'N/A':
                                     st.metric(label=f"trailing PE (:orange[***{stock_option}***])",
                                                 value=PE_Ratio_ttm)
+                            
                             else:
                                 st.info(f'No data available for trailing PE of **{stock_option}**')
                 
+            
                 with expl_Trailing_PE:
+                    
                     if 'Trailing PE' in metrics_filter:
                         st.info("""
                                 Trailing P/E is a metric analysts use to assess stock value by comparing the current market price to earnings over the last four quarters.
@@ -497,14 +554,18 @@ if not close_df.empty:
                                 """)
 
                 dividends_col, expl_dividends_col = st.columns(2)
+                
                 if 'Dividends' in metrics_filter:
+                    
                     with dividends_col:
                         dividends_data = yf.Ticker(stock_option).dividends
+                        
                         if not dividends_data.empty:
                                 last_dividend = dividends_data.iloc[-1]
                                 last_dividend_str = f"{last_dividend:.2f} EUR"  # Format the dividend value
                                 st.metric(label=f"Last Dividend (:orange[***{stock_option}***] in EUR)", 
                                           value=last_dividend_str)
+                        
                         else:
                             st.info(f'No dividend data available or (:orange[***{stock_option}***]) does not pay dividends.')   
                     
@@ -514,14 +575,18 @@ if not close_df.empty:
                                 in the equity of a company and usually comes from the **net profits of the company**
                                 """)
 
+
                 PE_Ratio_col, expl_PE_Ratio_col = st.columns(2)
                 with PE_Ratio_col:
+                    
                     if 'PE Ratio' in metrics_filter:
                         stock_info = yf.Ticker(stock_option).info
                         pe_ratio = stock_info.get('trailingPE', 'N/A')
                         st.metric(label=f"P/E Ratio (:orange[***{stock_option}***])", value=pe_ratio)
             
+
                 with expl_PE_Ratio_col:
+                    
                     if 'PE Ratio' in metrics_filter:
                         st.info("""
                                 **Understanding P/E Ratio:**
@@ -543,13 +608,16 @@ if not close_df.empty:
                 
 
                 P_B_ratio_col, expl_P_B_ratio_col_col = st.columns(2)
+                
                 with P_B_ratio_col:
+                    
                     if 'P/B ratio' in metrics_filter:
                         stock_info = yf.Ticker(stock_option).info
                         pb_ratio = stock_info.get('priceToBook', 'N/A')
                         st.metric(label=f"P/B Ratio (:orange[***{stock_option}***])", value=pb_ratio)
                 
                 with expl_P_B_ratio_col_col:
+                    
                     if 'P/B ratio' in metrics_filter:
                         st.info("""
                                 **Price-to-Book Ratio (P/B):**
@@ -568,19 +636,24 @@ if not close_df.empty:
                                 *Note: Use P/B ratio in conjunction with other metrics for comprehensive analysis.*
                                 """)
 
+
                 debt_to_equity_ratio_col, expl_debt_to_equity_ratio_col = st.columns(2)
                 with debt_to_equity_ratio_col:
+                    
                     try:
                         stock_info = yf.Ticker(stock_option).info
                         debt_equity_ratio = stock_info.get('debtToEquity', 'N/A')
                         
                         if debt_equity_ratio != 'N/A':
                             st.metric(label=f"Debt-to-Equity Ratio (:orange[***{stock_option}***])", value=debt_equity_ratio)
+                        
                         else:
                             st.info(f'No data available for Debt-to-Equity Ratio of (:orange[***{stock_option}***]) or the ticker symbol is invalid.')
+                    
                     except KeyError:
                         st.info(f"No data found for Debt-to-Equity Ratio of (:orange[***{stock_option}***])")
 
+                    
                     except ValueError:
                         st.info(f"Invalid stock symbol: (:orange[***{stock_option}***])")
 
@@ -588,7 +661,9 @@ if not close_df.empty:
                         st.info(f"An error occurred: {e}")
 
                 with expl_debt_to_equity_ratio_col:
+                    
                     if 'Debt-to-Equity Ratio' in metrics_filter:
+                        
                         if expl_debt_to_equity_ratio_col: 
                             st.info("""
                                     **Debt-to-Equity Ratio:**
@@ -613,7 +688,9 @@ if not close_df.empty:
             
 
                 free_cash_flow_col, expl_free_cash_flow_col = st.columns(2)
+                
                 with free_cash_flow_col:
+                    
                     if 'Free Cash Flow' in metrics_filter:
                         Free_cash_flow = yf.Ticker(stock_option)
                         
@@ -627,12 +704,10 @@ if not close_df.empty:
                                 x=Free_cash_flow_df.index,  # Use the date index as x-axis
                                 y=Free_cash_flow_df.values,  # Use the Free Cash Flow values as y-axis
                                 labels={'x': 'Date', 'y': 'Free Cash Flow'},
-                                text_auto=True
-                            )
+                                text_auto=True)
                             bar_chart_free_cash_flow.update_layout(
                                 xaxis=dict(showgrid=True),
-                                yaxis=dict(showgrid=True)
-                            )
+                                yaxis=dict(showgrid=True))
 
                             st.plotly_chart(bar_chart_free_cash_flow, use_container_width=True)
 
@@ -644,7 +719,10 @@ if not close_df.empty:
 
                         except Exception as e:
                             st.info(f"An error occurred: {e}")
+
+
                 with expl_free_cash_flow_col:
+                    
                     if 'Free Cash Flow' in metrics_filter:
                         st.info("""
                                 **Free Cash Flow Over Time:**
@@ -666,10 +744,13 @@ if not close_df.empty:
                                 *Note: Use FCF in conjunction with other financial metrics for a comprehensive analysis.*
                                 """)
 
+
                 EBITDA_col, expl_EBITDA_col = st.columns(2)
                 with EBITDA_col:
+                    
                     if 'EBITDA' in metrics_filter:
                         Company_stock = yf.Ticker(stock_option)
+                        
                         try:
                             EBITDA_df = Company_stock.financials.loc['EBITDA']
                             EBITDA_df = pd.DataFrame(EBITDA_df)
@@ -691,7 +772,9 @@ if not close_df.empty:
                         except Exception as e:
                             st.info(f"An error occurred: {e}")
 
+
                 with expl_EBITDA_col:
+                    
                     if 'EBITDA' in metrics_filter:
                         st.info("""
                                 **EBITDA Over Time:**
@@ -712,12 +795,14 @@ if not close_df.empty:
 
                                 *Note: EBITDA should be considered alongside other financial metrics for a comprehensive analysis.*
                                 """)
- ##
+
 
                 revenue_col, expl_revenue_col = st.columns(2)
                 with revenue_col:
+                    
                     if 'Revenue' in metrics_filter:
                         financials = Company_stock.get_financials()
+                        
                         try:
                             revenue = financials.loc['OperatingIncome':'OperatingExpense'].T
                             revenue.index.names = ['Date']
@@ -748,9 +833,11 @@ if not close_df.empty:
 
                         except Exception as e:
                             st.info(f"An error occurred: {e}")
-                with expl_revenue_col:
-                    if 'Revenue' in metrics_filter:
 
+
+                with expl_revenue_col:
+
+                    if 'Revenue' in metrics_filter:
                         st.info(f"""
                                     The displayed chart illustrates the trend of Operating Income and Operating Expenses over time for the company {stock_option}.
 
@@ -765,13 +852,15 @@ if not close_df.empty:
                                     Please note that the chart is dynamic and can be updated by selecting different metrics in the sidebar.
                                 """)
 
-                short_ratio_col, expl_short_ratio_col = st.columns(2)
 
+                short_ratio_col, expl_short_ratio_col = st.columns(2)
                 with short_ratio_col:
+                    
                     if 'Short Ratio' in metrics_filter:
                         short_ratio = Company_stock.info.get('shortRatio', 'N/A')
                         st.subheader(f":orange[**{stock_option}**] - Short Ratio:")
                         st.metric(label='Short Ratio', value=str(short_ratio))
+
 
                 with expl_short_ratio_col:
                     if 'Short Ratio' in metrics_filter:
@@ -781,8 +870,6 @@ if not close_df.empty:
                                 may indicate little interest in short selling. Investors should consider the ratio 
                                 in the context of other factors, as it is not sufficient on its own to make investment decisions.""")
                         st.latex(r'Short Ratio = \frac{Total Short Interest}{Average Daily Trading Volume}')
-
-
 
                 st.divider()
 
@@ -794,21 +881,18 @@ if not close_df.empty:
 ##################################################           
 
 
-
-    # V I S Z U A L I S A T I O N _ S T A R T
+# V I S Z U A L I S A T I O N _ S T A R T
 charts_vis = st.expander(label="Chart Visualization")
 
 # G E T _ N E W S _ F O R _ C O M P A N Y _ S T A R T
 if stock_option:
     newspaper_expander = st.expander(label="News about your Stocks")
     with newspaper_expander:
-
-
         for stock_option in stock_options:
             st.header(f"News for {stock_option}")
             url = f'https://finance.yahoo.com/quote/{stock_option}/'  # Ändern Sie dies entsprechend Ihrer Website oder Newsquelle
             article = newspaper.Article(url)
-
+            
             try:
                 article.download()
                 article.parse()
@@ -838,8 +922,11 @@ if stock_option:
 if stock_option:
     stock_report_mail = st.expander(label="Personalize your weekly Stock Report")
     with stock_report_mail:
-        st.info('currently under development')
-        st.info('')
+        st.write("Enter your email address to receive a weekly report of your stocks")
+        email = st.text_input("Email")
+        # here create a button to send the email with the personalized report
+        if st.button("Send me the report"):
+            st.write("Report sent to your email address")
 
         
 
