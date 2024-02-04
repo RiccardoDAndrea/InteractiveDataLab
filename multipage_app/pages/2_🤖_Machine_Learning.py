@@ -114,16 +114,18 @@ if uploaded_file is not None:
             st.write('In the follwoing Tab you can get a :blue[Overview of your data.] It will only show the first :keycap_ten: rows')
             st.dataframe(uploaded_file.head(10),use_container_width=True)
             expander_head = st.expander(':grey[ :information_source: More details about the df.head() method and why it\'s important]')
-            expander_head.info("""
-                When dealing with extensive datasets, repeatedly reloading the entire dataset can be impractical. 
-                The `df.head()` method in Pandas comes in handy in such situations.
+            expander_head.info(f"""
+                The df.head() method in Pandas is used to quickly get an overview of your 
+                data. It returns the first 5 rows of your DataFrame, showing the column 
+                names, data types, and sample data. This method is particularly useful 
+                when dealing with large datasets, as it allows you to quickly understand 
+                the structure of your data without having to load the entire dataset.
 
-                This method provides a quick glimpse by showing you the first 5 rows of your data. 
-                It offers a swift overview of the data structure, including column names, data types, and sample data. 
-                This is particularly useful for making rapid decisions about data cleaning, transformation, or analysis, 
-                all without the need to reload the entire dataset. 
-                It saves time and ensures efficient utilization of computational resources.
-            """)
+                By using df.head(), you can make rapid decisions about data cleaning, 
+                transformation, or analysis. It saves time and ensures efficient 
+                utilization of computational resources. Instead of reloading the 
+                entire dataset, you can get a quick glimpse of the data and use that 
+                               information to perform necessary operations.""")
 
             st.divider()
 
@@ -131,7 +133,7 @@ if uploaded_file is not None:
             st.dataframe(uploaded_file.describe(),use_container_width=True)
             expander_describe = st.expander(':grey[:information_source: More details about the describe method and its importance]')
             expander_describe.info("""
-                Let's delve into the power of the `df.describe()` function. This function offers more than just a summary of rows and columns; 
+                Let's delve into the power of the 'df.describe()' function. This function offers more than just a summary of rows and columns; 
                 it provides essential statistical insights. 
 
                 The describe function not only reveals the basic statistics like mean and standard deviation but also includes the median. 
@@ -141,6 +143,7 @@ if uploaded_file is not None:
                 In essence, df.describe() empowers you to quickly grasp the distribution and central tendencies of your data, 
                 enabling you to make informed decisions about the performance and reliability of your models.
             """)
+
 
             st.divider()
 
