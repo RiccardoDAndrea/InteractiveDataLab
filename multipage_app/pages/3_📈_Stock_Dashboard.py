@@ -124,7 +124,6 @@ if not close_df.empty:
                                                     'P/B ratio',
                                                     'Debt-to-Equity Ratio',
                                                     'Free Cash Flow',
-                                                    'PEG Ratio',
                                                     'EBITDA', 
                                                     'Revenue', 
                                                     'Short Ratio'],
