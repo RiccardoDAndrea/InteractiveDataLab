@@ -362,18 +362,17 @@ if not close_df.empty:
                         Free_cash_flow = yf.Ticker(stock_option)
                         
                         try:
-                            Free_cash_flow_df = Free_cash_flow.cash_flow.loc['Free Cash Flow']
-                            Free_cash_flow_df.index = Free_cash_flow_df.index.date
-                            st.subheader(f":orange[**{stock_option}**] - Free Cash Flow Over time:")
-                            bar_chart_free_cash_flow = px.bar(
-                                x=Free_cash_flow_df.index,  # Use the date index as x-axis
-                                y=Free_cash_flow_df.values,  # Use the Free Cash Flow values as y-axis
-                                labels={'x': 'Date', 'y': 'Free Cash Flow'},
-                                text_auto=True)
+                            Free_cash_flow = Free_cash_flow.cash_flow.loc['Free Cash Flow']
+                            Free_cash_flow = pd.DataFrame(Free_cash_flow)
+                            Free_cash_flow.index = pd.to_datetime(Free_cash_flow.index).year
+                            Free_cash_flow = Free_cash_flow.reset_index()
+                            Free_cash_flow.rename(columns={'index': 'Date'}, inplace=True)
+                            Free_cash_flow['Free Cash Flow'] = Free_cash_flow['Free Cash Flow'].astype(int)
+
+                            bar_chart_free_cash_flow = px.bar(Free_cash_flow, x='Date', y='Free Cash Flow', title='Free Cash Flow Over Time', text='Free Cash Flow',
+                                        text_auto=True)
+                            bar_chart_free_cash_flow.update_layout(xaxis={'tickmode': 'linear', 'dtick': 1})
                             
-                            bar_chart_free_cash_flow.update_layout(
-                                xaxis=dict(showgrid=True),
-                                yaxis=dict(showgrid=True))
 
                             st.plotly_chart(bar_chart_free_cash_flow, use_container_width=True)
 
@@ -393,13 +392,16 @@ if not close_df.empty:
 
                             EBITDA_df = Company_stock.financials.loc['EBITDA']
                             EBITDA_df = pd.DataFrame(EBITDA_df)
-                            EBITDA_df.index.names = ['Date']
+                            EBITDA_df.index = pd.to_datetime(EBITDA_df.index).year
                             EBITDA_df = EBITDA_df.reset_index()
+                            EBITDA_df['EBITDA'] = EBITDA_df['EBITDA'].astype(int)
+                            EBITDA_df = EBITDA_df.rename(columns={'index': 'Date'})
+                            EBITDA_df['Date'] = EBITDA_df['Date'].astype(int)
                             st.subheader(f":orange[**{stock_option}**] - EBITDA Over Time:")
-                            bar_chart_free_cash_flow = px.bar(EBITDA_df, 
-                                                            x='Date', 
-                                                            y='EBITDA', 
-                                                            text_auto=True)
+                            bar_chart_free_cash_flow = px.bar(EBITDA_df, x='Date', y='EBITDA', title='EBITDA Over Time', text='EBITDA',barmode='group', 
+                                                                text_auto=True)
+                            bar_chart_free_cash_flow.update_layout(xaxis={'tickmode': 'linear', 'dtick': 1})
+
                             st.plotly_chart(bar_chart_free_cash_flow, use_container_width=True)
 
                         except KeyError:
@@ -416,20 +418,22 @@ if not close_df.empty:
                         financials = Company_stock.get_financials()
                         
                         try:
+                            financials = Company_stock.get_financials()
                             revenue = financials.loc['OperatingIncome':'OperatingExpense'].T
-                            revenue.index.names = ['Date']
+                            revenue.index = pd.to_datetime(revenue.index).year
                             revenue = revenue.reset_index()
+                            revenue = revenue.rename(columns={'index': 'Date'})  # Rename the 'index' column to 'Date'
                             revenue['OperatingIncome'] = revenue['OperatingIncome'].astype(float)
                             revenue['OperatingExpense'] = revenue['OperatingExpense'].astype(float)
 
-                            # Automatische Skalierung
-                            scaling_factor = max(revenue[['OperatingIncome', 'OperatingExpense']].max()) / 10000000
-                            revenue[['OperatingIncome', 'OperatingExpense']] /= scaling_factor
-                            st.subheader(f":orange[**{stock_option}**] - Operating Income and Expense Over Time:")
+                            # Scale 'OperatingIncome' and 'OperatingExpense' by dividing by 10,000,000
+                            revenue['OperatingIncome'] = revenue['OperatingIncome'] / 10000000
+                            revenue['OperatingExpense'] = revenue['OperatingExpense'] / 10000000
+
                             # Create a bar chart using plotly.express
                             bar_chart_revenue = px.bar(revenue, x='Date', y=['OperatingIncome', 'OperatingExpense'], barmode='group',
-                                        labels={'value': f'Amount (scaled by {scaling_factor:.0f})', 'variable': 'Category'},
-                                            text_auto=True)
+                                        labels={'value': 'Amount (in 10,000,000)', 'variable': 'Category'},
+                                        title='Operating Income and Expense Over Time',text_auto=True)
                             bar_chart_revenue.update_layout(
                                 xaxis=dict(showgrid=True),
                                 yaxis=dict(showgrid=True))
