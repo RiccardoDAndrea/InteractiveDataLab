@@ -155,7 +155,7 @@ if not close_df.empty:
 
                     # get data from the API financial information
                     financials = Company_stock.get_financials()
-                    
+                    st.title(f"Metrics for :orange[***{stock_option}***]")
                     ### M E T R I C S _ S T A R T 
                     if 'Business Summary' in metrics_filter:
 
@@ -184,38 +184,42 @@ if not close_df.empty:
 
                     if 'Stock Performance' in metrics_filter:
                         st.markdown('## Line Chart')
+                        
+
                         # Allow user to select companies to show
                         selected_companies_2 = st.multiselect('Which companies to show?', 
                                                                 options=stock_options, 
                                                                 default=stock_options,
                                                                 key=f'unique_key_for_multiselect_2_{stock_option}')
-                        
+                        cleaned_stock_options = ", ".join(selected_companies_2)
+                        st.markdown(f"Line Chart of :orange[***{cleaned_stock_options}***]")
                         if not selected_companies_2:
                             st.info("Please select at least one company to show stock performance.")
                         
                         else:
-                            # Filter the selected companies based on those present in the DataFrame
                             valid_selected_companies = [company for company in selected_companies_2 if company in close_df.columns]
                             
                             if not valid_selected_companies:
                                 st.warning("None of the selected companies were found in the data.")
                         
                             else:
-                                # Filter the dataframe based on valid selected companies
                                 close_df_selected = close_df[valid_selected_companies]
                                 
-                                # Create a line chart using plotly.express
                                 line_chart = px.line(close_df_selected, 
                                                         x=close_df_selected.index, 
                                                         y=valid_selected_companies, 
                                                         title=f'Stock Prices Over Time - {", ".join(valid_selected_companies)}')
                                 
                                 # Update layout for better visualization
+                                title_text = "Stock Prices Over Time - " + ", ".join(f"<span style='color:orange'>{company}</span>" for company in valid_selected_companies)
+
+                                # Erstelle das Plotly-Diagramm mit dem angepassten Titel
                                 line_chart.update_layout(
                                     xaxis_title='Date',
                                     yaxis_title='Stock Price',
                                     legend_title='Companies',
-                                    title=dict(text=f'Stock Prices Over Time - {", ".join(valid_selected_companies)}', x=0.5))
+                                    title=dict(
+                                        text=title_text, x=0.5))
                                 
                                 st.plotly_chart(line_chart, use_container_width=True, key='line_chart_no_explanation')
                     
@@ -368,6 +372,7 @@ if not close_df.empty:
                             Free_cash_flow = Free_cash_flow.reset_index()
                             Free_cash_flow.rename(columns={'index': 'Date'}, inplace=True)
                             Free_cash_flow['Free Cash Flow'] = Free_cash_flow['Free Cash Flow'].astype(int)
+                            st.subheader(f":orange[**{stock_option}**] - Free Cash Flow Over Time Over Time:")
 
                             bar_chart_free_cash_flow = px.bar(Free_cash_flow, x='Date', y='Free Cash Flow', title='Free Cash Flow Over Time', text='Free Cash Flow',
                                         text_auto=True)
@@ -429,11 +434,10 @@ if not close_df.empty:
                             # Scale 'OperatingIncome' and 'OperatingExpense' by dividing by 10,000,000
                             revenue['OperatingIncome'] = revenue['OperatingIncome'] / 10000000
                             revenue['OperatingExpense'] = revenue['OperatingExpense'] / 10000000
-
-                            # Create a bar chart using plotly.express
+                            st.subheader(f":orange[**{stock_option}**] - Operating Income and Expense Over Time Over Time:")
                             bar_chart_revenue = px.bar(revenue, x='Date', y=['OperatingIncome', 'OperatingExpense'], barmode='group',
-                                        labels={'value': 'Amount (in 10,000,000)', 'variable': 'Category'},
-                                        title='Operating Income and Expense Over Time',text_auto=True)
+                                        labels={'value': 'Amount (in 10,000,000)', 'variable': 'Category'}
+                                        ,text_auto=True)
                             bar_chart_revenue.update_layout(
                                 xaxis=dict(showgrid=True),
                                 yaxis=dict(showgrid=True))
@@ -465,7 +469,9 @@ if not close_df.empty:
 ##################################################     
                     
 
-        if show_explanation == True:            
+        if show_explanation == True:  
+            st.title(f"Metrics for :orange[***{stock_option}***]")
+          
             if metrics_filter:
             
                 for stock_option in stock_options:
@@ -473,8 +479,6 @@ if not close_df.empty:
                     Company_stock = yf.Ticker(stock_option[0])
 
                     # get data from the API financial information
-                    financials = Company_stock.get_financials()
-                    
                     ### M E T R I C S _ S T A R T 
                 if 'Business Summary' in metrics_filter:
                     stock_info = yf.Ticker(stock_option)
@@ -485,42 +489,45 @@ if not close_df.empty:
 
                 if 'Stock Performance' in metrics_filter:
                     st.markdown('## Line Chart')
-                    
-                    # Allow user to select companies to show
+                        
+
+                        # Allow user to select companies to show
                     selected_companies_2 = st.multiselect('Which companies to show?', 
                                                             options=stock_options, 
                                                             default=stock_options,
                                                             key=f'unique_key_for_multiselect_2_{stock_option}')
-                    
+                    cleaned_stock_options = ", ".join(selected_companies_2)
+                    st.markdown(f"Line Chart of :orange[***{cleaned_stock_options}***]")
                     if not selected_companies_2:
                         st.info("Please select at least one company to show stock performance.")
+                    
                     else:
-                        # Filter the selected companies based on those present in the DataFrame
                         valid_selected_companies = [company for company in selected_companies_2 if company in close_df.columns]
                         
                         if not valid_selected_companies:
                             st.warning("None of the selected companies were found in the data.")
-                        
+                    
                         else:
-                            # Filter the dataframe based on valid selected companies
                             close_df_selected = close_df[valid_selected_companies]
                             
-                            # Create a line chart using plotly.express
                             line_chart = px.line(close_df_selected, 
                                                     x=close_df_selected.index, 
                                                     y=valid_selected_companies, 
                                                     title=f'Stock Prices Over Time - {", ".join(valid_selected_companies)}')
                             
                             # Update layout for better visualization
+                            title_text = "Stock Prices Over Time - " + ", ".join(f"<span style='color:orange'>{company}</span>" for company in valid_selected_companies)
+
+                            # Erstelle das Plotly-Diagramm mit dem angepassten Titel
                             line_chart.update_layout(
                                 xaxis_title='Date',
                                 yaxis_title='Stock Price',
                                 legend_title='Companies',
-                                title=dict(text=f'Stock Prices Over Time - {", ".join(valid_selected_companies)}', x=0.5),
-                            )
+                                title=dict(
+                                    text=title_text, x=0.5))
                             
-                            st.plotly_chart(line_chart, use_container_width=True, key='line_chart_no_explanation')       
-
+                            st.plotly_chart(line_chart, use_container_width=True, key='line_chart_no_explanation')
+                
 
                 Trailing_PE_col, expl_Trailing_PE = st.columns(2)
                 with Trailing_PE_col:
@@ -698,19 +705,18 @@ if not close_df.empty:
                         Free_cash_flow = yf.Ticker(stock_option)
                         
                         try:
-                            Free_cash_flow_df = Free_cash_flow.cash_flow.loc['Free Cash Flow']
-                            Free_cash_flow_df.index = Free_cash_flow_df.index.date
+                            Free_cash_flow = Free_cash_flow.cash_flow.loc['Free Cash Flow']
+                            Free_cash_flow = pd.DataFrame(Free_cash_flow)
+                            Free_cash_flow.index = pd.to_datetime(Free_cash_flow.index).year
+                            Free_cash_flow = Free_cash_flow.reset_index()
+                            Free_cash_flow.rename(columns={'index': 'Date'}, inplace=True)
+                            Free_cash_flow['Free Cash Flow'] = Free_cash_flow['Free Cash Flow'].astype(int)
+                            st.subheader(f":orange[**{stock_option}**] - Free Cash Flow Over Time Over Time:")
 
-                            st.subheader(f":orange[**{stock_option}**] - Free Cash Flow Over time:")
-
-                            bar_chart_free_cash_flow = px.bar(
-                                x=Free_cash_flow_df.index,  # Use the date index as x-axis
-                                y=Free_cash_flow_df.values,  # Use the Free Cash Flow values as y-axis
-                                labels={'x': 'Date', 'y': 'Free Cash Flow'},
-                                text_auto=True)
-                            bar_chart_free_cash_flow.update_layout(
-                                xaxis=dict(showgrid=True),
-                                yaxis=dict(showgrid=True))
+                            bar_chart_free_cash_flow = px.bar(Free_cash_flow, x='Date', y='Free Cash Flow', title='Free Cash Flow Over Time', text='Free Cash Flow',
+                                        text_auto=True)
+                            bar_chart_free_cash_flow.update_layout(xaxis={'tickmode': 'linear', 'dtick': 1})
+                            
 
                             st.plotly_chart(bar_chart_free_cash_flow, use_container_width=True)
 
@@ -757,13 +763,16 @@ if not close_df.empty:
                         try:
                             EBITDA_df = Company_stock.financials.loc['EBITDA']
                             EBITDA_df = pd.DataFrame(EBITDA_df)
-                            EBITDA_df.index.names = ['Date']
+                            EBITDA_df.index = pd.to_datetime(EBITDA_df.index).year
                             EBITDA_df = EBITDA_df.reset_index()
+                            EBITDA_df['EBITDA'] = EBITDA_df['EBITDA'].astype(int)
+                            EBITDA_df = EBITDA_df.rename(columns={'index': 'Date'})
+                            EBITDA_df['Date'] = EBITDA_df['Date'].astype(int)
                             st.subheader(f":orange[**{stock_option}**] - EBITDA Over Time:")
-                            bar_chart_free_cash_flow = px.bar(EBITDA_df, 
-                                                            x='Date', 
-                                                            y='EBITDA', 
-                                                            text_auto=True)
+                            bar_chart_free_cash_flow = px.bar(EBITDA_df, x='Date', y='EBITDA', title='EBITDA Over Time', text='EBITDA',barmode='group', 
+                                                                text_auto=True)
+                            bar_chart_free_cash_flow.update_layout(xaxis={'tickmode': 'linear', 'dtick': 1})
+
                             st.plotly_chart(bar_chart_free_cash_flow, use_container_width=True)
 
                         except KeyError:
@@ -807,23 +816,26 @@ if not close_df.empty:
                         financials = Company_stock.get_financials()
                         
                         try:
+                            financials = Company_stock.get_financials()
                             revenue = financials.loc['OperatingIncome':'OperatingExpense'].T
-                            revenue.index.names = ['Date']
+                            revenue.index = pd.to_datetime(revenue.index).year
                             revenue = revenue.reset_index()
+                            revenue = revenue.rename(columns={'index': 'Date'})  # Rename the 'index' column to 'Date'
                             revenue['OperatingIncome'] = revenue['OperatingIncome'].astype(float)
                             revenue['OperatingExpense'] = revenue['OperatingExpense'].astype(float)
 
-                            # Automatische Skalierung
-                            scaling_factor = max(revenue[['OperatingIncome', 'OperatingExpense']].max()) / 10000000
-                            revenue[['OperatingIncome', 'OperatingExpense']] /= scaling_factor
-                            st.subheader(f":orange[**{stock_option}**] - Operating Income and Expense Over Time:")
-                            # Create a bar chart using plotly.express
+                            # Scale 'OperatingIncome' and 'OperatingExpense' by dividing by 10,000,000
+                            revenue['OperatingIncome'] = revenue['OperatingIncome'] / 10000000
+                            revenue['OperatingExpense'] = revenue['OperatingExpense'] / 10000000
+                            st.subheader(f":orange[**{stock_option}**] - Operating Income and Expense Over Time Over Time:")
+
                             bar_chart_revenue = px.bar(revenue, x='Date', y=['OperatingIncome', 'OperatingExpense'], barmode='group',
-                                        labels={'value': f'Amount (scaled by {scaling_factor:.0f})', 'variable': 'Category'},
-                                            text_auto=True)
+                                        labels={'value': 'Amount (in 10,000,000)', 'variable': 'Category'}
+                                        ,text_auto=True)
                             bar_chart_revenue.update_layout(
                                 xaxis=dict(showgrid=True),
                                 yaxis=dict(showgrid=True))
+                            bar_chart_revenue.update_layout(xaxis={'tickmode': 'linear', 'dtick': 1})
 
                             st.plotly_chart(bar_chart_revenue, 
                                             use_container_width=True)
