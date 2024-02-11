@@ -931,18 +931,7 @@ if stock_option:
             except Exception as e:
                 st.error(f"Error processing news for {stock_option}: {e}")
 
-        
-    # G E T _ N E W S _ F O R _ C O M P A N Y _ E N D
-
-if stock_option:
-    stock_report_mail = st.expander(label="Personalize your weekly Stock Report")
-    with stock_report_mail:
-        st.write("Enter your email address to receive a weekly report of your stocks")
-        email = st.text_input("Email")
-        # here create a button to send the email with the personalized report
-        if st.button("Send me the report"):
-            st.write("Report sent to your email address")
-
+# G E T _ N E W S _ F O R _ C O M P A N Y _ E N D
         
 
 
