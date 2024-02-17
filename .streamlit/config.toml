@@ -1,2 +1,3 @@
 [theme]
+maxUploadSize = 500
 base="dark"
