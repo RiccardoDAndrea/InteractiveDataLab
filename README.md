@@ -1,5 +1,20 @@
 # 🤖 Interactive Machine Learning Website
-Welcome to our interactive website that allows you to go through a basic machine learning process and perform either simple or multiple linear regression. Additionally, you have the flexibility to adjust the input variables according to your preference. 🤖📊
+Welcome to our my Streamlit webpage. My name is Riccardo and I am a data enthusiast frome Data engineer till a Data Scientist. 
+My Page is build up with Streamlit. The great thing about Streamlit is that I can build a creat everthing like my imagination as long i can code it properly.
+My webpage is seperates in multiple parts. 
+The first part is the 
+
+#### *1. Welcome Page*
+Were i introduce my self very shortly, And also some explanation of the projects that i have implemented.
+
+#### *2. Machine Learning (Linear Regression)*
+In the machine Learning Section it was for me important to explain what is machine Learning and what are some important compontons to it.
+Also i helps we the visted the code and implemented new features when i have learned to things. 
+The user can upload what ever data file he wants. 
+The range on componted is very wide from a 
+#### [Overview, Change a data type, Handling missing values, Remove columns, Viszualisation, Machine Learning]
+
+
 
 The website provides an interactive user interface that allows you to experience the step-by-step process of machine learning. You can start with data exploration and then perform various preprocessing steps. Once you have prepared your data, you can initiate model training and evaluate the performance of the model. 🔍🧪🔢
 
