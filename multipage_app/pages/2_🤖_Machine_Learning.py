@@ -85,7 +85,7 @@ def dataframe_from_url(url):
 datasets = ['Supermarket dataset', 'Wage dataset', 'Own dataset']  # Liste der verfügbaren Datensätze
 selected_datasets = st.sidebar.selectbox('Choose your Dataset:', options=datasets)
 
-if 'Supermarket dataset' in selected_datasets:
+if 'housing Dataset' in selected_datasets:
     dataset_url = "https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/main/Dataset/housing.csv"
     uploaded_file = dataframe_from_url(dataset_url)[0:10000]
 elif 'Wage dataset' in selected_datasets:
