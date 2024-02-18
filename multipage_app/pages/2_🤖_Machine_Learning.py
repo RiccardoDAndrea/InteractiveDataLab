@@ -87,7 +87,7 @@ selected_datasets = st.sidebar.selectbox('Choose your Dataset:', options=dataset
 
 if 'Supermarket dataset' in selected_datasets:
     dataset_url = "https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/main/Dataset/housing.csv"
-    uploaded_file = dataframe_from_url(dataset_url)
+    uploaded_file = dataframe_from_url(dataset_url)[0:10000]
 elif 'Wage dataset' in selected_datasets:
     dataset_url = "https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/main/Dataset/wage.csv"
     uploaded_file = dataframe_from_url(dataset_url)
