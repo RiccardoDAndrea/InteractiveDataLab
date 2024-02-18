@@ -1,4 +1,4 @@
-# 🤖 Interactive Machine Learning Website
+# 🤖 Interactive Streamlit Protfolie Projects
 
 Welcome to my Streamlit webpage! My name is Riccardo, and I am a data enthusiast, ranging from Data Engineer to Data Scientist.
 
