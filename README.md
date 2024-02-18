@@ -1,6 +1,8 @@
-# 🤖 Interactive Streamlit Protfolie Projects
+# 🤖 Interactive Streamlit Portfolio Projects
 
-Welcome to my Streamlit webpage! My name is Riccardo, and I am a data enthusiast, ranging from Data Engineer to Data Scientist.
+Welcome to my Streamlit webpage! My name is 
+### Riccardo
+, and I am a data enthusiast, ranging from Data Engineer to Data Scientist.
 
 My page is built using Streamlit. The great thing about Streamlit is that I can build and create anything my imagination desires, as long as I can code it properly.
 
