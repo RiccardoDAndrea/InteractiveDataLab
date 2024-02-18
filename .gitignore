@@ -9,7 +9,7 @@ reg_venv
 
 #files 
 /python_files/send_email.py
-
+python_files/
 # Distribution / packaging
 .Python
 build/
