@@ -6,6 +6,10 @@ bsp.txt
 # C extensions
 *.so
 reg_venv
+
+#files 
+/python_files/send_email.py
+
 # Distribution / packaging
 .Python
 build/
@@ -19,11 +23,6 @@ lib64/
 parts/
 sdist/
 var/
-
-
-python_files/
-
-
 wheels/
 share/python-wheels/
 *.egg-info/
@@ -132,7 +131,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-stock_venv/
+
+python_files/send_email.py
+python_files/übungs_notebook.ipynb
 # Spyder project settings
 .spyderproject
 .spyproject
