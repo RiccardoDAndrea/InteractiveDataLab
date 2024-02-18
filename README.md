@@ -53,3 +53,6 @@ Lastly, there's a section dedicated to getting to know me better. Here, I delve 
 
 
 **At the moment, there are some errors on the page. I am working on it and will update all errors as soon as possible.** 😊✨
+
+
+![Linear Regression](https://streamlit.io/images/brand/streamlit-logo-primary-colormark-darktext.png)
