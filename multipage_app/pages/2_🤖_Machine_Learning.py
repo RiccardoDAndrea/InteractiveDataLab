@@ -13,8 +13,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 from math import sqrt
 import os
 import requests
-
-
+import statsmodels as sm
 def load_lottieurl(url:str):
     """ 
     The follwing function request a url from the homepage
@@ -82,7 +81,7 @@ def dataframe_from_url(url):
 
 
 # Ausgabe des Datensatzes
-datasets = ['Supermarket dataset', 'Wage dataset', 'Own dataset']  # Liste der verfügbaren Datensätze
+datasets = ['Housing Dataset', 'Wage dataset', 'Own dataset']  # Liste der verfügbaren Datensätze
 selected_datasets = st.sidebar.selectbox('Choose your Dataset:', options=datasets)
 
 if 'Housing Dataset' in selected_datasets:
