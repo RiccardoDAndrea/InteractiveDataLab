@@ -6,7 +6,8 @@ bsp.txt
 # C extensions
 *.so
 reg_venv
-
+secrets.toml
+st_llm
 #files 
 /python_files/send_email.py
 python_files/
