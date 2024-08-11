@@ -1,7 +1,4 @@
-
 ## streamlit run 1_Home.py
-
-
 import streamlit as st 
 from streamlit_lottie import st_lottie
 import requests
@@ -35,14 +32,6 @@ stock_dashboard_explanation = load_lottieurl('https://lottie.host/562bdf3a-49ea-
 
 
 ####################  H O M E P A G E   ########################################################################    
-
-
-st.set_page_config(
-    page_title="Portfolio Projects",
-    page_icon="🧊",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
 
 
 st.write('# :blue[Welcome]')
@@ -157,5 +146,8 @@ if 'Stock Dashboard' in explination_homepage:
                 With a stock dashboard, your investment journey becomes a comedy show, 
                 and StockSavvy is your financial stand-up, making the financial world a 
                 bit more entertaining, one trade at a time. 🎤💸""")
+
+
+
 
 
