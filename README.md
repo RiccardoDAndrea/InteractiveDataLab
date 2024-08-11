@@ -1,4 +1,4 @@
-# 🤖 Interactive Streamlit Portfolio Projects
+# 🤖 InteractiveDataLab
 
 Link: https://riccardo-dandrea-projects.streamlit.app/
 
