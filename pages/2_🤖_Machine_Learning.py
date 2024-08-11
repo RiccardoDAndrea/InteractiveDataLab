@@ -81,7 +81,7 @@ def dataframe_from_url(url):
 
 
 # Ausgabe des Datensatzes
-datasets = ['Housing Dataset', 'Wage dataset', 'Own dataset']  # Liste der verfügbaren Datensätze
+datasets = ['Car dataset', 'Wage dataset', 'Own dataset']  # Liste der verfügbaren Datensätze
 selected_datasets = st.sidebar.selectbox('Choose your Dataset:', options=datasets)
 
 if 'Housing Dataset' in selected_datasets:
@@ -525,7 +525,7 @@ if uploaded_file is not None:
                 with R_2_training_col:
                     st.metric(label = 'R2 of the Training Data', value = R2_sklearn_train)
                 with R_2_test_col:
-                    st.metric(label = 'R2 of the Test Data', value = R2_sklearn_test.round(3))
+                    st.metric(label = 'R2 of the Test Data', value = R2_sklearn_test)
 
                 st.divider()
                 
@@ -538,9 +538,9 @@ if uploaded_file is not None:
 
                 RMSE_train_col,RMSE_test_col = st.columns(2)
                 with RMSE_train_col:
-                    st.metric(label = 'RMSE of the Training Data', value = round(RMSE_train,3))
+                    st.metric(label = 'RMSE of the Training Data', value = RMSE_train)
                 with RMSE_test_col:
-                    st.metric(label = 'RMSE of the Test Data', value = round(RMSE_test,3))
+                    st.metric(label = 'RMSE of the Test Data', value = RMSE_test)
 
                 st.divider()
                 
@@ -557,9 +557,9 @@ if uploaded_file is not None:
 
                 MAE_train_col,MAE_test_col = st.columns(2)
                 with RMSE_train_col:
-                    st.metric(label = 'MAE of the Training Data', value = round(MAE_train,3))
+                    st.metric(label = 'MAE of the Training Data', value = MAE_train)
                 with RMSE_test_col:
-                    st.metric(label = 'MAE of the Test Data', value = round(MAE_test,3))
+                    st.metric(label = 'MAE of the Test Data', value = MAE_test)
 
                 # Coefficient
                 coefficiensts = lm.coef_
@@ -682,7 +682,7 @@ if uploaded_file is not None:
                                     Please choose up to 7 columns to avoid this error message""",icon="ℹ️")
                     
                     st.stop()
-                st.markdown(f'Your predicted value for :blue[{Target_variable}] is: **{y_pred_.round(3)}**')
+                st.markdown(f'Your predicted value for :blue[{Target_variable}] is: **{y_pred_}**')
 else:
     st.write('#### You :blue[**_have not uploaded any data_**] if you want to start just upload a dataset or use one of the example datasets')
     st_lottie(no_data_avaible)
