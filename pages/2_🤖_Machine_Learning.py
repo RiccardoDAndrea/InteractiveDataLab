@@ -14,6 +14,7 @@ from math import sqrt
 import os
 import requests
 import statsmodels as sm
+
 def load_lottieurl(url:str):
     """ 
     The follwing function request a url from the homepage
@@ -25,6 +26,7 @@ def load_lottieurl(url:str):
     if r.status_code != 200:
         return None
     return r.json()
+
 no_date_col = load_lottieurl('https://assets8.lottiefiles.com/packages/lf20_0pgmwzt3.json')
 removed_date_column = load_lottieurl('https://assets3.lottiefiles.com/packages/lf20_ovo7L6.json')
 no_data_avaible = load_lottieurl('https://assets7.lottiefiles.com/packages/lf20_rjn0esjh.json')
@@ -33,65 +35,51 @@ no_X_variable_lottie = load_lottieurl('https://assets10.lottiefiles.com/packages
 value_is_zero_in_train_size = load_lottieurl('https://assets7.lottiefiles.com/packages/lf20_usmfx6bp.json')
 wrong_data_type_ML = load_lottieurl('https://assets5.lottiefiles.com/packages/lf20_2frpohrv.json')
 rocket_for_cv = load_lottieurl('https://assets4.lottiefiles.com/packages/lf20_atskiwym.json')
+
 ################################################################################################################
 ################################################################################################################
 
-
-
-# Initialize session state if not already initialized
-if 'separator' not in st.session_state:
-    st.session_state.separator = ','  # Default separator
 
 # Let the user choose the separator
-selected_separator = st.sidebar.selectbox('How would you like to separate your values?', (",", ";", ".", ":"))
+with st.sidebar.expander('Upload settings'):
 
-# Update the separator in session state
-st.session_state.separator = selected_separator
-
-def dataframe():
-    """
-    The following function gives the User the capability to 
-    enter a dataframe that he wants
-    """
-    uploaded_file = st.sidebar.file_uploader('Upload here your file', key='dataframe')
-    if uploaded_file is not None:
-        if st.session_state.separator:
-            df = pd.read_csv(uploaded_file, sep=st.session_state.separator)
-        else:
-            df = pd.read_csv(uploaded_file)
-        return df
+    separator, thousands = st.columns(2)
     
-
-def dataframe_from_url(url):
-    response = requests.get(url)
-    content = response.content
-
-    # Speichern des Inhalts als temporäre Datei
-    temp_file = 'temp.csv'
-    with open(temp_file, 'wb') as f:
-        f.write(content)
-
-    # Laden der CSV-Datei mit Pandas
-    dataset = pd.read_csv(temp_file, sep= st.session_state.separator)
-    os.remove(temp_file)
-    dataset_regression = pd.DataFrame(dataset)
-    return dataset_regression
-
-
+    with separator:
+        selected_separator = st.selectbox('Value separator:', (";", ",", ".", ":"))
+    
+    with thousands:
+        selected_thousands = st.selectbox('Thousands separator:', (",", "."), key='thousands')
+    
+    decimal, unicode = st.columns(2)
+    
+    with decimal:
+        selected_decimal = st.selectbox('Decimal separator:', (".", ","), key='decimal')
+    
+    with unicode:
+        selected_unicode = st.selectbox('File encoding:', ('utf-8', 'utf-16', 'utf-32', 'iso-8859-1', 'cp1252'))
 
 
 # Ausgabe des Datensatzes
 datasets = ['Car dataset', 'Wage dataset', 'Own dataset']  # Liste der verfügbaren Datensätze
 selected_datasets = st.sidebar.selectbox('Choose your Dataset:', options=datasets)
 
-if 'Housing Dataset' in selected_datasets:
-    dataset_url = "https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/main/Dataset/housing.csv"
-    uploaded_file = dataframe_from_url(dataset_url)[0:10000]
+if 'Car dataset' in selected_datasets:
+    uploaded_file = pd.read_csv('https://raw.githubusercontent.com/RiccardoDAndrea/InteractiveDataLab/main/Dataset/Car.csv',
+                                sep=selected_separator, thousands=selected_thousands, decimal=selected_decimal, encoding=selected_unicode)
+    
+    
 elif 'Wage dataset' in selected_datasets:
-    dataset_url = "https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/main/Dataset/wage.csv"
-    uploaded_file = dataframe_from_url(dataset_url)
+     uploaded_file = pd.read_csv('https://raw.githubusercontent.com/RiccardoDAndrea/Streamlit-Regression-App/main/Dataset/wage.csv',
+                                 sep=selected_separator, thousands=selected_thousands, decimal=selected_decimal, encoding=selected_unicode)
+
+
 elif 'Own dataset' in selected_datasets:
-    uploaded_file = dataframe()
+    uploaded_file = st.file_uploader("Upload your own dataset", type=['csv', 'txt'], key='dataframe')
+    if uploaded_file is not None:
+        uploaded_file = pd.read_csv(uploaded_file, sep=selected_separator, thousands=selected_thousands, decimal=selected_decimal, encoding=selected_unicode)
+
+
 
 ####################################################################################################
 #############  M A C H I N E - L E A R N I N G ####################################################
@@ -158,40 +146,57 @@ if uploaded_file is not None:
                                 Addressing NaN values through appropriate handling methods is essential for maintaining the integrity and accuracy of your analyses and models.
                             """)
             st.divider()
-
-    ## Here can the use change the data types if its neccarsary
     with change_data_type:
-
-        ######## In this part the user have the choose to change his datatype if is neccary he or she can choose betweem
-        ######## different types of data types and can save it with the button 'save changes'
-
-        st.subheader('Your DataFrame data types')
+        # Display original data types
+        st.subheader('Your DataFrame data types:')
         st.dataframe(uploaded_file.dtypes, use_container_width=True)
 
-        # Change data types
+        # Section for changing data types
         st.subheader("Change your Data Types:")
-        selected_columns = st.multiselect("Choose your columns", uploaded_file.columns)
-        selected_dtype = st.selectbox("Choose a data type", ["int64", "float64", "string", "datetime64[ns]"])
 
-        if st.button("Save Changes"):
-            try:
-                if selected_dtype == "datetime64[ns]":
-                    for col in selected_columns:
-                        uploaded_file[col] = pd.to_datetime(uploaded_file[col], format="%Y")
+        # Split into two columns for selecting columns and data types
+        change_data_type_col_1, change_data_type_col_2 = st.columns(2)
 
-                for col in selected_columns:
-                    uploaded_file[col] = uploaded_file[col].astype(selected_dtype)
-            except Exception as e:
-                st.error(f"An error occurred: {str(e)}")
-                st_lottie(wrong_data_type_ML, width=700, height=300, quality='low', loop=False)
-                #st.stop()
-                # Display updated DataFrame
-            st.write("Updated DataFrame:")
-            st.dataframe(uploaded_file.dtypes, use_container_width=True)
-            st.dataframe(uploaded_file.head(), use_container_width=True)
-            
+        with change_data_type_col_1:
+            selected_columns_1 = st.multiselect("Choose your columns", uploaded_file.columns, key='change_data_type_1')
+            selected_dtype_1 = st.selectbox("Choose a data type", ['None', 'int64', 'float64', 'string', 'datetime64[ns]'], 
+                                            key='selectbox_1')
 
-        
+        with change_data_type_col_2:
+            selected_columns_2 = st.multiselect("Choose your columns", uploaded_file.columns, key='change_data_type_2')
+            selected_dtype_2 = st.selectbox("Choose a data type", ['None', 'int64', 'float64', 'string', 'datetime64[ns]'], 
+                                            key='selectbox_2')
+
+    # Function to change data types
+        def change_data_types(uploaded_file, columns, dtype):
+            if columns and dtype != 'None':  # Ensure columns are selected and dtype is not 'None'
+                try:
+                    if dtype == "int64":
+                        uploaded_file[columns] = uploaded_file[columns].apply(pd.to_numeric, errors='coerce').round(0).astype('Int64')
+                    elif dtype == "float64":
+                        uploaded_file[columns] = uploaded_file[columns].apply(pd.to_numeric, errors='coerce').astype('float64')
+                    elif dtype == "string":
+                        uploaded_file[columns] = uploaded_file[columns].astype('string')
+                    elif dtype == "datetime64[ns]":
+                        uploaded_file[columns] = pd.to_datetime(uploaded_file[columns], errors='coerce')
+                except Exception as e:
+                    st.error(f"Error converting columns {columns} to {dtype}: {e}")
+
+            return uploaded_file
+
+        # Apply data type changes for both sets of selections
+        uploaded_file = change_data_types(uploaded_file, selected_columns_1, selected_dtype_1)
+        uploaded_file = change_data_types(uploaded_file, selected_columns_2, selected_dtype_2)
+
+        # Display the modified DataFrame data types
+        st.subheader('Modified DataFrame data types:')
+        st.dataframe(uploaded_file.dtypes, use_container_width=True)
+
+        # Display the modified DataFrame
+        st.subheader('Modified DataFrame:')
+        st.dataframe(uploaded_file, use_container_width=True)
+
+   
 
     with handling_missing_values:
 
@@ -245,8 +250,6 @@ if uploaded_file is not None:
                 st.dataframe(uploaded_file.isna().sum(), use_container_width=True)
                 st.divider()
 
-
-    
 
         with remove_columns_tab:
             # Dropdown-Box mit Spaltennamen erstellen
@@ -424,9 +427,13 @@ if uploaded_file is not None:
 
                 fig_correlation.update_traces( showscale = False, 
                                                 colorbar_thickness = 25)
-                
-               
-                
+                # Hinzufügen der numerischen Werte als Text
+                annotations = []
+                for i, row in enumerate(corr_matrix.values):
+                    for j, val in enumerate(row):
+                        annotations.append(dict(x=j, y=i, text=str(round(val, 2)), showarrow=False, font=dict(size=16)))
+                fig_correlation.update_layout(annotations=annotations)
+
                 # Anzeigen der Plot
                 st.plotly_chart(fig_correlation, use_container_width= True)
                 fig_correlationplot = go.Figure(data=fig_correlation)
@@ -495,8 +502,8 @@ if uploaded_file is not None:
                     st.stop()
                 
                 # Unanhängige Varible sowie Abhängige 
-                X = uploaded_file[X_variables]
-                y = uploaded_file[Target_variable]
+                X = uploaded_file[X_variables].round(2)
+                y = uploaded_file[Target_variable].round(2)
                 
                 # Aufteilung der Train und Test Datensätze
                 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size/100, train_size=train_size/100, random_state=42)
@@ -510,22 +517,22 @@ if uploaded_file is not None:
                 # Berechnung der R2-Scores
 
                 try:
-                    R2_sklearn_train = lm.score(X_train, y_train)
+                    R2_sklearn_train = lm.score(X_train.round(2), y_train.round(2))
+                    
                 except Exception as e:
                     st.error(f"""Error occurred during R2 score calculation for training data: {str(e)}.
                                     Please check the data type of your target variable in the 'Change Data Types' section and make sure it is compatible for regression analysis.""")
-
                     st.stop()
 
 
 
-                R2_sklearn_test = lm.score(X_test, y_test)
+                R2_sklearn_test = lm.score(X_test.round(2), y_test.round(2))
                 
                 R_2_training_col,R_2_test_col = st.columns(2)
                 with R_2_training_col:
-                    st.metric(label = 'R2 of the Training Data', value = R2_sklearn_train)
+                    st.metric(label = 'R2 of the Training Data', value = round(R2_sklearn_train,2))
                 with R_2_test_col:
-                    st.metric(label = 'R2 of the Test Data', value = R2_sklearn_test)
+                    st.metric(label = 'R2 of the Test Data', value = round(R2_sklearn_test,2))
 
                 st.divider()
                 
@@ -538,9 +545,9 @@ if uploaded_file is not None:
 
                 RMSE_train_col,RMSE_test_col = st.columns(2)
                 with RMSE_train_col:
-                    st.metric(label = 'RMSE of the Training Data', value = RMSE_train)
+                    st.metric(label = 'RMSE of the Training Data', value = round(RMSE_train,2))
                 with RMSE_test_col:
-                    st.metric(label = 'RMSE of the Test Data', value = RMSE_test)
+                    st.metric(label = 'RMSE of the Test Data', value = round(RMSE_test,2))
 
                 st.divider()
                 
@@ -557,9 +564,9 @@ if uploaded_file is not None:
 
                 MAE_train_col,MAE_test_col = st.columns(2)
                 with RMSE_train_col:
-                    st.metric(label = 'MAE of the Training Data', value = MAE_train)
+                    st.metric(label = 'MAE of the Training Data', value = round(MAE_train,2))
                 with RMSE_test_col:
-                    st.metric(label = 'MAE of the Test Data', value = MAE_test)
+                    st.metric(label = 'MAE of the Test Data', value = round(MAE_test,2))
 
                 # Coefficient
                 coefficiensts = lm.coef_
@@ -568,7 +575,7 @@ if uploaded_file is not None:
             
                 # Intercept
                 
-                st.metric(label='Intercept', value=lm.intercept_)
+                st.metric(label='Intercept', value= round(lm.intercept_,3))
 
                 results = pd.concat([y_test.reset_index(drop=True), pd.Series(y_pred_test)], axis=1)
                 results.columns = ['y_test', 'y_pred_test']
@@ -682,7 +689,7 @@ if uploaded_file is not None:
                                     Please choose up to 7 columns to avoid this error message""",icon="ℹ️")
                     
                     st.stop()
-                st.markdown(f'Your predicted value for :blue[{Target_variable}] is: **{y_pred_}**')
+                st.markdown(f'Your predicted value for :blue[{Target_variable}] is: **{y_pred_.round(3)}**')
 else:
     st.write('#### You :blue[**_have not uploaded any data_**] if you want to start just upload a dataset or use one of the example datasets')
     st_lottie(no_data_avaible)
