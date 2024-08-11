@@ -4,7 +4,7 @@ import yfinance as yf
 import pandas as pd
 import plotly.express as px
 import requests
-import newspaper
+#import newspaper
 import nltk
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -899,39 +899,39 @@ if not close_df.empty:
 # V I S Z U A L I S A T I O N _ S T A R T
 charts_vis = st.expander(label="Chart Visualization")
 
-# G E T _ N E W S _ F O R _ C O M P A N Y _ S T A R T
-if stock_option:
-    newspaper_expander = st.expander(label="News about your Stocks")
-    with newspaper_expander:
-        for stock_option in stock_options:
-            st.header(f"News for {stock_option}")
-            url = f'https://finance.yahoo.com/quote/{stock_option}/'  # Ändern Sie dies entsprechend Ihrer Website oder Newsquelle
-            article = newspaper.Article(url)
+# # G E T _ N E W S _ F O R _ C O M P A N Y _ S T A R T
+# if stock_option:
+#     newspaper_expander = st.expander(label="News about your Stocks")
+#     with newspaper_expander:
+#         for stock_option in stock_options:
+#             st.header(f"News for {stock_option}")
+#             url = f'https://finance.yahoo.com/quote/{stock_option}/'  # Ändern Sie dies entsprechend Ihrer Website oder Newsquelle
+#             article = newspaper.Article(url)
             
-            try:
-                article.download()
-                article.parse()
-                authors = article.authors
-                article_meta_data = article.meta_data
-                article_published_date = article_meta_data.get('article:published_time', 'N/A')
-                #st.write("Authors:", ', '.join(authors))
-                #st.write("Published Date:", article_published_date)
-                article.nlp()
+#             try:
+#                 article.download()
+#                 article.parse()
+#                 authors = article.authors
+#                 article_meta_data = article.meta_data
+#                 article_published_date = article_meta_data.get('article:published_time', 'N/A')
+#                 #st.write("Authors:", ', '.join(authors))
+#                 #st.write("Published Date:", article_published_date)
+#                 article.nlp()
 
-                tab1, tab2 = st.tabs(['Full Text', 'Summary'])
-                with tab1:
-                    #st.write(article.authors)
-                    #st.write(article_published_date)
-                    st.write(article.text)
+#                 tab1, tab2 = st.tabs(['Full Text', 'Summary'])
+#                 with tab1:
+#                     #st.write(article.authors)
+#                     #st.write(article_published_date)
+#                     st.write(article.text)
 
-                with tab2:
-                    #st.write(article.authors)
-                    st.write(article.summary)
+#                 with tab2:
+#                     #st.write(article.authors)
+#                     st.write(article.summary)
 
-            except Exception as e:
-                st.error(f"Error processing news for {stock_option}: {e}")
+#             except Exception as e:
+#                 st.error(f"Error processing news for {stock_option}: {e}")
 
-# G E T _ N E W S _ F O R _ C O M P A N Y _ E N D
+# # G E T _ N E W S _ F O R _ C O M P A N Y _ E N D
         
 
 

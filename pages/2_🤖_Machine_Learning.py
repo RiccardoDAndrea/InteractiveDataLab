@@ -306,12 +306,7 @@ if uploaded_file is not None:
                         fig = go.Figure(data=hist_plot_1)
                         # Umwandeln des Histogramm-Graphen in eine Bilddatei
                         img_bytes = pio.to_image(fig, format='png', width=1000, height=600, scale=2)
-                        # Herunterladen der Bilddatei als Button
-                        with open('histo.png', 'wb') as f:
-                            f.write(img_bytes)
-                        with open('histo.png', 'rb') as f:
-                            image_bytes = f.read()
-                            st.download_button(label='Download Histogramm', data=image_bytes, file_name='histo.png')
+                        
                         st.divider()
 
                     elif chart_type == 'Scatterchart':
@@ -329,12 +324,7 @@ if uploaded_file is not None:
                         # Umwandeln des Histogramm-Graphen in eine Bilddatei
                         plt.tight_layout()
                         img_bytes_scatter = pio.to_image(fig_scatter, format='png', width=1000, height=600, scale=2)
-                        # Herunterladen der Bilddatei als Button
-                        with open('Scatter.png', 'wb') as f:
-                            f.write(img_bytes_scatter)
-                        with open('Scatter.png', 'rb') as f:
-                            image_bytes_scatter = f.read()
-                            st.download_button(label='Download Scatter', data=image_bytes_scatter, file_name='Scatter.png')
+                        
                         st.divider()
 
                     elif chart_type == 'Linechart':
@@ -354,12 +344,7 @@ if uploaded_file is not None:
                         fig_line = go.Figure(data=line_plot_1)
                         # Umwandeln des Histogramm-Graphen in eine Bilddatei
                         img_bytes_line = pio.to_image(fig_line, format='png', width=1000, height=600, scale=2)
-                        # Herunterladen der Bilddatei als Button
-                        with open('Lineplot.png', 'wb') as f:
-                            f.write(img_bytes_line)
-                        with open('Lineplot.png', 'rb') as f:
-                            img_bytes_line = f.read()
-                            st.download_button(label='Download Lineplot', data=img_bytes_line, file_name='histo.png')
+                        
                         st.divider()
 
                     elif chart_type == 'Barchart':
@@ -379,12 +364,6 @@ if uploaded_file is not None:
                         # Umwandeln des Histogramm-Graphen in eine Bilddatei
                         img_bytes_bar = pio.to_image(fig_bar, format='png', width=1000, height=600, scale=2)
                         
-                        # Herunterladen der Bilddatei als Button
-                        with open('Barplot.png', 'wb') as f:
-                            f.write(img_bytes_bar)
-                        with open('Barplot.png', 'rb') as f:
-                            img_bytes_line = f.read()
-                            st.download_button(label='Download Barplot', data=img_bytes_bar, file_name='Barplot.png')
                         st.divider()
 
                     elif chart_type == 'Boxplot':
@@ -399,11 +378,7 @@ if uploaded_file is not None:
                         # Umwandeln des Histogramm-Graphen in eine Bilddatei
                         img_bytes_boxplot = pio.to_image(fig_boxplot, format='png', width=1000, height=600, scale=2)
                         # Herunterladen der Bilddatei als Button
-                        with open('Boxplot.png', 'wb') as f:
-                            f.write(img_bytes_boxplot)
-                        with open('Boxplot.png', 'rb') as f:
-                            img_bytes_line = f.read()
-                            st.download_button(label='Download Boxplot', data=img_bytes_boxplot, file_name='Barplot.png')
+                        
                         st.divider()
                         
             else:
@@ -450,12 +425,7 @@ if uploaded_file is not None:
                 fig_correlation.update_traces( showscale = False, 
                                                 colorbar_thickness = 25)
                 
-                # Hinzufügen der numerischen Werte als Text
-                annotations = []
-                for i, row in enumerate(corr_matrix.values):
-                    for j, val in enumerate(row):
-                        annotations.append(dict(x=j, y=i, text=str(round(val, 2)), showarrow=False, font=dict(size=16)))
-                fig_correlation.update_layout(annotations=annotations)
+               
                 
                 # Anzeigen der Plot
                 st.plotly_chart(fig_correlation, use_container_width= True)
@@ -511,12 +481,15 @@ if uploaded_file is not None:
                     st_lottie(value_is_zero_in_train_size)
                     st.warning('Train size should be greater than zero.')
                     st.stop()
+
                 elif test_size <= 0:
                     st.warning('Test size should be greater than zero.')
                     st.stop()
+                
                 # elif train_size + test_size > len(df_dtype_and_groupby_and_dropped):
                 #     st.warning('Train size and Test size exceed the number of samples in the dataset.')
                 #     st.stop()
+                
                 elif train_size == len(uploaded_file):
                     st.warning('Train size cannot be equal to the number of samples in the dataset.')
                     st.stop()
@@ -550,7 +523,7 @@ if uploaded_file is not None:
                 
                 R_2_training_col,R_2_test_col = st.columns(2)
                 with R_2_training_col:
-                    st.metric(label = 'R2 of the Training Data', value = R2_sklearn_train.round(3))
+                    st.metric(label = 'R2 of the Training Data', value = R2_sklearn_train)
                 with R_2_test_col:
                     st.metric(label = 'R2 of the Test Data', value = R2_sklearn_test.round(3))
 

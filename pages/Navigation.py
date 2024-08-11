@@ -1,15 +1,12 @@
 ## streamlit run 1_Home.py
 import streamlit as st 
-from streamlit_lottie import st_lottie
-import requests
-from streamlit_option_menu import option_menu
-import requests
+
 
 Home = st.Page(
     "1_Home.py",
     title="Home",
     icon=":material/home:",
-    )
+    default=True)
 
 Linear_Regression = st.Page(
     "2_🤖_Machine_Learning.py",
@@ -33,14 +30,6 @@ Contact = st.Page(
     "5_🤵‍♂️_Contact.py",
     title="Contact",
     icon=":material/smart_toy:",
-)
-
-pg = st.navigation(
-    {
-            
-        "Projects": [Linear_Regression, Stock_Dashboard,Explore_the_power_of_rnns],
-        "Info": [Contact],
-    }
 )
 
 
