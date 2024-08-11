@@ -26,6 +26,12 @@ Explore_the_power_of_rnns = st.Page(
     icon=":material/smart_toy:",
 )
 
+face_detection = st.Page(
+    "pages/face_detection.py",
+    title="Face Recognition",
+    icon=":material/smart_toy:",
+)
+
 Contact = st.Page(
     "pages/5_🤵‍♂️_Contact.py",
     title="Contact",
@@ -36,7 +42,7 @@ Contact = st.Page(
 pg = st.navigation(
     {
         "Home": [Home],
-        "Projects": [Linear_Regression, Stock_Dashboard,Explore_the_power_of_rnns],
+        "Projects": [Linear_Regression, Stock_Dashboard,Explore_the_power_of_rnns, face_detection],
         "Info": [Contact],
     }
 )
