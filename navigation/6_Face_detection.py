@@ -5,9 +5,9 @@ import cv2
 
 
 # Load the cascade classifiers
-face_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-eye_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
-glasses_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye_tree_eyeglasses.xml')
+face_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + 'navigation/models/haarcascade_frontalface_default.xml')
+eye_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + 'navigation/models/haarcascade_eye.xml')
+glasses_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + 'navigation/models/haarcascade_eye_tree_eyeglasses.xml')
 
 st.title("Face Detection App")
 
