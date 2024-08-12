@@ -5,8 +5,7 @@ import streamlit as st
 Home = st.Page(
     "navigation/1_Home.py",
     title="Home",
-    icon=":material/home:",
-    default=True)
+    icon=":material/home:")
 
 Linear_Regression = st.Page(
     "navigation/2_🤖_Machine_Learning.py",
