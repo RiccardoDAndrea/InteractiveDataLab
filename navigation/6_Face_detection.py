@@ -9,6 +9,7 @@ eye_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.
 glasses_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye_tree_eyeglasses.xml')
 
 st.title("Face Detection App")
+
 st.markdown("""
 Welcome to the Face Detection App! This app uses OpenCV to detect faces, eyes, and glasses in your photos.
 Just take a picture using your webcam, and we'll do the rest!
