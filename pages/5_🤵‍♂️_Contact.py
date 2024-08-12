@@ -37,13 +37,14 @@ if "Contact" in contact_possibilities:
             <a href="https://stackoverflow.com/users/19773284" target="_blank">Stack Overflow</a>
         </p>
 
-        <h3 align="left">Languages and Tools:</h3>
+        <h3 align="left">Languages and Libaries:</h3>
         <p align="left">
+            <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="40" height="40"/>
+            <img src="https://www.r-project.org/logo/Rlogo.svg" alt="R" width="40" height="40"/>
             <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="Git" width="40" height="40"/>
             <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL" width="40" height="40"/>
             <img src="https://www.vectorlogo.zone/logos/opencv/opencv-icon.svg" alt="OpenCV" width="40" height="40"/>
             <img src="https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg" alt="Pandas" width="40" height="40"/>
-            <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="40" height="40"/>
             <img src="https://www.vectorlogo.zone/logos/pytorch/pytorch-icon.svg" alt="PyTorch" width="40" height="40"/>
             <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" alt="Scikit-Learn" width="40" height="40"/>
             <img src="https://seaborn.pydata.org/_images/logo-mark-lightbg.svg" alt="Seaborn" width="40" height="40"/>
@@ -53,20 +54,19 @@ if "Contact" in contact_possibilities:
 
 if "Vita" in contact_possibilities:
 
-    langugage_version = st.radio('Which langauge do you want the CV', ['German version', 
+    language_version = st.radio('Which langauge do you want the CV', ['German version', 
                                                                         'English version'])
         
     ##### G E R M A N _ V E R S I O N ####
 
-    if 'German version' in langugage_version:
-        st.markdown(f"<div style='text-align:center;'><h1>Lebenslauf</h1></div>",
-                        unsafe_allow_html=True)
+    if 'German version' in language_version:
+        # Display the title centered
+        st.markdown("<div style='text-align:center;'><h1>Lebenslauf</h1></div>", unsafe_allow_html=True)
+        
+        # Add a horizontal divider
         st.divider()
-
-        url = "https://media.licdn.com/dms/image/D4D03AQG-a7zlIBBcYw/profile-displayphoto-shrink_200_200/0/1699013217528?e=1710979200&v=beta&t=qMYfiGkQEJt8hB45L0WRUdg0YCGgqp946wrHXmXn4vw"
-
-        image = Image.open(requests.get(url, stream = True).raw)
-        resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
+        
+         
     # Ändern Sie die Größe nach Bedarf
 
         CV_title, CV_image = st.columns([2, 1])  # Aufteilung in zwei Spalten
@@ -107,7 +107,7 @@ if "Vita" in contact_possibilities:
         st.dataframe(df, column_config=column_config, hide_index=True, use_container_width=True)
         with CV_image:
             # Hier können Sie den restlichen Inhalt der Spalte platzieren
-            st.image(resized_image, use_column_width=True)
+            st.image("pic/mso_Bild.jpeg", width=200, use_column_width=True)
         st.divider()
 
         current_activity_date, current_activity = st.columns((1,2))
@@ -179,15 +179,15 @@ if "Vita" in contact_possibilities:
     ###########################################################################################################################################################################
     ########### E N G L I S H _ V E R S I O N #######################################################################################################################################
     ###########################################################################################################################################################################
-    if 'English version' in langugage_version:
+    if 'English version' in language_version:
         st.markdown(f"<div style='text-align:center;'><h1>Curriculum Vitae</h1></div>",
                     unsafe_allow_html=True)
         st.divider()
 
-        url = "https://media.licdn.com/dms/image/D4D03AQG-a7zlIBBcYw/profile-displayphoto-shrink_200_200/0/1699013217528?e=1710979200&v=beta&t=qMYfiGkQEJt8hB45L0WRUdg0YCGgqp946wrHXmXn4vw"
+        # url = "https://media.licdn.com/dms/image/D4D03AQG-a7zlIBBcYw/profile-displayphoto-shrink_200_200/0/1699013217528?e=1710979200&v=beta&t=qMYfiGkQEJt8hB45L0WRUdg0YCGgqp946wrHXmXn4vw"
 
-        image = Image.open(requests.get(url, stream=True).raw)
-        resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
+        # image = Image.open(requests.get(url, stream=True).raw)
+        # resized_image = image.resize((200, 200))  # Ändern Sie die Größe nach Bedarf
     # Ändern Sie die Größe nach Bedarf
 
         CV_title, CV_image = st.columns([2, 1])  # Aufteilung in zwei Spalten
@@ -227,9 +227,10 @@ if "Vita" in contact_possibilities:
 
         # DataFrame anzeigen
         st.dataframe(df, column_config=column_config, hide_index=True, use_container_width=True)
+        
         with CV_image:
             # Hier können Sie den restlichen Inhalt der Spalte platzieren
-            st.image(resized_image, use_column_width=True)
+            st.image("pic/mso_Bild.jpeg", width=200, use_column_width=True)
         st.divider()
 
         current_activity_date, current_activity = st.columns((1,2))

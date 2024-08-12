@@ -56,7 +56,7 @@ st.warning("""Hold your horses! This page is still under construction.
 
 st_lottie( working_men,
             quality='high',
-            width=1500,
+            width=700,
             height=400,
                 )
 
@@ -84,7 +84,7 @@ if 'Machine Learning' in explination_homepage:
                 unsafe_allow_html=True)
     
     st_lottie(machine_learning_explanation, 
-              width=1500,
+              width=700,
               height=400,
               quality='high')
     
@@ -107,7 +107,7 @@ if 'Object detection' in explination_homepage:
                 unsafe_allow_html=True)
     
     st_lottie(objection_detection_explanation, 
-                width=1500,
+                width=700,
                 height=400, 
                 quality='high')
     
@@ -127,7 +127,7 @@ if 'Stock Dashboard' in explination_homepage:
                 unsafe_allow_html=True)
     
     st_lottie(stock_dashboard_explanation, 
-                width=1500,
+                width=700,
                 height=400,
                 quality='high')
 

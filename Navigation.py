@@ -11,13 +11,13 @@ Home = st.Page(
 Linear_Regression = st.Page(
     "pages/2_🤖_Machine_Learning.py",
     title="Linear Regression",
-    icon=":material/bar_chart:",
+    icon=":material/data_exploration:",
 )
 
 Stock_Dashboard = st.Page(
     "pages/3_📈_Stock_Dashboard.py",
     title="Stocks Dashboard",
-    icon=":material/smart_toy:",
+    icon=":material/dashboard:",
 )
 
 Explore_the_power_of_rnns = st.Page(
@@ -29,13 +29,13 @@ Explore_the_power_of_rnns = st.Page(
 face_detection = st.Page(
     "pages/face_detection.py",
     title="Face Recognition",
-    icon=":material/smart_toy:",
+    icon=":material/familiar_face_and_zone:",
 )
 
 Contact = st.Page(
     "pages/5_🤵‍♂️_Contact.py",
     title="Contact",
-    icon=":material/smart_toy:",
+    icon=":material/contacts_product:",
 )
 
 
