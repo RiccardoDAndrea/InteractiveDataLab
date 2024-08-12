@@ -2,6 +2,8 @@ import streamlit as st
 import numpy as np
 from PIL import Image
 import cv2 
+
+
 # Load the cascade classifiers
 face_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 eye_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
