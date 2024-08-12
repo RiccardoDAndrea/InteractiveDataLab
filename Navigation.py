@@ -26,7 +26,7 @@ Explore_the_power_of_rnns = st.Page(
 )
 
 face_detection = st.Page(
-    "navigation/face_detection.py",
+    "navigation/6_Face_detection.py",
     title="Face Recognition",
     icon=":material/familiar_face_and_zone:",
 )
