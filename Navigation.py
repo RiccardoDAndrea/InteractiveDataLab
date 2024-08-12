@@ -1,7 +1,7 @@
 ## streamlit run 1_Home.py
 import streamlit as st 
 
-
+#d
 Home = st.Page(
     "navigation/1_Home.py",
     title="Home",
