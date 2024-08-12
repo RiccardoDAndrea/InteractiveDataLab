@@ -4,12 +4,10 @@ import yfinance as yf
 import pandas as pd
 import plotly.express as px
 import requests
-#import newspaper
-import nltk
+
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-nltk.download('punkt')
 
 
 
