@@ -15,4 +15,5 @@ kaleido==0.2.1
 keras==3.4.1
 matplotlib==3.9.1.post1
 yfinance==0.2.41
-opencv-python==4.10.0.84
+opencv-python==4.8.0.74
+
