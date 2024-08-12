@@ -41,7 +41,7 @@ Contact = st.Page(
 pg = st.navigation(
     {
         "Home": [Home],
-        "Projects": [Linear_Regression, Stock_Dashboard,Explore_the_power_of_rnns, face_detection],
+        "Projects": [face_detection, Linear_Regression, Stock_Dashboard,Explore_the_power_of_rnns],
         "Info": [Contact],
     }
 )
