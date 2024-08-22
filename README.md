@@ -9,7 +9,7 @@ My page is built using Streamlit. The great thing about Streamlit is that I can 
 
 My webpage is separated into multiple parts.
 
-## 1. Welcome Page
+## 1. Home Page
 
 Here, I introduce myself briefly and provide explanations of the projects I have implemented.
 
@@ -48,6 +48,15 @@ With that said, the main components are that the user can choose their stock tic
 
 These are what you can inspect on the Streamlit page.
 After that you also have a section for the news related to your Stock. 
+
+## 4. Face Recognition
+This project allows the user to create a photo, which in turn is used for the face recognition algorithm.
+
+This can be recognised by:
+
+- The eyes
+- The face
+- Glasses
 
 ## 4. Contact
 Lastly, there's a section dedicated to getting to know me better. Here, I delve into details about myself, how to reach out to me, and the programming languages and packages I am proficient in. Additionally, you'll find my 
