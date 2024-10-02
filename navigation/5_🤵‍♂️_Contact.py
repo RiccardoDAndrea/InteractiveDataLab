@@ -17,7 +17,7 @@ if "Contact" in contact_possibilities:
 
     st.markdown('''
         <h1 align="center">Hi 👋, I'm Riccardo D'Andrea</h1>
-        <h3 align="center">A passionate Data Scientist from Germany</h3>
+        <h3 align="center">A passionate Data Scientist / Engineer from Germany</h3>
 
         <p>
             I'm currently working on a Streamlit Regression App, where I explore the fascinating world of machine learning and data analysis. 📊🔬
@@ -28,7 +28,7 @@ if "Contact" in contact_possibilities:
         </p>
 
         <p>
-            If you have any questions or just want to chat about anything related to data science, feel free to reach out to me. I'm always open for discussions and collaborations! 💬📫
+            If you have any questions or just want to chat about anything related to data science or data engineer, feel free to reach out to me. I'm always open for discussions and collaborations! 💬📫
         </p>
 
         <h3 align="left">Connect with me:</h3>
@@ -55,7 +55,7 @@ if "Contact" in contact_possibilities:
 if "Vita" in contact_possibilities:
 
     language_version = st.radio('Which langauge do you want the CV', ['German version', 
-                                                                        'English version'])
+                                                                      'English version'])
         
     ##### G E R M A N _ V E R S I O N ####
 
@@ -105,6 +105,7 @@ if "Vita" in contact_possibilities:
 
         # DataFrame anzeigen
         st.dataframe(df, column_config=column_config, hide_index=True, use_container_width=True)
+        
         with CV_image:
             # Hier können Sie den restlichen Inhalt der Spalte platzieren
             st.image("pic/mso_Bild.jpeg", width=200, use_column_width=True)
@@ -119,12 +120,20 @@ if "Vita" in contact_possibilities:
         with current_activity:
             st.markdown("""**Bachelor of Arts in Angewandter Volkswirtschaft**
                             im 5. Semester Hochschule Osnabrück, Osnabrück""")
+            st.markdown("> Bachelorarbeit mit 1,0 bestanden")
+            st.markdown("""> Schwerpunkt: **Data Science**""")
+            st.markdown("""> Thema:                             
+            **1. Generativ AI ein Chatbot mit RAG Funktion bauen**
+                        
+                        
+            **2. Ein Dashboard mit RNN und LSTM bauen"**""")
+
         intership_date, intership_activity = st.columns((1,2))
 
         with intership_date:
             st.markdown("""> 03/2023 - 06/2023""")
         with intership_activity:
-            st.markdown("> **Praktikum bei der mso digital GmbH & Co. KG**\n\n > - Abteilung **Data & Process Analytics**")
+            st.markdown(" **Praktikum bei der mso digital GmbH & Co. KG**\n\n > - Abteilung **Data & Process Analytics**")
 
             
         st.divider()
