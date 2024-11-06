@@ -1,5 +1,6 @@
 ## streamlit run 1_Home.py
 import streamlit as st 
+st.set_page_config(layout="wide")
 
 #d
 Home = st.Page(

@@ -55,7 +55,6 @@ value_is_zero_in_train_size = load_lottieurl('https://assets7.lottiefiles.com/pa
 ########################################################################################
 
 # Set page configuration
-st.set_page_config(page_title='exploring-the-power-of-rnns', page_icon=':robot:', layout='wide')
 st.title('Recurrent Neural Network')
 
 
