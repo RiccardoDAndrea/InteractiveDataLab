@@ -165,6 +165,7 @@ if 'Recurrent Neural Network' in explination_homepage:
                 It’s not just a one-hit wonder, though. Sometimes, memories fade (let’s face it, no one has perfect recall), but that’s where Long Short-Term Memory (LSTM) comes in — an upgraded version of RNNs that helps keep important info from slipping away. Think of it as the model’s personal assistant, making sure crucial details are never forgotten. 🧳
                 Imagine NeuroTime as your reliable guide through time, turning messy data into a smooth, predictive path. Whether you're using it to translate languages, predict the stock market, or forecast the weather, NeuroTime brings the magic of memory to every sequence. 🌟
                 With NeuroTime, you're not just making predictions — you’re learning from the past to shape a smarter future, one sequence at a time! 🌤️💸""")
+    
     st_lottie(rnn_explanation, 
                 width=2000,
                 height=400,
