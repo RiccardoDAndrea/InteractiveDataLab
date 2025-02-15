@@ -1,5 +1,6 @@
 [theme]
-primaryColor="#17254a"
-backgroundColor="#151226"
-secondaryBackgroundColor="#431f54"
-textColor="#ffffff"
+primaryColor = "#33ff33"  # Klassisches Pip-Boy Grün für Buttons und Highlights
+backgroundColor = "#0a140a"  # Fast schwarzes Olivgrün für den Retro-Look
+secondaryBackgroundColor = "#121f12"  # Dunkles Grün für Sidebar/Panels
+textColor = "#33ff33"  # Leuchtendes Grün für Terminal-Text
+font = "monospace"  # Monospace für den klassischen Pip-Boy-Stil

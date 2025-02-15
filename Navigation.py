@@ -38,11 +38,18 @@ Contact = st.Page(
     icon=":material/contacts_product:",
 )
 
+Blog = st.Page(
+    "navigation/Blog_Post.py",
+    title="Blog",
+    icon=":material/contacts_product:",
+)
+
 
 pg = st.navigation(
     {
         "Home": [Home],
         "Projects": [face_detection, Linear_Regression, Stock_Dashboard,Explore_the_power_of_rnns],
+        "Blog": [Blog],
         "Info": [Contact],
     }
 )

@@ -35,7 +35,7 @@ rnn_explanation = load_lottieurl("https://lottie.host/1fc8d735-8a9d-4d28-aab8-f7
 ####################  H O M E P A G E   ########################################################################    
 
 
-st.write("# :blue[Hey, I'm Riccardo D'Andrea - welcome to my site!]")
+st.write("# :green[Hey, I'm Riccardo D'Andrea - welcome to my site!]")
 
 st.markdown("###### I'm glad you stopped by! This is all about my passion for **data science** and data engineering. I love tinkering in the infinite vastness of code and data — whether it's building clever data pipelines or bringing machine learning models to life.")
 
@@ -47,10 +47,10 @@ st.divider()
 motvation_col, motivation_pic_col = st.columns(2)
 with motvation_col:
     st.markdown("""
-### 🚀 Turning Theory into Action
+### :green[🚀 Turning Theory into Action]
 My projects are driven by a clear mission: to bridge the gap between theoretical concepts and real-world applications, making them more accessible and impactful for users. By keeping my code open source, I encourage everyone to explore, test, and, ideally, contribute to enhancing it further.
 
-### 🌍 Embracing Challenges as a European and a German
+### 🌍 :green[Embracing Challenges as a European and a German]
 As a proud European—and even more so as a German—I am committed to confronting challenges directly, be it pandemics, wars, political upheavals, or economic crises. In times of adversity, I believe that retreating is not an option; instead, facing problems with determination is essential. Maintaining a clear mind and readiness to solve even the toughest issues is crucial. This approach requires dedication, discipline, and an unwavering belief in the European project and the German ideal. We have the capability in Europe to shape a sustainable future that empowers the next generations to build and progress further.
 """)
 st.markdown("""
