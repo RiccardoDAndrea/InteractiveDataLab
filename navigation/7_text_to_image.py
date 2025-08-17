@@ -1,6 +1,4 @@
 import os
-os.environ["HF_HOME"] = "/run/media/riccardodandrea/Ricca_Data"
-
 import torch
 import streamlit as st
 from diffusers import StableDiffusionXLPipeline
