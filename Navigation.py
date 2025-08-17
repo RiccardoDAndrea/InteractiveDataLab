@@ -32,6 +32,13 @@ face_detection = st.Page(
     icon=":material/familiar_face_and_zone:",
 )
 
+test_to_image = st.Page(
+    "navigation/7_text_to_image.py",
+    title="Face Recognition",
+    icon=":material/familiar_face_and_zone:",
+)
+
+
 Contact = st.Page(
     "navigation/5_🤵‍♂️_Contact.py",
     title="Contact",
@@ -48,7 +55,7 @@ Blog = st.Page(
 pg = st.navigation(
     {
         "Home": [Home],
-        "Projects": [face_detection, Linear_Regression, Stock_Dashboard,Explore_the_power_of_rnns],
+        "Projects": [face_detection, Linear_Regression, Stock_Dashboard,Explore_the_power_of_rnns, test_to_image],
         "Blog": [Blog],
         "Info": [Contact],
     }
