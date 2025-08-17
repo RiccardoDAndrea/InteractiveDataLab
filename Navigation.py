@@ -34,7 +34,7 @@ face_detection = st.Page(
 
 test_to_image = st.Page(
     "navigation/7_text_to_image.py",
-    title="Face Recognition",
+    title="Text 2 Image",
     icon=":material/familiar_face_and_zone:",
 )
 
