@@ -20,4 +20,4 @@ statsmodels
 torch==2.8.0
 diffusers==0.34.0
 transformers==4.55.2
-
+accelerate==1.10.0
