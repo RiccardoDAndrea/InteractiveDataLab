@@ -1,94 +1,66 @@
-import streamlit as st
-import torch
-from diffusers import StableDiffusionXLPipeline, StableDiffusionPipeline
 import os
+import streamlit as st
+from streamlit_lottie import st_lottie
+import torch
+from utils import load_lottieurl, Pipeline_for_text2Image
 
-# Titel
-st.title("🎨 Stable Diffusion Image Generator")
+st.title("Text :two: Image Generator")
 
-# Eingabefeld für optionalen Modellpfad oder Repo-Namen
-location_of_image_models = st.text_input(
-    "Optional: Specify local model path (with model_index.json) or leave empty to use default repo:",
-    value=""
+# ---- SessionState ----
+if "pipe" not in st.session_state:
+    st.session_state.pipe = None
+if "show_path_input" not in st.session_state:
+    st.session_state.show_path_input = False
+
+# ---- Animation ----
+working_men = load_lottieurl(
+    "https://lottie.host/a2786f75-598c-457d-83b8-da7d5c45b91f/g06V88qWpk.json"
 )
 
-# Auswahl Modell
-model_type = st.radio(
-    "Select Model Type:",
-    ("SDXL Base 1.0 (High Quality, ~7GB)",
-     "SD 1.5 Pruned / Lite (~2GB)",
-     "SDXL Turbo (fast, ~7GB)")
-)
 
-# Device check
-device = "cuda" if torch.cuda.is_available() else "cpu"
-st.write(f"Using device: **{device}**")
+welcome_container_lottie, text_container = st.columns(2)
+with welcome_container_lottie:
+    st_lottie(working_men, width=400, height=200)
+    
+with text_container:
+    st.markdown("""
+        Welcome to a short demo showing how you can generate a new image by describing text. 
+        We will use the HuggingFace API for this, but you can 
+        also use models saved locally.""")
 
-# Pipeline Loader
-@st.cache_resource
-def load_pipeline(model_choice, custom_path=None):
-    # Repo-Namen als Fallback
-    if model_choice == "SDXL Base 1.0 (High Quality, ~7GB)":
-        default_repo = "stabilityai/stable-diffusion-xl-base-1.0"
-        pipe_cls = StableDiffusionXLPipeline
-    elif model_choice == "SDXL Turbo (fast, ~7GB)":
-        default_repo = "stabilityai/sdxl-turbo"
-        pipe_cls = StableDiffusionXLPipeline
-    else:  # SD 1.5
-        default_repo = "runwayml/stable-diffusion-v1-5"
-        pipe_cls = StableDiffusionPipeline
+# ---- Button zum Umschalten ----
+if st.button("Change Model Path"):
+    st.session_state.show_path_input = not st.session_state.show_path_input
 
-    model_path = default_repo
+# ---- Modell laden (nur wenn nötig oder explizit angefordert) ----
+if st.session_state.pipe is None or st.session_state.show_path_input:
+    Path_to_models = st.text_input(
+        label="Enter your model directory",
+        key="path_input"
+    )
 
-    if custom_path:
-        # wenn Nutzer einen lokalen Ordner angegeben hat
-        if os.path.exists(os.path.join(custom_path, "model_index.json")):
-            model_path = custom_path
-        elif os.path.isdir(custom_path):
-            # prüfen, ob es ein Hub-Cache Ordner ist (models--xxx)
-            snapshots_dir = os.path.join(custom_path, "snapshots")
-            if os.path.exists(snapshots_dir):
-                subfolders = os.listdir(snapshots_dir)
-                if subfolders:
-                    model_path = os.path.join(snapshots_dir, subfolders[0])
-                    st.info(f"Using snapshot: {model_path}")
-        else:
-            st.warning("⚠️ Path not valid, falling back to default repo.")
+    if Path_to_models:
+        st.info(f"Selected model path: {Path_to_models}")
 
-    pipe = pipe_cls.from_pretrained(
-        model_path,
-        torch_dtype=torch.float16 if device == "cuda" else torch.float32
-    ).to(device)
-
-    return pipe
-
-pipe = load_pipeline(model_type, location_of_image_models.strip())
-
-# Prompt Input
-prompt = st.text_input("Enter your prompt:")
-
-# Zusätzliche Optionen
-steps = st.slider("Inference steps", 5, 50, 20)
-guidance = st.slider("Guidance scale", 1.0, 15.0, 7.5)
-seed = st.number_input("Random Seed (0 = random)", value=0, step=1)
-
-# Bild generieren
-if st.button("Generate Image"):
-    if prompt.strip():
-        with st.spinner("Generating image... ⏳"):
-            generator = torch.manual_seed(seed) if seed != 0 else None
+        if st.button("Load Model"):
             try:
-                image = pipe(
-                    prompt,
-                    num_inference_steps=steps,
-                    guidance_scale=guidance,
-                    generator=generator
-                ).images[0]
-                st.image(image, caption="Generated Image")
-            except torch.cuda.OutOfMemoryError:
-                st.error("⚠️ Out of GPU memory! Try lower resolution or a smaller model.")
-                torch.cuda.empty_cache()
+                pipe = Pipeline_for_text2Image(Path_to_models)
+                device = "cuda" if torch.cuda.is_available() else "cpu"
+                st.session_state.pipe = pipe.to(device)
+                st.success(f"✅ Pipeline loaded on {device.upper()}")
+                st.session_state.show_path_input = False  # Pfadeingabe wieder schließen
             except Exception as e:
-                st.error(f"⚠️ Error: {e}")
+                st.error(f"Could not load model: {e}")
     else:
-        st.warning("Please enter a prompt!")
+        st.info()
+        st.warning("No directory entered")
+
+
+
+# ---- Prompt Input + Image Generation ----
+if st.session_state.pipe and not st.session_state.show_path_input:
+    prompt = st.text_input("Describe your image prompt:")
+    if st.button("Generate Image"):
+        with st.spinner("Generating image..."):
+            image = st.session_state.pipe(prompt, num_inference_steps=25).images[0]
+            st.image(image, caption=prompt)
