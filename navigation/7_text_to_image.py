@@ -2,7 +2,7 @@ import os
 import streamlit as st
 from streamlit_lottie import st_lottie
 import torch
-from utils import load_lottieurl, Pipeline_for_text2Image
+from navigation.utils import load_lottieurl, Pipeline_for_text2Image
 st.title("Text :two: Image Generator")
 
 # ---- SessionState ----
@@ -51,7 +51,7 @@ if st.session_state.pipe is None or st.session_state.show_path_input:
             except Exception as e:
                 st.error(f"Could not load model: {e}")
     else:
-        st.info()
+        st.info("error")
         st.warning("No directory entered")
 
 
