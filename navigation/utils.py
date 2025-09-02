@@ -40,7 +40,7 @@ def Pipeline_for_text2Image(Path_to_models: str):
 
     # Pipeline laden (nur lokal, kein Download!)
     pipe = AutoPipelineForText2Image.from_pretrained(
-        Path_to_models,
+        "Lykon/dreamshaper-7",
         torch_dtype=torch.float16,
         variant="fp16",
         local_files_only=True
