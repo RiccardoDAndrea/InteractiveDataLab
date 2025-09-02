@@ -22,19 +22,24 @@ working_men = load_lottieurl(
 welcome_container_lottie, text_container = st.columns(2)
 with welcome_container_lottie:
     st_lottie(working_men, width=400, height=200)
-    
+
 with text_container:
     st.markdown("""
-        Welcome to a short demo showing how you can generate a new image by describing text. 
-        We will use the HuggingFace API for this, but you can 
+        Welcome to a short demo showing how you can generate a new image by describing text.
+        We will use the HuggingFace API for this, but you can
         also use models saved locally.""")
 
-# ---- Button zum Umschalten ----
-if st.button("Change Model Path"):
-    st.session_state.show_path_input = not st.session_state.show_path_input
 
-# ---- Modell laden ----
-if st.session_state.pipe is None or st.session_state.show_path_input:
+
+## Application Flow
+
+### 1. Change Model Path
+
+if st.button("Change Model Path"):
+    st.session_state.show_path_input = True # Show the input on click
+
+# Check if we should show the model path input section
+if st.session_state.show_path_input:
     st.text_input(
         label="Enter your model directory",
         key="path_input"
@@ -45,20 +50,29 @@ if st.session_state.pipe is None or st.session_state.show_path_input:
         if Path_to_models:
             st.info(f"Selected model path: {Path_to_models}")
             try:
+                # Assuming Pipeline_for_text2Image is defined elsewhere
                 pipe = Pipeline_for_text2Image(Path_to_models)
                 device = "cuda" if torch.cuda.is_available() else "cpu"
                 st.session_state.pipe = pipe.to(device)
                 st.success(f"✅ Pipeline loaded on {device.upper()}")
-                st.session_state.show_path_input = False
+                st.session_state.show_path_input = False # Hide the input on successful load
+                st.rerun() # Force a refresh to hide the input immediately
             except Exception as e:
                 st.error(f"Could not load model: {e}")
         else:
             st.warning("No directory entered")
 
-# ---- Prompt Input + Image Generation ----
+
+
+### 2. Generate Image
+
+# Only show this section if a pipeline is loaded and the path input is hidden
 if st.session_state.pipe and not st.session_state.show_path_input:
     prompt = st.text_input("Describe your image prompt:", key="prompt_input")
     if st.button("Generate Image"):
-        with st.spinner("Generating image..."):
-            image = st.session_state.pipe(prompt, num_inference_steps=25).images[0]
-            st.image(image, caption=prompt)
+        if prompt:
+            with st.spinner("Generating image..."):
+                image = st.session_state.pipe(prompt, num_inference_steps=25).images[0]
+                st.image(image, caption=prompt)
+        else:
+            st.warning("Please enter a prompt to generate an image.")
