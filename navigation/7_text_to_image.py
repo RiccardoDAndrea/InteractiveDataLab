@@ -2,7 +2,7 @@ import os
 import streamlit as st
 from streamlit_lottie import st_lottie
 import torch
-from utils import load_lottieurl, Pipeline_for_text2Image
+from navigation.utils import load_lottieurl, Pipeline_for_text2Image
 st.title("Text :two: Image Generator")
 
 # ---- SessionState ----
