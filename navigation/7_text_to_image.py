@@ -3,6 +3,7 @@ import streamlit as st
 from streamlit_lottie import st_lottie
 import torch
 from navigation.utils import load_lottieurl, Pipeline_for_text2Image
+
 st.title("Text :two: Image Generator")
 
 # ---- SessionState ----
@@ -10,12 +11,13 @@ if "pipe" not in st.session_state:
     st.session_state.pipe = None
 if "show_path_input" not in st.session_state:
     st.session_state.show_path_input = False
+if "path_input" not in st.session_state:
+    st.session_state.path_input = ""
 
 # ---- Animation ----
 working_men = load_lottieurl(
     "https://lottie.host/a2786f75-598c-457d-83b8-da7d5c45b91f/g06V88qWpk.json"
 )
-
 
 welcome_container_lottie, text_container = st.columns(2)
 with welcome_container_lottie:
@@ -31,34 +33,31 @@ with text_container:
 if st.button("Change Model Path"):
     st.session_state.show_path_input = not st.session_state.show_path_input
 
-# ---- Modell laden (nur wenn nötig oder explizit angefordert) ----
+# ---- Modell laden ----
 if st.session_state.pipe is None or st.session_state.show_path_input:
-    Path_to_models = st.text_input(
+    st.text_input(
         label="Enter your model directory",
         key="path_input"
     )
 
-    if Path_to_models:
-        st.info(f"Selected model path: {Path_to_models}")
-
-        if st.button("Load Model"):
+    if st.button("Load Model"):
+        Path_to_models = st.session_state.path_input
+        if Path_to_models:
+            st.info(f"Selected model path: {Path_to_models}")
             try:
                 pipe = Pipeline_for_text2Image(Path_to_models)
                 device = "cuda" if torch.cuda.is_available() else "cpu"
                 st.session_state.pipe = pipe.to(device)
                 st.success(f"✅ Pipeline loaded on {device.upper()}")
-                st.session_state.show_path_input = False  # Pfadeingabe wieder schließen
+                st.session_state.show_path_input = False
             except Exception as e:
                 st.error(f"Could not load model: {e}")
-    else:
-        st.info("error")
-        st.warning("No directory entered")
-
-
+        else:
+            st.warning("No directory entered")
 
 # ---- Prompt Input + Image Generation ----
 if st.session_state.pipe and not st.session_state.show_path_input:
-    prompt = st.text_input("Describe your image prompt:")
+    prompt = st.text_input("Describe your image prompt:", key="prompt_input")
     if st.button("Generate Image"):
         with st.spinner("Generating image..."):
             image = st.session_state.pipe(prompt, num_inference_steps=25).images[0]
