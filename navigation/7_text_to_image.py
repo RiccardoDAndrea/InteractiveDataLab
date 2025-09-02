@@ -11,8 +11,6 @@ if "pipe" not in st.session_state:
     st.session_state.pipe = None
 if "show_path_input" not in st.session_state:
     st.session_state.show_path_input = False
-if "path_input" not in st.session_state:
-    st.session_state.path_input = ""
 
 # ---- Animation ----
 working_men = load_lottieurl(
@@ -25,54 +23,57 @@ with welcome_container_lottie:
 
 with text_container:
     st.markdown("""
-        Welcome to a short demo showing how you can generate a new image by describing text.
-        We will use the HuggingFace API for this, but you can
-        also use models saved locally.""")
+        Willkommen zu einer kurzen Demo, die zeigt, wie Sie ein neues Bild durch Textbeschreibung erstellen können.
+        Wir werden die HuggingFace API dafür nutzen, aber Sie können
+        auch lokal gespeicherte Modelle verwenden.""")
 
 
 
-## Application Flow
+### Applikationsfluss mit `st.form`
 
-### 1. Change Model Path
+# Button zum Anzeigen des Pfad-Eingabefeldes
+if st.session_state.pipe is None:
+    if st.button("Load a Model"):
+        st.session_state.show_path_input = True
 
-if st.button("Change Model Path"):
-    st.session_state.show_path_input = True # Show the input on click
-
-# Check if we should show the model path input section
+# Einbettung der Eingabe in ein Formular
 if st.session_state.show_path_input:
-    st.text_input(
-        label="Enter your model directory",
-        key="path_input"
-    )
+    # Beginnen Sie ein Formular
+    with st.form("model_loader_form"):
+        st.write("Enter your model directory")
+        path_input = st.text_input(label="Model Path")
 
-    if st.button("Load Model"):
-        Path_to_models = st.session_state.path_input
-        if Path_to_models:
-            st.info(f"Selected model path: {Path_to_models}")
-            try:
-                # Assuming Pipeline_for_text2Image is defined elsewhere
-                pipe = Pipeline_for_text2Image(Path_to_models)
-                device = "cuda" if torch.cuda.is_available() else "cpu"
-                st.session_state.pipe = pipe.to(device)
-                st.success(f"✅ Pipeline loaded on {device.upper()}")
-                st.session_state.show_path_input = False # Hide the input on successful load
-                st.rerun() # Force a refresh to hide the input immediately
-            except Exception as e:
-                st.error(f"Could not load model: {e}")
-        else:
-            st.warning("No directory entered")
+        # Jede Eingabe innerhalb des Formulars wird erst bei Klick auf den Submit-Button verarbeitet
+        submit_button = st.form_submit_button("Load Model")
+
+        if submit_button:
+            if path_input:
+                st.info(f"Selected model path: {path_input}")
+                try:
+                    # Annahme: Pipeline_for_text2Image ist in navigation.utils definiert
+                    pipe = Pipeline_for_text2Image(path_input)
+                    device = "cuda" if torch.cuda.is_available() else "cpu"
+                    st.session_state.pipe = pipe.to(device)
+                    st.session_state.show_path_input = False
+                    st.success(f"✅ Pipeline geladen auf {device.upper()}")
+                    # st.rerun() kann hier vermieden werden, da die Form
+                    # automatisch das Skript neu ausführt, sobald sie abgeschickt wird.
+                except Exception as e:
+                    st.error(f"Konnte das Modell nicht laden: {e}")
+            else:
+                st.warning("Bitte geben Sie ein Verzeichnis ein.")
 
 
 
-### 2. Generate Image
+### Bild-Generierung
 
-# Only show this section if a pipeline is loaded and the path input is hidden
+# Nur diesen Abschnitt anzeigen, wenn die Pipeline geladen ist und der Pfad-Input nicht sichtbar ist
 if st.session_state.pipe and not st.session_state.show_path_input:
-    prompt = st.text_input("Describe your image prompt:", key="prompt_input")
-    if st.button("Generate Image"):
+    prompt = st.text_input("Beschreiben Sie Ihr Bild:", key="prompt_input")
+    if st.button("Bild generieren"):
         if prompt:
-            with st.spinner("Generating image..."):
+            with st.spinner("Bild wird generiert..."):
                 image = st.session_state.pipe(prompt, num_inference_steps=25).images[0]
                 st.image(image, caption=prompt)
         else:
-            st.warning("Please enter a prompt to generate an image.")
+            st.warning("Bitte geben Sie einen Prompt ein, um ein Bild zu generieren.")
